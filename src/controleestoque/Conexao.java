@@ -15,17 +15,17 @@ import java.sql.Statement;
  * @author aluno
  */
 public class Conexao {
-    private Statement stmt;
-    private Connection conn;
+    private static Statement stmt;
+    private static Connection conn;
     
-     public Statement conectar() throws ClassNotFoundException, SQLException {
+     public static Statement conectar(String driver, String dataBaseName, String url, String usuario, String senha) throws ClassNotFoundException, SQLException {
         try {
 
-            String driver = "com.mysql.jdbc.Driver";
-            String dataBaseName = "merciaria";
-            String url = "jdbc:mysql://localhost:3306/";
-            String usuario = "root";
-            String senha = "";
+//            String driver = "com.mysql.jdbc.Driver";
+//            String dataBaseName = "merciaria";
+//            String url = "jdbc:mysql://localhost:3306/";
+//            String usuario = "root";
+//            String senha = "";
             Class.forName(driver).newInstance();
             conn = (Connection) DriverManager.getConnection(url + dataBaseName, usuario, senha);
             stmt = conn.createStatement();
