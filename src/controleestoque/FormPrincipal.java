@@ -18,6 +18,8 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import java.awt.Toolkit;
+import java.awt.event.WindowEvent;
 import java.awt.print.PrinterException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -95,9 +97,8 @@ public class FormPrincipal extends javax.swing.JFrame {
 
 //alinhamento do que tem dentro da celula
             cell1.setHorizontalAlignment(Element.ALIGN_CENTER);
-            
+
             cell2.setHorizontalAlignment(Element.ALIGN_CENTER);
-            
 
 //finalizando as celulas nome, email na tabela
             table.addCell(cell1);
@@ -107,11 +108,11 @@ public class FormPrincipal extends javax.swing.JFrame {
 //criando varias celulas dentro do while
                 PdfPCell cell3 = new PdfPCell(new Paragraph(rs.getString(2)));
                 PdfPCell cell4 = new PdfPCell(new Paragraph(rs.getString(4)));
-                
+
                 cell3.setHorizontalAlignment(Element.ALIGN_CENTER);
-                
+
                 cell4.setHorizontalAlignment(Element.ALIGN_CENTER);
-                
+
 //finalizando as celulas do while na tabela
                 table.addCell(cell3);
                 table.addCell(cell4);
@@ -282,12 +283,13 @@ public class FormPrincipal extends javax.swing.JFrame {
         jTextFieldDescricao = new javax.swing.JTextField();
         jLabeID = new javax.swing.JLabel();
         jTextFieldPreco = new javax.swing.JTextField();
+        jButtonLogoff = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1Arquivo = new javax.swing.JMenu();
         jMenuItemGerarRelatorio = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Controle De Estoque - Copyright © ®");
 
         jTextFieldID.addActionListener(new java.awt.event.ActionListener() {
@@ -368,6 +370,13 @@ public class FormPrincipal extends javax.swing.JFrame {
 
         jLabeID.setText("ID:");
 
+        jButtonLogoff.setText("Logoff");
+        jButtonLogoff.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonLogoffActionPerformed(evt);
+            }
+        });
+
         jMenu1Arquivo.setText("Arquivo");
 
         jMenuItemGerarRelatorio.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
@@ -396,33 +405,30 @@ public class FormPrincipal extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jLabeID)
+                                    .addGap(35, 35, 35))
+                                .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel1)
-                                    .addComponent(jLabel2)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addComponent(jLabeID)
-                                            .addGap(35, 35, 35))
-                                        .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jTextFieldID, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jTextFieldQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jTextFieldPreco, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(0, 0, Short.MAX_VALUE))
-                                    .addComponent(jTextFieldDescricao)
-                                    .addComponent(jTextFieldNome)))))
+                                    .addComponent(jTextFieldID, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jTextFieldQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jTextFieldPreco, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(jTextFieldDescricao)
+                            .addComponent(jTextFieldNome)))
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
                         .addComponent(jButtonCadastrar)
                         .addGap(113, 113, 113)
                         .addComponent(jButtonListar)
@@ -434,6 +440,8 @@ public class FormPrincipal extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(234, 234, 234)
                 .addComponent(jButtonTestarConexao)
+                .addGap(18, 18, 18)
+                .addComponent(jButtonLogoff)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -468,7 +476,9 @@ public class FormPrincipal extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButtonTestarConexao)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonTestarConexao)
+                    .addComponent(jButtonLogoff))
                 .addGap(17, 17, 17))
         );
 
@@ -543,16 +553,15 @@ public class FormPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jMenu2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu2MouseClicked
-        
+
         MessageFormat header = new MessageFormat("Controle de Estoque");
         MessageFormat footer = new MessageFormat("Pagina {0,number,integer}");
-        
-        
+
         try {
             // TODO add your handling code here:
-            
+
             jTable1.print(JTable.PrintMode.FIT_WIDTH, header, footer);
-            
+
             /*Boolean printdata = jTable1.print();
             
             if(printdata){
@@ -566,20 +575,22 @@ public class FormPrincipal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jMenu2MouseClicked
 
+    private void jButtonLogoffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLogoffActionPerformed
+        // TODO add your handling code here:
+        fechar();
+        new Login().setVisible(true);
+        
+    }//GEN-LAST:event_jButtonLogoffActionPerformed
+
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new FormPrincipal().setVisible(true);
-            }
-        });
-    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAtualizar;
     private javax.swing.JButton jButtonCadastrar;
     private javax.swing.JButton jButtonListar;
+    private javax.swing.JButton jButtonLogoff;
     private javax.swing.JButton jButtonRemover;
     private javax.swing.JButton jButtonTestarConexao;
     private javax.swing.JLabel jLabeID;
@@ -599,5 +610,10 @@ public class FormPrincipal extends javax.swing.JFrame {
     private javax.swing.JTextField jTextFieldPreco;
     private javax.swing.JTextField jTextFieldQuantidade;
     // End of variables declaration//GEN-END:variables
+
+    private void fechar() {
+        WindowEvent windowsfechar = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
+        Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(windowsfechar);
+    }
 
 }
