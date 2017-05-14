@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 14-Maio-2017 às 21:56
+-- Generation Time: 15-Maio-2017 às 00:59
 -- Versão do servidor: 10.1.21-MariaDB
 -- PHP Version: 5.6.30
 
@@ -19,6 +19,24 @@ SET time_zone = "+00:00";
 --
 -- Database: `merciaria`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `login`
+--
+
+CREATE TABLE `login` (
+  `nome` varchar(100) COLLATE utf8_bin NOT NULL,
+  `senha` varchar(12) COLLATE utf8_bin NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Extraindo dados da tabela `login`
+--
+
+INSERT INTO `login` (`nome`, `senha`) VALUES
+('admin', '123456');
 
 -- --------------------------------------------------------
 
