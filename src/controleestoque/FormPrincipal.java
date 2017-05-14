@@ -3,23 +3,34 @@
  * and open the template in the editor.
  */
 
-/*
+ /*
  * FormPrincipal.java
  *
  * Created on 29/03/2012, 10:47:50
  */
 package controleestoque;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+import java.awt.print.PrinterException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
+import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 /**
  *
@@ -34,18 +45,107 @@ public class FormPrincipal extends javax.swing.JFrame {
         initComponents();
         listar();
     }
-    
+
     Conexao con = new Conexao();
-    
-    private void cadastrar(){
-         try {
+
+    private void gerarRelatorio() {
+
+        // TODO add your handling code here:
+        Document document = new Document();
+//mudando a fonte, tamanho e colocando em negrito
+        Font font1 = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD);
+        Font font2 = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD);
+
+        try {
+            Statement conex = con.conectar();
+            String sql = "SELECT * FROM produtos ORDER BY qtd";
+            //ResultSet rs = stmt.executeQuery(sql);
+            ResultSet rs = conex.executeQuery(sql);
+
+            PdfWriter.getInstance(document, new FileOutputStream("PDF_Rlatorio.pdf"));
+            document.open();
+
+// adicionando um Titulo no documento
+            Paragraph title = new Paragraph("Produtos Cadastrados", font1);
+
+//alinhado o titulo na forma centralizada
+            title.setAlignment(Element.ALIGN_CENTER);
+            document.add(title);
+            //Paragraph paragraph2;
+            Paragraph paragraphSpace = new Paragraph();
+
+            paragraphSpace.setSpacingBefore(50);
+
+            document.add(paragraphSpace);
+            /*
+            while (rs.next()) {
+                paragraph2 = new Paragraph(rs.getString(1) + " - " + rs.getString(2));
+                
+                //paragraph2.setSpacingAfter(10);
+                paragraph2.setSpacingBefore(20);
+            document.add(paragraph2);
+
+            }*/
+
+//criando uma tabela
+            PdfPTable table = new PdfPTable(2); // 2 colunas.
+//adicionando as celulas
+            PdfPCell cell1 = new PdfPCell(new Paragraph("Produto", font2));
+            PdfPCell cell2 = new PdfPCell(new Paragraph("Quantidade", font2));
+
+//alinhamento do que tem dentro da celula
+            cell1.setHorizontalAlignment(Element.ALIGN_CENTER);
+            
+            cell2.setHorizontalAlignment(Element.ALIGN_CENTER);
+            
+
+//finalizando as celulas nome, email na tabela
+            table.addCell(cell1);
+            table.addCell(cell2);
+
+            while (rs.next()) {
+//criando varias celulas dentro do while
+                PdfPCell cell3 = new PdfPCell(new Paragraph(rs.getString(2)));
+                PdfPCell cell4 = new PdfPCell(new Paragraph(rs.getString(4)));
+                
+                cell3.setHorizontalAlignment(Element.ALIGN_CENTER);
+                
+                cell4.setHorizontalAlignment(Element.ALIGN_CENTER);
+                
+//finalizando as celulas do while na tabela
+                table.addCell(cell3);
+                table.addCell(cell4);
+
+            }
+//finalizando a tabela dentro do pdf
+            document.add(table);
+
+//fechando a conexão com o banco de dados
+            con.desconectar();
+
+        } catch (DocumentException | IOException de) {
+            System.err.println(de.getMessage());
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(FormPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+//encerrando o documento pdf
+        document.close();
+        JOptionPane.showMessageDialog(null, "Relatorio gerado com sucesso!");
+    }
+
+    private void cadastrar() {
+        try {
             // TODO add your handling code here:
             //abrindo a conexão
             Statement conex = con.conectar();
             //instrução sql correspondente a inserção do aluno
-            String sql = "INSERT INTO merciaria (nome, matricula)";
-            sql += "VALUES ('" + jTextFieldNome.getText() + "', "
-                    + jTextFieldMatricula.getText() + ")";
+            String sql = "INSERT INTO produtos (id, nome, preco, qtd, tipoProduto)";
+            sql += "VALUES (" + jTextFieldID.getText() + ", '"
+                    + jTextFieldNome.getText() + "', "
+                    + jTextFieldPreco.getText() + ", "
+                    + jTextFieldQuantidade.getText() + ", '"
+                    + jTextFieldDescricao.getText() + "' )";
             try {
                 //executando a instrução sql
                 conex.execute(sql);
@@ -55,65 +155,98 @@ public class FormPrincipal extends javax.swing.JFrame {
             }
             //fechando a conexão com o banco de dados
             con.desconectar();
-            JOptionPane.showMessageDialog(null, "Aluno cadastrado com sucesso");
+
+            //Limpando os textos das caixas
+            jTextFieldID.setText("");
+            jTextFieldNome.setText("");
+            jTextFieldPreco.setText("");
+            jTextFieldQuantidade.setText("");
+            jTextFieldDescricao.setText("");
+
+            //Mensagem de cadastro com sucesso
+            JOptionPane.showMessageDialog(null, "Produto cadastrado com sucesso");
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
     }
-    
-    private void atualizar(){
+
+    private void atualizar() {
         try {
-            int matricula = Integer.parseInt(jTextFieldMatricula.getText());
+            int id = Integer.parseInt(jTextFieldID.getText());
             //abrindo a conexão
             Statement conex = con.conectar();
             //instrução sql correspondente a atualização do aluno
-            String sql = "update aluno set " + " nome = '" + jTextFieldNome.getText()
-                    + "' where matricula = " + matricula;
+            String sql = "update produtos set " + " nome = '" + jTextFieldNome.getText()
+                    + "', preco = " + jTextFieldPreco.getText()
+                    + ", qtd = " + jTextFieldQuantidade.getText()
+                    + ", tipoProduto = '" + jTextFieldDescricao.getText()
+                    + "' where id = " + id;
 
             //executando a instrução sql
             conex.execute(sql);
+
             //fechando a conexão com o banco de dados
             con.desconectar();
-            JOptionPane.showMessageDialog(null, "Aluno atualizado com sucesso");
+
+            //Limpando os textos das caixas
+            jTextFieldID.setText("");
+            jTextFieldNome.setText("");
+            jTextFieldPreco.setText("");
+            jTextFieldQuantidade.setText("");
+            jTextFieldDescricao.setText("");
+
+            //Mensagem de atualização com sucesso
+            JOptionPane.showMessageDialog(null, "Produto atualizado com sucesso");
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
     }
-    private void remover(){
+
+    private void remover() {
         try {
             //abrindo a conexão
             Statement conex = con.conectar();
-            int matricula = Integer.parseInt(jTextFieldMatricula.getText());
+            int id = Integer.parseInt(jTextFieldID.getText());
             //instrução sql correspondente a remoção do aluno
-            String sql = "delete from aluno where matricula = "
-                    + matricula;
+            String sql = "delete from produtos where id = "
+                    + id;
 
             //executando a instrução sql
             conex.execute(sql);
             //fechando a conexão com o banco de dados
             con.desconectar();
-            JOptionPane.showMessageDialog(null, "Aluno removido com sucesso");
+
+            //Limpando os textos das caixas
+            jTextFieldID.setText("");
+            jTextFieldNome.setText("");
+            jTextFieldPreco.setText("");
+            jTextFieldQuantidade.setText("");
+            jTextFieldDescricao.setText("");
+
+            //Mensagem de removido com sucesso
+            JOptionPane.showMessageDialog(null, "Produto removido com sucesso");
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
     }
-    
-    private void listar(){
+
+    private void listar() {
         DefaultTableModel modelo = new DefaultTableModel();
         //atribuindo as colunas da tabela
-        modelo.setColumnIdentifiers(new String[]{"Matricula", "Nome"});
+        modelo.setColumnIdentifiers(new String[]{"ID", "Nome", "Preço", "Quantidade", "Descrição"});
         try {
             // TODO add your handling code here:
 
             //abrindo a conexão
             Statement conex = con.conectar();
             //instrução sql correspondente a seleção dos alunos
-            String sql = "SELECT matricula, nome FROM aluno order by nome";
+            String sql = "SELECT id, nome, preco, qtd, tipoProduto FROM produtos order by nome";
 
             //executando a instrução sql
             ResultSet rs = conex.executeQuery(sql);
             while (rs.next()) {
-                modelo.addRow(new String[]{"" + rs.getInt("matricula"), rs.getString("nome")});
+                modelo.addRow(new String[]{"" + rs.getInt("id"), rs.getString("nome"),
+                    rs.getString("preco"), rs.getString("qtd"), rs.getString("tipoProduto")});
             }
             //fechando a conexão com o banco de dados
             con.desconectar();
@@ -122,6 +255,7 @@ public class FormPrincipal extends javax.swing.JFrame {
         }
         jTable1.setModel(modelo);
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -131,7 +265,7 @@ public class FormPrincipal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTextFieldMatricula = new javax.swing.JTextField();
+        jTextFieldID = new javax.swing.JTextField();
         jTextFieldNome = new javax.swing.JTextField();
         jButtonCadastrar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -144,15 +278,21 @@ public class FormPrincipal extends javax.swing.JFrame {
         jButtonTestarConexao = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
+        jTextFieldQuantidade = new javax.swing.JTextField();
+        jTextFieldDescricao = new javax.swing.JTextField();
+        jLabeID = new javax.swing.JLabel();
+        jTextFieldPreco = new javax.swing.JTextField();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1Arquivo = new javax.swing.JMenu();
+        jMenuItemGerarRelatorio = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Manipulação de Alunos - Copyright © ®  Professor Melo");
+        setTitle("Controle De Estoque - Copyright © ®");
 
-        jTextFieldMatricula.addActionListener(new java.awt.event.ActionListener() {
+        jTextFieldID.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldMatriculaActionPerformed(evt);
+                jTextFieldIDActionPerformed(evt);
             }
         });
 
@@ -165,15 +305,29 @@ public class FormPrincipal extends javax.swing.JFrame {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Title 1", "Title 2", "Title 3", "Title 4", "Título 5"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         jButtonListar.setText("Listar");
@@ -212,9 +366,30 @@ public class FormPrincipal extends javax.swing.JFrame {
 
         jLabel4.setText("Quantidade:");
 
-        jTextField1.setText("jTextField1");
+        jLabeID.setText("ID:");
 
-        jTextField2.setText("jTextField2");
+        jMenu1Arquivo.setText("Arquivo");
+
+        jMenuItemGerarRelatorio.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemGerarRelatorio.setText("Gerar Relatorio");
+        jMenuItemGerarRelatorio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemGerarRelatorioActionPerformed(evt);
+            }
+        });
+        jMenu1Arquivo.add(jMenuItemGerarRelatorio);
+
+        jMenuBar1.add(jMenu1Arquivo);
+
+        jMenu2.setText("Imprimir");
+        jMenu2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu2MouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -223,59 +398,68 @@ public class FormPrincipal extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(173, 173, 173)
-                        .addComponent(jButtonTestarConexao))
-                    .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jButtonCadastrar)
-                                .addGap(70, 70, 70)
-                                .addComponent(jButtonListar)
-                                .addGap(79, 79, 79)
-                                .addComponent(jButtonRemover)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButtonAtualizar))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 508, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel4)
                                     .addComponent(jLabel1)
-                                    .addComponent(jLabel3))
-                                .addGap(21, 21, 21)
+                                    .addComponent(jLabel2)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(jLabeID)
+                                            .addGap(35, 35, 35))
+                                        .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextFieldMatricula, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jTextFieldID, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jTextFieldQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jTextFieldPreco, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addComponent(jTextFieldDescricao)
                                     .addComponent(jTextFieldNome)))))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(jLabel4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(27, Short.MAX_VALUE))
+                        .addComponent(jButtonCadastrar)
+                        .addGap(113, 113, 113)
+                        .addComponent(jButtonListar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 112, Short.MAX_VALUE)
+                        .addComponent(jButtonRemover)
+                        .addGap(91, 91, 91)
+                        .addComponent(jButtonAtualizar)))
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(234, 234, 234)
+                .addComponent(jButtonTestarConexao)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(24, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabeID)
+                    .addComponent(jTextFieldID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
+                .addGap(9, 9, 9)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(jTextFieldDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jTextFieldMatricula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldPreco, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(2, 2, 2)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
+                    .addComponent(jTextFieldQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonCadastrar)
                     .addComponent(jButtonListar)
@@ -283,20 +467,21 @@ public class FormPrincipal extends javax.swing.JFrame {
                     .addComponent(jButtonAtualizar))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jButtonTestarConexao)
-                .addGap(24, 24, 24))
+                .addGap(17, 17, 17))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextFieldMatriculaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldMatriculaActionPerformed
+    private void jTextFieldIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldIDActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldMatriculaActionPerformed
+    }//GEN-LAST:event_jTextFieldIDActionPerformed
 
     private void jButtonCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCadastrarActionPerformed
-       cadastrar();
+        cadastrar();
+        listar();
     }//GEN-LAST:event_jButtonCadastrarActionPerformed
 
     private void jButtonListarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonListarActionPerformed
@@ -306,12 +491,14 @@ public class FormPrincipal extends javax.swing.JFrame {
     private void jButtonRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoverActionPerformed
         // TODO add your handling code here:
         remover();
+        listar();
 
     }//GEN-LAST:event_jButtonRemoverActionPerformed
 
     private void jButtonAtualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAtualizarActionPerformed
         // TODO add your handling code here:
         atualizar();
+        listar();
     }//GEN-LAST:event_jButtonAtualizarActionPerformed
 
     private void jButtonTestarConexaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTestarConexaoActionPerformed
@@ -320,12 +507,64 @@ public class FormPrincipal extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, "Conectou");
             con.desconectar();
             JOptionPane.showMessageDialog(rootPane, "Desconectou");
-        } catch (ClassNotFoundException ex) {
-            JOptionPane.showMessageDialog(rootPane, ex.getMessage());
-        } catch (SQLException ex) {
+        } catch (ClassNotFoundException | SQLException ex) {
             JOptionPane.showMessageDialog(rootPane, ex.getMessage());
         }
     }//GEN-LAST:event_jButtonTestarConexaoActionPerformed
+
+    private void jMenuItemGerarRelatorioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemGerarRelatorioActionPerformed
+        gerarRelatorio();
+    }//GEN-LAST:event_jMenuItemGerarRelatorioActionPerformed
+
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // TODO add your handling code here:
+
+        int index = jTable1.getSelectedRow();
+
+        TableModel model = jTable1.getModel();
+
+        String id = model.getValueAt(index, 0).toString();
+        String nome = model.getValueAt(index, 1).toString();
+        String preco = model.getValueAt(index, 2).toString();
+        String quantidade = model.getValueAt(index, 3).toString();
+        String descricao = model.getValueAt(index, 4).toString();
+
+        jTextFieldID.setText(id);
+        jTextFieldNome.setText(nome);
+        jTextFieldPreco.setText(preco);
+        jTextFieldQuantidade.setText(quantidade);
+        jTextFieldDescricao.setText(descricao);
+
+        /*int column = 0;
+        int row = jTable1.getSelectedRow();
+        String value = jTable1.getModel().getValueAt(row, column).toString();
+        jTextFieldID.setText(value);*/
+    }//GEN-LAST:event_jTable1MouseClicked
+
+    private void jMenu2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu2MouseClicked
+        
+        MessageFormat header = new MessageFormat("Controle de Estoque");
+        MessageFormat footer = new MessageFormat("Pagina {0,number,integer}");
+        
+        
+        try {
+            // TODO add your handling code here:
+            
+            jTable1.print(JTable.PrintMode.FIT_WIDTH, header, footer);
+            
+            /*Boolean printdata = jTable1.print();
+            
+            if(printdata){
+                JOptionPane.showMessageDialog(null, "Impressão terminada");
+            }else{
+                JOptionPane.showMessageDialog(null, "Imprimindo...");
+            }*/
+        } catch (PrinterException ex) {
+            //System.err.format("Impressora não encontrada %s%n", ex.getMessage());
+            Logger.getLogger(FormPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jMenu2MouseClicked
 
     /**
      * @param args the command line arguments
@@ -343,15 +582,22 @@ public class FormPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton jButtonListar;
     private javax.swing.JButton jButtonRemover;
     private javax.swing.JButton jButtonTestarConexao;
+    private javax.swing.JLabel jLabeID;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JMenu jMenu1Arquivo;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItemGerarRelatorio;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextFieldMatricula;
+    private javax.swing.JTextField jTextFieldDescricao;
+    private javax.swing.JTextField jTextFieldID;
     private javax.swing.JTextField jTextFieldNome;
+    private javax.swing.JTextField jTextFieldPreco;
+    private javax.swing.JTextField jTextFieldQuantidade;
     // End of variables declaration//GEN-END:variables
+
 }
