@@ -87,7 +87,8 @@ public class Login extends javax.swing.JFrame {
         jLabelBackground = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Tela de Logiin");
+        setTitle("Tela de Login");
+        setLocation(new java.awt.Point(400, 150));
         setMinimumSize(new java.awt.Dimension(455, 280));
         setResizable(false);
         getContentPane().setLayout(null);
