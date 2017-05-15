@@ -18,7 +18,7 @@ public class Conexao {
     private static Statement stmt;
     private static Connection conn;
     
-     public static Statement conectar(String driver, String dataBaseName, String url, String usuario, String senha) throws ClassNotFoundException, SQLException {
+     public static Statement conectar(String[] dataBaseConfig) throws ClassNotFoundException, SQLException {
         try {
 
 //            String driver = "com.mysql.jdbc.Driver";
@@ -26,8 +26,8 @@ public class Conexao {
 //            String url = "jdbc:mysql://localhost:3306/";
 //            String usuario = "root";
 //            String senha = "";
-            Class.forName(driver).newInstance();
-            conn = (Connection) DriverManager.getConnection(url + dataBaseName, usuario, senha);
+            Class.forName(dataBaseConfig[0]).newInstance();
+            conn = (Connection) DriverManager.getConnection(dataBaseConfig[2] + dataBaseConfig[1], dataBaseConfig[3], dataBaseConfig[4]);
             stmt = conn.createStatement();
             return stmt;
         } catch (InstantiationException ex) {

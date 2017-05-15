@@ -27,11 +27,28 @@ import javax.swing.table.DefaultTableModel;
  */
 public class FormPrincipal extends javax.swing.JFrame {
 
+    
+    private Statement conex;
     /**
      * Creates new form FormPrincipal
      */
     public FormPrincipal() {
         initComponents();
+        String[] dataBaseConfig = new String[5];
+        dataBaseConfig[0] = "com.mysql.jdbc.Driver";
+        dataBaseConfig[1] = "merciaria";
+        dataBaseConfig[2] = "jdbc:mysql://localhost:3306/";
+        dataBaseConfig[3] = "root";
+        dataBaseConfig[4] = "";
+        
+        
+        try {
+            this.conex = Conexao.conectar(dataBaseConfig);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(FormPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(FormPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
         listar();
     }
     
@@ -41,20 +58,16 @@ public class FormPrincipal extends javax.swing.JFrame {
          try {
             // TODO add your handling code here:
             //abrindo a conexão
-            Statement conex = Conexao.conectar();
+//            Statement conex = Conexao.conectar();
             //instrução sql correspondente a inserção do aluno
             String sql = "INSERT INTO merciaria (nome, matricula)";
             sql += "VALUES ('" + jTextFieldNome.getText() + "', "
                     + jTextFieldMatricula.getText() + ")";
-            try {
                 //executando a instrução sql
                 conex.execute(sql);
-            } catch (SQLException e) {
-                //caso haja algum erro neste método será levantada esta execeção
-                throw new Exception("Erro ao executar inserção: " + e.getMessage());
-            }
+   
             //fechando a conexão com o banco de dados
-            con.desconectar();
+            conex.close();
             JOptionPane.showMessageDialog(null, "Aluno cadastrado com sucesso");
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage());
@@ -65,7 +78,7 @@ public class FormPrincipal extends javax.swing.JFrame {
         try {
             int matricula = Integer.parseInt(jTextFieldMatricula.getText());
             //abrindo a conexão
-            Statement conex = con.conectar();
+//            Statement conex = con.conectar();
             //instrução sql correspondente a atualização do aluno
             String sql = "update aluno set " + " nome = '" + jTextFieldNome.getText()
                     + "' where matricula = " + matricula;
@@ -73,7 +86,7 @@ public class FormPrincipal extends javax.swing.JFrame {
             //executando a instrução sql
             conex.execute(sql);
             //fechando a conexão com o banco de dados
-            con.desconectar();
+            conex.close();
             JOptionPane.showMessageDialog(null, "Aluno atualizado com sucesso");
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage());
@@ -82,7 +95,7 @@ public class FormPrincipal extends javax.swing.JFrame {
     private void remover(){
         try {
             //abrindo a conexão
-            Statement conex = con.conectar();
+//            Statement conex = con.conectar();
             int matricula = Integer.parseInt(jTextFieldMatricula.getText());
             //instrução sql correspondente a remoção do aluno
             String sql = "delete from aluno where matricula = "
@@ -106,7 +119,7 @@ public class FormPrincipal extends javax.swing.JFrame {
             // TODO add your handling code here:
 
             //abrindo a conexão
-            Statement conex = con.conectar();
+//            Statement conex = con.conectar();
             //instrução sql correspondente a seleção dos alunos
             String sql = "SELECT matricula, nome FROM aluno order by nome";
 
@@ -116,7 +129,7 @@ public class FormPrincipal extends javax.swing.JFrame {
                 modelo.addRow(new String[]{"" + rs.getInt("matricula"), rs.getString("nome")});
             }
             //fechando a conexão com o banco de dados
-            con.desconectar();
+            conex.close();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
@@ -317,7 +330,7 @@ public class FormPrincipal extends javax.swing.JFrame {
 
     private void jButtonTestarConexaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTestarConexaoActionPerformed
         try {
-            con.conectar();
+            conex.conectar();
             JOptionPane.showMessageDialog(rootPane, "Conectou");
             con.desconectar();
             JOptionPane.showMessageDialog(rootPane, "Desconectou");
