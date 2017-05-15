@@ -40,223 +40,17 @@ import javax.swing.table.TableModel;
  */
 public class FormPrincipal extends javax.swing.JFrame {
 
+    private Conexao con;
+    
+    
     /**
      * Creates new form FormPrincipal
      */
     public FormPrincipal() {
+        this.con = new Conexao();
         initComponents();
         listar();
     }
-
-    Conexao con = new Conexao();
-
-    private void gerarRelatorio() {
-
-        // TODO add your handling code here:
-        Document document = new Document();
-//mudando a fonte, tamanho e colocando em negrito
-        Font font1 = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD);
-        Font font2 = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD);
-
-        try {
-            Statement conex = con.conectar();
-            String sql = "SELECT * FROM produtos ORDER BY qtd";
-            //ResultSet rs = stmt.executeQuery(sql);
-            ResultSet rs = conex.executeQuery(sql);
-
-            PdfWriter.getInstance(document, new FileOutputStream("PDF_Rlatorio.pdf"));
-            document.open();
-
-// adicionando um Titulo no documento
-            Paragraph title = new Paragraph("Produtos Cadastrados", font1);
-
-//alinhado o titulo na forma centralizada
-            title.setAlignment(Element.ALIGN_CENTER);
-            document.add(title);
-            //Paragraph paragraph2;
-            Paragraph paragraphSpace = new Paragraph();
-
-            paragraphSpace.setSpacingBefore(50);
-
-            document.add(paragraphSpace);
-            /*
-            while (rs.next()) {
-                paragraph2 = new Paragraph(rs.getString(1) + " - " + rs.getString(2));
-                
-                //paragraph2.setSpacingAfter(10);
-                paragraph2.setSpacingBefore(20);
-            document.add(paragraph2);
-
-            }*/
-
-//criando uma tabela
-            PdfPTable table = new PdfPTable(2); // 2 colunas.
-//adicionando as celulas
-            PdfPCell cell1 = new PdfPCell(new Paragraph("Produto", font2));
-            PdfPCell cell2 = new PdfPCell(new Paragraph("Quantidade", font2));
-
-//alinhamento do que tem dentro da celula
-            cell1.setHorizontalAlignment(Element.ALIGN_CENTER);
-
-            cell2.setHorizontalAlignment(Element.ALIGN_CENTER);
-
-//finalizando as celulas nome, email na tabela
-            table.addCell(cell1);
-            table.addCell(cell2);
-
-            while (rs.next()) {
-//criando varias celulas dentro do while
-                PdfPCell cell3 = new PdfPCell(new Paragraph(rs.getString(2)));
-                PdfPCell cell4 = new PdfPCell(new Paragraph(rs.getString(4)));
-
-                cell3.setHorizontalAlignment(Element.ALIGN_CENTER);
-
-                cell4.setHorizontalAlignment(Element.ALIGN_CENTER);
-
-//finalizando as celulas do while na tabela
-                table.addCell(cell3);
-                table.addCell(cell4);
-
-            }
-//finalizando a tabela dentro do pdf
-            document.add(table);
-
-//fechando a conexão com o banco de dados
-            con.desconectar();
-
-        } catch (DocumentException | IOException de) {
-            System.err.println(de.getMessage());
-        } catch (SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(FormPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-//encerrando o documento pdf
-        document.close();
-        JOptionPane.showMessageDialog(null, "Relatorio gerado com sucesso!");
-    }
-
-    private void cadastrar() {
-        try {
-            // TODO add your handling code here:
-            //abrindo a conexão
-            Statement conex = con.conectar();
-            //instrução sql correspondente a inserção do aluno
-            String sql = "INSERT INTO produtos (id, nome, preco, qtd, tipoProduto)";
-            sql += "VALUES (" + jTextFieldID.getText() + ", '"
-                    + jTextFieldNome.getText() + "', "
-                    + jTextFieldPreco.getText() + ", "
-                    + jTextFieldQuantidade.getText() + ", '"
-                    + jTextFieldDescricao.getText() + "' )";
-            try {
-                //executando a instrução sql
-                conex.execute(sql);
-            } catch (SQLException e) {
-                //caso haja algum erro neste método será levantada esta execeção
-                throw new Exception("Erro ao executar inserção: " + e.getMessage());
-            }
-            //fechando a conexão com o banco de dados
-            con.desconectar();
-
-            //Limpando os textos das caixas
-            jTextFieldID.setText("");
-            jTextFieldNome.setText("");
-            jTextFieldPreco.setText("");
-            jTextFieldQuantidade.setText("");
-            jTextFieldDescricao.setText("");
-
-            //Mensagem de cadastro com sucesso
-            JOptionPane.showMessageDialog(null, "Produto cadastrado com sucesso");
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, ex.getMessage());
-        }
-    }
-
-    private void atualizar() {
-        try {
-            int id = Integer.parseInt(jTextFieldID.getText());
-            //abrindo a conexão
-            Statement conex = con.conectar();
-            //instrução sql correspondente a atualização do aluno
-            String sql = "update produtos set " + " nome = '" + jTextFieldNome.getText()
-                    + "', preco = " + jTextFieldPreco.getText()
-                    + ", qtd = " + jTextFieldQuantidade.getText()
-                    + ", tipoProduto = '" + jTextFieldDescricao.getText()
-                    + "' where id = " + id;
-
-            //executando a instrução sql
-            conex.execute(sql);
-
-            //fechando a conexão com o banco de dados
-            con.desconectar();
-
-            //Limpando os textos das caixas
-            jTextFieldID.setText("");
-            jTextFieldNome.setText("");
-            jTextFieldPreco.setText("");
-            jTextFieldQuantidade.setText("");
-            jTextFieldDescricao.setText("");
-
-            //Mensagem de atualização com sucesso
-            JOptionPane.showMessageDialog(null, "Produto atualizado com sucesso");
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, ex.getMessage());
-        }
-    }
-
-    private void remover() {
-        try {
-            //abrindo a conexão
-            Statement conex = con.conectar();
-            int id = Integer.parseInt(jTextFieldID.getText());
-            //instrução sql correspondente a remoção do aluno
-            String sql = "delete from produtos where id = "
-                    + id;
-
-            //executando a instrução sql
-            conex.execute(sql);
-            //fechando a conexão com o banco de dados
-            con.desconectar();
-
-            //Limpando os textos das caixas
-            jTextFieldID.setText("");
-            jTextFieldNome.setText("");
-            jTextFieldPreco.setText("");
-            jTextFieldQuantidade.setText("");
-            jTextFieldDescricao.setText("");
-
-            //Mensagem de removido com sucesso
-            JOptionPane.showMessageDialog(null, "Produto removido com sucesso");
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, ex.getMessage());
-        }
-    }
-
-    private void listar() {
-        DefaultTableModel modelo = new DefaultTableModel();
-        //atribuindo as colunas da tabela
-        modelo.setColumnIdentifiers(new String[]{"ID", "Nome", "Preço", "Quantidade", "Descrição"});
-        try {
-            // TODO add your handling code here:
-
-            //abrindo a conexão
-            Statement conex = con.conectar();
-            //instrução sql correspondente a seleção dos alunos
-            String sql = "SELECT id, nome, preco, qtd, tipoProduto FROM produtos order by nome";
-
-            //executando a instrução sql
-            ResultSet rs = conex.executeQuery(sql);
-            while (rs.next()) {
-                modelo.addRow(new String[]{"" + rs.getInt("id"), rs.getString("nome"),
-                    rs.getString("preco"), rs.getString("qtd"), rs.getString("tipoProduto")});
-            }
-            //fechando a conexão com o banco de dados
-            con.desconectar();
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, ex.getMessage());
-        }
-        jTable1.setModel(modelo);
-    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -490,25 +284,34 @@ public class FormPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldIDActionPerformed
 
     private void jButtonCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCadastrarActionPerformed
-        cadastrar();
+        Produto produto1 = new Produto(Integer.valueOf(jTextFieldID.getText()), jTextFieldNome.getText(), Double.valueOf(jTextFieldPreco.getText()), 
+                                Integer.valueOf(jTextFieldQuantidade.getText()), jTextFieldDescricao.getText());
+        
+        con.cadastrar(produto1);
         listar();
+        clearFields();
     }//GEN-LAST:event_jButtonCadastrarActionPerformed
 
     private void jButtonListarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonListarActionPerformed
         listar();
+        clearFields();
     }//GEN-LAST:event_jButtonListarActionPerformed
 
     private void jButtonRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoverActionPerformed
         // TODO add your handling code here:
-        remover();
+        con.remover(Integer.parseInt(jTextFieldID.getText()));
         listar();
+        clearFields();
 
     }//GEN-LAST:event_jButtonRemoverActionPerformed
 
     private void jButtonAtualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAtualizarActionPerformed
         // TODO add your handling code here:
-        atualizar();
+        Produto novoProduto = new Produto(Integer.valueOf(jTextFieldID.getText()), jTextFieldNome.getText(), Double.valueOf(jTextFieldPreco.getText()), 
+                                Integer.valueOf(jTextFieldQuantidade.getText()), jTextFieldDescricao.getText());
+        con.atualizar(novoProduto);
         listar();
+        clearFields();
     }//GEN-LAST:event_jButtonAtualizarActionPerformed
 
     private void jButtonTestarConexaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTestarConexaoActionPerformed
@@ -523,7 +326,7 @@ public class FormPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonTestarConexaoActionPerformed
 
     private void jMenuItemGerarRelatorioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemGerarRelatorioActionPerformed
-        gerarRelatorio();
+        con.gerarRelatorio();
     }//GEN-LAST:event_jMenuItemGerarRelatorioActionPerformed
 
 
@@ -611,6 +414,18 @@ public class FormPrincipal extends javax.swing.JFrame {
     private javax.swing.JTextField jTextFieldQuantidade;
     // End of variables declaration//GEN-END:variables
 
+    private void clearFields(){
+        jTextFieldID.setText("");
+        jTextFieldNome.setText("");
+        jTextFieldPreco.setText("");
+        jTextFieldQuantidade.setText("");
+        jTextFieldDescricao.setText("");
+    }
+    
+    private void listar(){
+        jTable1.setModel(con.listar());
+    }
+    
     private void fechar() {
         WindowEvent windowsfechar = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
         Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(windowsfechar);
