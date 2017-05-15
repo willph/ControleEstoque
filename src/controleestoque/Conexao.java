@@ -251,7 +251,7 @@ public class Conexao {
             //executando a instrução sql
             ResultSet rs = conex.executeQuery(sql);
             while (rs.next()) {
-                modelo.addRow(new String[]{"" + rs.getInt("id"), rs.getString("nome"),
+                modelo.addRow(new String[]{"" + rs.getInt("id"), rs.getString("nome"), "R$ "+
                     rs.getString("preco"), rs.getString("qtd"), rs.getString("tipoProduto")});
             }
             //fechando a conexão com o banco de dados

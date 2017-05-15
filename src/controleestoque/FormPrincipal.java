@@ -27,9 +27,8 @@ import javax.swing.table.TableModel;
  */
 public class FormPrincipal extends javax.swing.JFrame {
 
-    private Conexao con;
-    
-    
+    private final Conexao con;
+
     /**
      * Creates new form FormPrincipal
      */
@@ -38,6 +37,7 @@ public class FormPrincipal extends javax.swing.JFrame {
         initComponents();
         listar();
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -272,9 +272,9 @@ public class FormPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldIDActionPerformed
 
     private void jButtonCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCadastrarActionPerformed
-        Produto produto1 = new Produto(Integer.valueOf(jTextFieldID.getText()), jTextFieldNome.getText(), Double.valueOf(jTextFieldPreco.getText()), 
-                                Integer.valueOf(jTextFieldQuantidade.getText()), jTextFieldDescricao.getText());
-        
+        Produto produto1 = new Produto(Integer.valueOf(jTextFieldID.getText()), jTextFieldNome.getText(), Double.valueOf(jTextFieldPreco.getText()),
+                Integer.valueOf(jTextFieldQuantidade.getText()), jTextFieldDescricao.getText());
+
         con.cadastrar(produto1);
         listar();
         clearFields();
@@ -295,8 +295,8 @@ public class FormPrincipal extends javax.swing.JFrame {
 
     private void jButtonAtualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAtualizarActionPerformed
         // TODO add your handling code here:
-        Produto novoProduto = new Produto(Integer.valueOf(jTextFieldID.getText()), jTextFieldNome.getText(), Double.valueOf(jTextFieldPreco.getText()), 
-                                Integer.valueOf(jTextFieldQuantidade.getText()), jTextFieldDescricao.getText());
+        Produto novoProduto = new Produto(Integer.valueOf(jTextFieldID.getText()), jTextFieldNome.getText(), Double.valueOf(jTextFieldPreco.getText()),
+                Integer.valueOf(jTextFieldQuantidade.getText()), jTextFieldDescricao.getText());
         con.atualizar(novoProduto);
         listar();
         clearFields();
@@ -321,62 +321,25 @@ public class FormPrincipal extends javax.swing.JFrame {
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         // TODO add your handling code here:
 
-        int index = jTable1.getSelectedRow();
-
-        TableModel model = jTable1.getModel();
-
-        String id = model.getValueAt(index, 0).toString();
-        String nome = model.getValueAt(index, 1).toString();
-        String preco = model.getValueAt(index, 2).toString();
-        String quantidade = model.getValueAt(index, 3).toString();
-        String descricao = model.getValueAt(index, 4).toString();
-
-        jTextFieldID.setText(id);
-        jTextFieldNome.setText(nome);
-        jTextFieldPreco.setText(preco);
-        jTextFieldQuantidade.setText(quantidade);
-        jTextFieldDescricao.setText(descricao);
-
-        /*int column = 0;
-        int row = jTable1.getSelectedRow();
-        String value = jTable1.getModel().getValueAt(row, column).toString();
-        jTextFieldID.setText(value);*/
+        selectTableRow();
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jMenu2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu2MouseClicked
 
-        MessageFormat header = new MessageFormat("Controle de Estoque");
-        MessageFormat footer = new MessageFormat("Pagina {0,number,integer}");
-
-        try {
-            // TODO add your handling code here:
-
-            jTable1.print(JTable.PrintMode.FIT_WIDTH, header, footer);
-
-            /*Boolean printdata = jTable1.print();
-            
-            if(printdata){
-                JOptionPane.showMessageDialog(null, "Impressão terminada");
-            }else{
-                JOptionPane.showMessageDialog(null, "Imprimindo...");
-            }*/
-        } catch (PrinterException ex) {
-            //System.err.format("Impressora não encontrada %s%n", ex.getMessage());
-            Logger.getLogger(FormPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        imprimir();
     }//GEN-LAST:event_jMenu2MouseClicked
 
     private void jButtonLogoffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLogoffActionPerformed
         // TODO add your handling code here:
         fechar();
         new Login().setVisible(true);
-        
+
     }//GEN-LAST:event_jButtonLogoffActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAtualizar;
     private javax.swing.JButton jButtonCadastrar;
@@ -402,21 +365,66 @@ public class FormPrincipal extends javax.swing.JFrame {
     private javax.swing.JTextField jTextFieldQuantidade;
     // End of variables declaration//GEN-END:variables
 
-    private void clearFields(){
+    private void clearFields() {
         jTextFieldID.setText("");
         jTextFieldNome.setText("");
         jTextFieldPreco.setText("");
         jTextFieldQuantidade.setText("");
         jTextFieldDescricao.setText("");
     }
-    
-    private void listar(){
+
+    private void listar() {
         jTable1.setModel(con.listar());
     }
-    
+
     private void fechar() {
         WindowEvent windowsfechar = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
         Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(windowsfechar);
+    }
+
+    private void selectTableRow() {
+        int index = jTable1.getSelectedRow();
+
+        TableModel model = jTable1.getModel();
+
+        String id = model.getValueAt(index, 0).toString();
+        String nome = model.getValueAt(index, 1).toString();
+        String preco = model.getValueAt(index, 2).toString();
+        String quantidade = model.getValueAt(index, 3).toString();
+        String descricao = model.getValueAt(index, 4).toString();
+
+        jTextFieldID.setText(id);
+        jTextFieldNome.setText(nome);
+        jTextFieldPreco.setText(preco);
+        jTextFieldQuantidade.setText(quantidade);
+        jTextFieldDescricao.setText(descricao);
+
+        /*int column = 0;
+        int row = jTable1.getSelectedRow();
+        String value = jTable1.getModel().getValueAt(row, column).toString();
+        jTextFieldID.setText(value);*/
+    }
+
+    private void imprimir() {
+        MessageFormat header = new MessageFormat("Controle de Estoque");
+        MessageFormat footer = new MessageFormat("Pagina {0,number,integer}");
+
+        try {
+            // TODO add your handling code here:
+
+            jTable1.print(JTable.PrintMode.FIT_WIDTH, header, footer);
+
+            /*Boolean printdata = jTable1.print();
+            
+            if(printdata){
+                JOptionPane.showMessageDialog(null, "Impressão terminada");
+            }else{
+                JOptionPane.showMessageDialog(null, "Imprimindo...");
+            }*/
+        } catch (PrinterException ex) {
+            //System.err.format("Impressora não encontrada %s%n", ex.getMessage());
+            Logger.getLogger(FormPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }
