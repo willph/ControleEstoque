@@ -6,6 +6,7 @@
 package controleestoque;
 
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -44,105 +45,81 @@ public class Login extends javax.swing.JFrame {
         jPasswordFieldSenha = new javax.swing.JPasswordField();
         jButtonEntrar = new javax.swing.JButton();
         jButtonSair = new javax.swing.JButton();
+        jLabelBackGround = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Tela de LOGIN");
+        setLocation(new java.awt.Point(300, 200));
+        setMaximumSize(null);
+        setMinimumSize(new java.awt.Dimension(448, 278));
+        setResizable(false);
+        getContentPane().setLayout(null);
 
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Nome");
+        getContentPane().add(jLabel1);
+        jLabel1.setBounds(145, 95, 35, 14);
 
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Senha");
+        getContentPane().add(jLabel2);
+        jLabel2.setBounds(145, 135, 36, 14);
+        getContentPane().add(jTextFieldNome);
+        jTextFieldNome.setBounds(190, 90, 110, 25);
 
-        jButtonEntrar.setText("ENTRAR");
+        jPasswordFieldSenha.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                enter(evt);
+            }
+        });
+        getContentPane().add(jPasswordFieldSenha);
+        jPasswordFieldSenha.setBounds(190, 130, 110, 25);
+
+        jButtonEntrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/controleestoque/botao/botao-login2.png"))); // NOI18N
+        jButtonEntrar.setMaximumSize(new java.awt.Dimension(327, 113));
         jButtonEntrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonEntrarActionPerformed(evt);
             }
         });
+        getContentPane().add(jButtonEntrar);
+        jButtonEntrar.setBounds(230, 180, 75, 25);
 
-        jButtonSair.setText("SAIR");
+        jButtonSair.setIcon(new javax.swing.ImageIcon(getClass().getResource("/controleestoque/botao/btn-sair.png"))); // NOI18N
+        jButtonSair.setLabel("");
         jButtonSair.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSairActionPerformed(evt);
             }
         });
+        getContentPane().add(jButtonSair);
+        jButtonSair.setBounds(162, 180, 60, 24);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(126, 126, 126)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel1))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jButtonEntrar, javax.swing.GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE)
-                        .addComponent(jButtonSair, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jPasswordFieldSenha, javax.swing.GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE)
-                    .addComponent(jTextFieldNome))
-                .addContainerGap(132, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(69, 69, 69)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jTextFieldNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jPasswordFieldSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(27, 27, 27)
-                .addComponent(jButtonEntrar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButtonSair)
-                .addContainerGap(89, Short.MAX_VALUE))
-        );
+        jLabelBackGround.setIcon(new javax.swing.ImageIcon(getClass().getResource("/controleestoque/background/windows_7_black_login.jpg"))); // NOI18N
+        getContentPane().add(jLabelBackGround);
+        jLabelBackGround.setBounds(0, 0, 440, 250);
 
         pack();
     }// </editor-fold>                        
 
     private void jButtonEntrarActionPerformed(java.awt.event.ActionEvent evt) {                                              
         // TODO add your handling code here:
-        String sql = "SELECT * FROM login";
-
-        String nome = jTextFieldNome.getText();
-        String senha = new String(jPasswordFieldSenha.getPassword());
-
-        try {
-            //abrindo a conexão
-            Statement conex = con.conectar();
-            //executando a instrução sql
-            ResultSet rs = conex.executeQuery(sql);
-            while (rs.next()) {
-                
-                // Nome de usuário é o nome da coluna na tabela do banco de dados
-                String unome = rs.getString("nome");
-                String usenha = rs.getString("senha");
-                
-                if ((nome.equals(unome)) && (senha.equals(usenha))) {
-                    fechar();
-                    new FormPrincipal().setVisible(true);
-                    
-                } else {
-                    JOptionPane.showMessageDialog(this, "Nome ou senha incorreto!");
-                }
-
-            }
-
-        } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+        entrar();
     }                                             
 
     private void jButtonSairActionPerformed(java.awt.event.ActionEvent evt) {                                            
         // TODO add your handling code here:
         fechar();
     }                                           
+
+    private void enter(java.awt.event.KeyEvent evt) {                       
+        // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER){
+            entrar();
+        }
+    }                      
 
     /**
      * @param args the command line arguments
@@ -184,6 +161,7 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JButton jButtonSair;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabelBackGround;
     private javax.swing.JPasswordField jPasswordFieldSenha;
     private javax.swing.JTextField jTextFieldNome;
     // End of variables declaration                   
@@ -191,5 +169,38 @@ public class Login extends javax.swing.JFrame {
     private void fechar() {
         WindowEvent windowsfechar = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
         Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(windowsfechar);
+    }
+
+    private void entrar() {
+        String sql = "SELECT * FROM login";
+
+        String nome = jTextFieldNome.getText();
+        String senha = new String(jPasswordFieldSenha.getPassword());
+
+        try {
+            //abrindo a conexão
+            Statement conex = con.conectar();
+            //executando a instrução sql
+            ResultSet rs = conex.executeQuery(sql);
+            while (rs.next()) {
+                
+                // Nome de usuário é o nome da coluna na tabela do banco de dados
+                String unome = rs.getString("nome");
+                String usenha = rs.getString("senha");
+                
+                if ((nome.equals(unome)) && (senha.equals(usenha))) {
+                    fechar();
+                    new FormPrincipal().setVisible(true);
+                    
+                } else {
+                    JOptionPane.showMessageDialog(this, "Nome ou senha incorreto!");
+                }
+
+            }
+
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 }
