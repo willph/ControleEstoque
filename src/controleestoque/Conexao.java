@@ -146,9 +146,8 @@ public class Conexao {
             //abrindo a conexão
             Statement conex = conectar();
             //instrução sql correspondente a inserção do aluno
-            String sql = "INSERT INTO produto (id, nome, preco, qtd, tipoProduto) ";
-            sql += "VALUES ("
-                    + novoProduto.getId() + ", '"
+            String sql = "INSERT INTO produto (nome, preco, qtd, tipoProduto) ";
+            sql += "VALUES ('"
                     + novoProduto.getNome() + "', "
                     + novoProduto.getPreco() + ", "
                     + novoProduto.getQuantidade() + ", '"

@@ -74,6 +74,7 @@ public class FormPrincipal extends javax.swing.JFrame {
         setTitle("Controle De Estoque - Copyright © ®");
         setLocation(new java.awt.Point(300, 50));
 
+        jTextFieldID.setEnabled(false);
         jTextFieldID.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextFieldIDActionPerformed(evt);
@@ -395,7 +396,7 @@ public class FormPrincipal extends javax.swing.JFrame {
 
         jTextFieldID.setText(id);
         jTextFieldNome.setText(nome);
-        jTextFieldPreco.setText(preco);
+        jTextFieldPreco.setText(preco.replace("R$ ", ""));
         jTextFieldQuantidade.setText(quantidade);
         jTextFieldDescricao.setText(descricao);
 
