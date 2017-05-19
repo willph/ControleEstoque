@@ -65,11 +65,11 @@ public class Conexao {
 
         try {
             Statement conex = this.conectar();
-            String sql = "SELECT * FROM produtos ORDER BY qtd";
+            String sql = "SELECT * FROM produto ORDER BY qtd";
             //ResultSet rs = stmt.executeQuery(sql);
             ResultSet rs = conex.executeQuery(sql);
 
-            PdfWriter.getInstance(document, new FileOutputStream("PDF_Rlatorio.pdf"));
+            PdfWriter.getInstance(document, new FileOutputStream("PDF_Relatorio.pdf"));
             document.open();
 
 // adicionando um Titulo no documento
@@ -146,9 +146,10 @@ public class Conexao {
             //abrindo a conexão
             Statement conex = conectar();
             //instrução sql correspondente a inserção do aluno
-            String sql = "INSERT INTO produtos (nome, preco, qtd, tipoProduto) VALUES (" + '';
+            String sql = "INSERT INTO produto (id, nome, preco, qtd, tipoProduto) ";
             sql += "VALUES ("
-                   + novoProduto.getNome() + "', "
+                    + novoProduto.getId() + ", '"
+                    + novoProduto.getNome() + "', "
                     + novoProduto.getPreco() + ", "
                     + novoProduto.getQuantidade() + ", '"
                     + novoProduto.getDescricao() + "' )";
@@ -182,7 +183,7 @@ public class Conexao {
             //abrindo a conexão
             Statement conex = this.conectar();
             //instrução sql correspondente a atualização do aluno
-            String sql = "update produtos set " + " nome = '" + novoProduto.getNome()
+            String sql = "update produto set " + " nome = '" + novoProduto.getNome()
                     + "', preco = " + novoProduto.getPreco()
                     + ", qtd = " + novoProduto.getQuantidade()
                     + ", tipoProduto = '" + novoProduto.getDescricao()
@@ -214,7 +215,7 @@ public class Conexao {
             Statement conex = conectar();
             
             //instrução sql correspondente a remoção do aluno
-            String sql = "delete from produtos where id = "
+            String sql = "delete from produto where id = "
                     + id;
 
             //executando a instrução sql
@@ -246,7 +247,7 @@ public class Conexao {
             //abrindo a conexão
             Statement conex = conectar();
             //instrução sql correspondente a seleção dos alunos
-            String sql = "SELECT id, nome, preco, qtd, tipoProduto FROM produtos order by nome";
+            String sql = "SELECT id, nome, preco, qtd, tipoProduto FROM produto order by nome";
 
             //executando a instrução sql
             ResultSet rs = conex.executeQuery(sql);

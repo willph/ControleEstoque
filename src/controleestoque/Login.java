@@ -36,9 +36,9 @@ public class Login extends javax.swing.JFrame {
     }
 
     private void entrar() {
-        String sql = "SELECT * FROM login";
+        String sql = "SELECT * FROM usuario";
 
-        String nome = jTextFieldNome.getText();
+        String nome = jTextFieldLogin.getText();
         String senha = new String(jPasswordFieldSenha.getPassword());
 
         try {
@@ -49,13 +49,13 @@ public class Login extends javax.swing.JFrame {
             while (rs.next()) {
 
                 // Nome de usuário é o nome da coluna na tabela do banco de dados
-                String unome = rs.getString("nome");
+                String ulogin = rs.getString("login");
                 String usenha = rs.getString("senha");
 
-                if ((nome.equals(unome)) && (senha.equals(usenha))) {
+                if ((nome.equals(ulogin)) && (senha.equals(usenha))) {
                     fechar();
                     new FormPrincipal().setVisible(true);
-
+                    break;
                 } else {
                     JOptionPane.showMessageDialog(this, "Nome ou senha incorreto!");
                 }
@@ -78,13 +78,17 @@ public class Login extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jTextField2 = new javax.swing.JTextField();
         jButtonEntrar = new javax.swing.JButton();
         jButtonSair = new javax.swing.JButton();
-        jLabelNome = new javax.swing.JLabel();
+        jLabelLogin = new javax.swing.JLabel();
         jLabelSenha = new javax.swing.JLabel();
-        jTextFieldNome = new javax.swing.JTextField();
+        jTextFieldLogin = new javax.swing.JTextField();
         jPasswordFieldSenha = new javax.swing.JPasswordField();
         jLabelBackground = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+
+        jTextField2.setText("jTextField2");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Tela de Login");
@@ -111,19 +115,25 @@ public class Login extends javax.swing.JFrame {
         getContentPane().add(jButtonSair);
         jButtonSair.setBounds(140, 180, 58, 25);
 
-        jLabelNome.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabelNome.setForeground(new java.awt.Color(255, 255, 255));
-        jLabelNome.setText("Nome");
-        getContentPane().add(jLabelNome);
-        jLabelNome.setBounds(150, 95, 40, 14);
+        jLabelLogin.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabelLogin.setForeground(new java.awt.Color(255, 255, 255));
+        jLabelLogin.setText("Login");
+        getContentPane().add(jLabelLogin);
+        jLabelLogin.setBounds(150, 95, 40, 14);
 
         jLabelSenha.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabelSenha.setForeground(new java.awt.Color(255, 255, 255));
         jLabelSenha.setText("Senha");
         getContentPane().add(jLabelSenha);
         jLabelSenha.setBounds(150, 135, 40, 14);
-        getContentPane().add(jTextFieldNome);
-        jTextFieldNome.setBounds(190, 90, 110, 25);
+
+        jTextFieldLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldLoginActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jTextFieldLogin);
+        jTextFieldLogin.setBounds(190, 90, 110, 25);
 
         jPasswordFieldSenha.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -136,6 +146,10 @@ public class Login extends javax.swing.JFrame {
         jLabelBackground.setIcon(new javax.swing.ImageIcon(getClass().getResource("/controleestoque/background/windows_7_black_login.jpg"))); // NOI18N
         getContentPane().add(jLabelBackground);
         jLabelBackground.setBounds(0, 0, 450, 250);
+
+        jTextField1.setText("jTextField1");
+        getContentPane().add(jTextField1);
+        jTextField1.setBounds(350, 50, 80, 26);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -156,6 +170,10 @@ public class Login extends javax.swing.JFrame {
             entrar();
         }
     }//GEN-LAST:event_enter
+
+    private void jTextFieldLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldLoginActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldLoginActionPerformed
 
     /**
      * @param args the command line arguments
@@ -196,9 +214,11 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JButton jButtonEntrar;
     private javax.swing.JButton jButtonSair;
     private javax.swing.JLabel jLabelBackground;
-    private javax.swing.JLabel jLabelNome;
+    private javax.swing.JLabel jLabelLogin;
     private javax.swing.JLabel jLabelSenha;
     private javax.swing.JPasswordField jPasswordFieldSenha;
-    private javax.swing.JTextField jTextFieldNome;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField jTextFieldLogin;
     // End of variables declaration//GEN-END:variables
 }
