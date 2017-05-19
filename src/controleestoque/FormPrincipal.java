@@ -272,7 +272,7 @@ public class FormPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldIDActionPerformed
 
     private void jButtonCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCadastrarActionPerformed
-        Produto produto1 = new Produto(Integer.valueOf(jTextFieldID.getText()), jTextFieldNome.getText(), Double.valueOf(jTextFieldPreco.getText()),
+        Produto produto1 = new Produto(jTextFieldNome.getText(), Double.valueOf(jTextFieldPreco.getText()),
                 Integer.valueOf(jTextFieldQuantidade.getText()), jTextFieldDescricao.getText());
 
         con.cadastrar(produto1);

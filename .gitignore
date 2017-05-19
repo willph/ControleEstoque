@@ -33,7 +33,10 @@
 hs_err_pid*\
 \
 \
-/nbproject
+nbproject/
+nbproject/private/private.properties
+nbproject/private/private.xml
+build/classes/controleestoque/*.class
 .directory
 \
 # End of https://www.gitignore.io/api/java\

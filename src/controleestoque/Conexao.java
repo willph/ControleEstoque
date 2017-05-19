@@ -146,9 +146,9 @@ public class Conexao {
             //abrindo a conexão
             Statement conex = conectar();
             //instrução sql correspondente a inserção do aluno
-            String sql = "INSERT INTO produtos (id, nome, preco, qtd, tipoProduto)";
-            sql += "VALUES (" + novoProduto.getId() + ", '"
-                    + novoProduto.getNome() + "', "
+            String sql = "INSERT INTO produtos (nome, preco, qtd, tipoProduto) VALUES (" + '';
+            sql += "VALUES ("
+                   + novoProduto.getNome() + "', "
                     + novoProduto.getPreco() + ", "
                     + novoProduto.getQuantidade() + ", '"
                     + novoProduto.getDescricao() + "' )";
@@ -255,7 +255,7 @@ public class Conexao {
                     rs.getString("preco"), rs.getString("qtd"), rs.getString("tipoProduto")});
             }
             //fechando a conexão com o banco de dados
-            this.desconectar();
+            desconectar();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
