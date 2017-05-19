@@ -78,18 +78,16 @@
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jTextFieldID" min="-2" pref="102" max="-2" attributes="0"/>
-                                  <Component id="jTextFieldQuantidade" min="-2" pref="103" max="-2" attributes="0"/>
-                                  <Component id="jTextFieldPreco" min="-2" pref="102" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                          </Group>
-                          <Component id="jTextFieldDescricao" max="32767" attributes="0"/>
-                          <Component id="jTextFieldNome" alignment="0" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="jTextFieldID" min="-2" pref="102" max="-2" attributes="0"/>
+                          <Component id="jTextFieldQuantidade" min="-2" pref="103" max="-2" attributes="0"/>
+                          <Component id="jTextFieldPreco" min="-2" pref="102" max="-2" attributes="0"/>
+                          <Component id="jTextFieldNome" alignment="0" pref="200" max="32767" attributes="0"/>
+                          <Component id="jTextFieldDescricao" alignment="0" max="32767" attributes="0"/>
                       </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jButtonBuscar" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="jButtonCadastrar" min="-2" max="-2" attributes="0"/>
@@ -124,8 +122,9 @@
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jTextFieldNome" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jButtonBuscar" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jTextFieldDescricao" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -272,6 +271,14 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonLogoffActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="jButtonBuscar">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Buscar"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonBuscarActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>
