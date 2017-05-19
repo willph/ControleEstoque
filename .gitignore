@@ -33,9 +33,6 @@
 hs_err_pid*\
 \
 \
-nbproject/
-nbproject/private/private.properties
-nbproject/private/private.xml
 build/classes/controleestoque/*.class
 .directory
 \
