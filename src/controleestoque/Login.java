@@ -21,6 +21,8 @@ import javax.swing.JOptionPane;
  */
 public class Login extends javax.swing.JFrame {
 
+    private static int usuarioId = 0;
+    
     /**
      * Creates new form Login
      */
@@ -53,6 +55,7 @@ public class Login extends javax.swing.JFrame {
                 String usenha = rs.getString("senha");
 
                 if ((nome.equals(ulogin)) && (senha.equals(usenha))) {
+                    Login.setUsuarioId(rs.getInt("id"));
                     fechar();
                     new FormPrincipal().setVisible(true);
                     break;
@@ -221,4 +224,13 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextFieldLogin;
     // End of variables declaration//GEN-END:variables
+
+    private static void setUsuarioId(int id){
+        Login.usuarioId = id;
+    }
+    
+    public static int getUsuarioId(){
+        return Login.usuarioId;
+    }
+    
 }

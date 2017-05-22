@@ -32,6 +32,7 @@ import javax.swing.table.DefaultTableModel;
 public class Conexao {
     private Statement stmt;
     private Connection conn;
+    private UtilsDbAuditoria auditConection;
     
      public Statement conectar() throws ClassNotFoundException, SQLException {
         try {
@@ -42,8 +43,9 @@ public class Conexao {
             String usuario = "root";
             String senha = "";
             Class.forName(driver).newInstance();
-            conn = (Connection) DriverManager.getConnection(url + dataBaseName, usuario, senha);
-            stmt = conn.createStatement();
+            this.conn = (Connection) DriverManager.getConnection(url + dataBaseName, usuario, senha);
+            this.stmt = conn.createStatement();
+            this.auditConection = new UtilsDbAuditoria(this.stmt);
             return stmt;
         } catch (InstantiationException ex) {
             throw new SQLException(ex.getMessage());
@@ -154,7 +156,10 @@ public class Conexao {
                     + novoProduto.getDescricao() + "' )";
             try {
                 //executando a instrução sql
-                conex.execute(sql);
+//                conex.execute(sql);
+                if (conex.executeUpdate(sql) > 0) {
+                    auditConection.cadastrarAuditoria(novoProduto);
+                }
             } catch (SQLException e) {
                 //caso haja algum erro neste método será levantada esta execeção
                 throw new Exception("Erro ao executar inserção: " + e.getMessage());
