@@ -35,6 +35,8 @@ hs_err_pid*\
 \
 build/classes/controleestoque/*.class
 .directory
+.DS_Store
+src/.DS_Store
 \
 # End of https://www.gitignore.io/api/java\
 }
