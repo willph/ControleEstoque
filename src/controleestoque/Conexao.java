@@ -146,7 +146,7 @@ public class Conexao {
         try {
             // TODO add your handling code here:
             //abrindo a conexão
-            Statement conex = conectar();
+            Statement conex = this.conectar();
             TipoTransacao tipo = verificaTipo(novoProduto.getNome());
             
             //instrução sql correspondente a inserção do aluno
@@ -159,15 +159,15 @@ public class Conexao {
             try {
                 //executando a instrução sql
 //                conex.execute(sql);
-                if (conex.executeUpdate(sql) > 0) {
-                    auditConection.cadastroAuditoria(novoProduto, tipo);
-                }
+                conex.executeUpdate(sql);
+                auditConection.cadastroAuditoria(novoProduto, tipo, conex);
+           
             } catch (SQLException e) {
                 //caso haja algum erro neste método será levantada esta execeção
                 throw new Exception("Erro ao executar inserção: " + e.getMessage());
             }
             //fechando a conexão com o banco de dados
-            desconectar();
+            this.desconectar();
 
             //Mensagem de cadastro com sucesso
             JOptionPane.showMessageDialog(null, "Produto cadastrado com sucesso");
