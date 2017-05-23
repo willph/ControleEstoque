@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: 19-Maio-2017 às 03:25
+-- Generation Time: 23-Maio-2017 às 02:54
 -- Versão do servidor: 10.1.21-MariaDB
 -- PHP Version: 5.6.30
 
@@ -32,9 +32,10 @@ CREATE TABLE `auditoria` (
   `id` int(11) NOT NULL,
   `usuario_id` int(11) NOT NULL,
   `produto_id` int(11) NOT NULL,
-  `data` date DEFAULT NULL,
-  `quantidadeProduto` int(11) DEFAULT NULL,
-  `transacaoTipo` text
+  `data` datetime DEFAULT NULL,
+  `quantidadeProdutoInicial` int(11) DEFAULT NULL,
+  `transacaoTipo` text,
+  `quantidadeProdutoFinal` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -103,12 +104,12 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT for table `auditoria`
 --
 ALTER TABLE `auditoria`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 --
 -- AUTO_INCREMENT for table `produto`
 --
 ALTER TABLE `produto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 --
 -- AUTO_INCREMENT for table `usuario`
 --
@@ -122,8 +123,7 @@ ALTER TABLE `usuario`
 -- Limitadores para a tabela `auditoria`
 --
 ALTER TABLE `auditoria`
-  ADD CONSTRAINT `auditoria_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`id`),
-  ADD CONSTRAINT `auditoria_ibfk_2` FOREIGN KEY (`produto_id`) REFERENCES `produto` (`id`);
+  ADD CONSTRAINT `auditoria_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
