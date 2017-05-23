@@ -297,6 +297,7 @@ public class FormPrincipal extends javax.swing.JFrame {
 
     private void jButtonRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoverActionPerformed
         // TODO add your handling code here:
+        
         con.remover(Integer.parseInt(jTextFieldID.getText()));
         listar();
         clearFields();

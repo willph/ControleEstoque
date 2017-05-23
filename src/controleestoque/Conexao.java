@@ -147,6 +147,8 @@ public class Conexao {
             // TODO add your handling code here:
             //abrindo a conexão
             Statement conex = conectar();
+            TipoTransacao tipo = verificaTipo(novoProduto.getNome());
+            
             //instrução sql correspondente a inserção do aluno
             String sql = "INSERT INTO produto (nome, preco, qtd, tipoProduto) ";
             sql += "VALUES ('"
@@ -158,7 +160,7 @@ public class Conexao {
                 //executando a instrução sql
 //                conex.execute(sql);
                 if (conex.executeUpdate(sql) > 0) {
-                    auditConection.cadastrarAuditoria(novoProduto);
+                    auditConection.cadastroAuditoria(novoProduto, tipo);
                 }
             } catch (SQLException e) {
                 //caso haja algum erro neste método será levantada esta execeção
@@ -166,13 +168,6 @@ public class Conexao {
             }
             //fechando a conexão com o banco de dados
             desconectar();
-
-            //Limpando os textos das caixas
-//            jTextFieldID.setText("");
-//            jTextFieldNome.setText("");
-//            jTextFieldPreco.setText("");
-//            jTextFieldQuantidade.setText("");
-//            jTextFieldDescricao.setText("");
 
             //Mensagem de cadastro com sucesso
             JOptionPane.showMessageDialog(null, "Produto cadastrado com sucesso");
@@ -184,8 +179,10 @@ public class Conexao {
     public void atualizar(Produto novoProduto) {
         try {
             int id = novoProduto.getId();
+            
             //abrindo a conexão
             Statement conex = this.conectar();
+            int quantidadeInicial = getProduto(id, conex).getQuantidade();
             //instrução sql correspondente a atualização do aluno
             String sql = "update produto set " + " nome = '" + novoProduto.getNome()
                     + "', preco = " + novoProduto.getPreco()
@@ -195,16 +192,11 @@ public class Conexao {
 
             //executando a instrução sql
             conex.execute(sql);
+            auditConection.edicaoAuditoria(novoProduto, quantidadeInicial, TipoTransacao.EDICAO, stmt);
+            
 
             //fechando a conexão com o banco de dados
             this.desconectar();
-
-            //Limpando os textos das caixas
-//            jTextFieldID.setText("");
-//            jTextFieldNome.setText("");
-//            jTextFieldPreco.setText("");
-//            jTextFieldQuantidade.setText("");
-//            jTextFieldDescricao.setText("");
 
             //Mensagem de atualização com sucesso
             JOptionPane.showMessageDialog(null, "Produto atualizado com sucesso");
@@ -217,6 +209,7 @@ public class Conexao {
         try {
             //abrindo a conexão
             Statement conex = conectar();
+            Produto produto = getProduto(id, conex);
             
             //instrução sql correspondente a remoção do aluno
             String sql = "delete from produto where id = "
@@ -224,6 +217,9 @@ public class Conexao {
 
             //executando a instrução sql
             conex.execute(sql);
+            auditConection.remocaoAuditoria(produto, TipoTransacao.REMOVEU, conex);
+            
+            
             //fechando a conexão com o banco de dados
             desconectar();
 
@@ -291,5 +287,39 @@ public class Conexao {
         }
         return modelo;
     }
-     
+    
+    public Produto getProduto(int id, Statement conex){
+        Produto produto = null;
+        try {
+
+            //abrindo a conexão
+//            Statement conex = conectar();
+            
+            
+//instrução sql correspondente a seleção dos alunos
+            String sql = "SELECT id, nome, preco, qtd, tipoProduto FROM produto WHERE id = " + id;
+
+            //executando a instrução sql
+            ResultSet rs = conex.executeQuery(sql);
+            while (rs.next()) {
+                produto = new Produto(rs.getInt("id"), rs.getString("nome"), rs.getDouble("preco"), rs.getInt("qtd"), rs.getString("tipoProduto"));
+            }
+            //fechando a conexão com o banco de dados
+//            desconectar();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
+        return produto;
+    }
+    
+    public TipoTransacao verificaTipo(String nomeProduto){
+        TipoTransacao tipo = null;
+        if (auditConection.buscarId(nomeProduto) != 0) {
+            tipo= TipoTransacao.ADICIONOU;
+        } else {
+            tipo= TipoTransacao.CRIACAO;
+        }
+        
+        return tipo;
+    }
 }

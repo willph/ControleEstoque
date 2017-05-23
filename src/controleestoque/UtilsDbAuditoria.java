@@ -33,7 +33,7 @@ public class UtilsDbAuditoria {
         this.usuarioId = Login.getUsuarioId();
     }
     
-    public void cadastrarAuditoria(Produto novoProduto) {
+    public void cadastroAuditoria(Produto novoProduto, TipoTransacao tipo) {
         Date date = Date.from(Instant.now());
         String data = dateFormat.format(date);
         
@@ -42,8 +42,56 @@ public class UtilsDbAuditoria {
             //abrindo a conexão
             Statement conex = stmt;
             //instrução sql correspondente a inserção da auditoria
-            String sql = "INSERT INTO auditoria (usuario_id, produto_id, data, quantidadeProduto) VALUES (%d, %d, '%s', %d);";
-            String sqlFormated = String.format(sql, usuarioId, produtoId, data, novoProduto.getQuantidade());
+            String sql = "INSERT INTO auditoria (usuario_id, produto_id, data, quantidadeProdutoInicial, transacaoTipo) VALUES (%d, %d, '%s', %d, '%s');";
+            String sqlFormated = String.format(sql, usuarioId, produtoId, data, novoProduto.getQuantidade(), tipo.getTipo());
+            
+            try {
+                //executando a instrução sql
+                conex.executeUpdate(sqlFormated);
+            } catch (SQLException e) {
+                //caso haja algum erro neste método será levantada esta execeção
+                throw new Exception("Erro ao executar inserção: " + e.getMessage());
+            }   
+        } catch (Exception ex) {
+//            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
+    }
+    
+    public void remocaoAuditoria(Produto novoProduto, TipoTransacao tipo, Statement stmt) {
+        Date date = Date.from(Instant.now());
+        String data = dateFormat.format(date);
+        
+        int produtoId = buscarId(novoProduto.getNome());
+        try {
+            //abrindo a conexão
+            Statement conex = stmt;
+            //instrução sql correspondente a inserção da auditoria
+            String sql = "INSERT INTO auditoria (usuario_id, produto_id, data, quantidadeProdutoInicial, transacaoTipo, quantidadeProdutoFinal) VALUES (%d, %d, '%s', %d, '%s', %d);";
+            String sqlFormated = String.format(sql, usuarioId, produtoId, data, novoProduto.getQuantidade(), tipo.getTipo(), 0);
+            
+            try {
+                //executando a instrução sql
+                conex.executeUpdate(sqlFormated);
+            } catch (SQLException e) {
+                //caso haja algum erro neste método será levantada esta execeção
+                throw new Exception("Erro ao executar inserção: " + e.getMessage());
+            }   
+        } catch (Exception ex) {
+//            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
+    }
+
+    public void edicaoAuditoria(Produto novoProduto, int quantidadeInicial, TipoTransacao tipo, Statement stmt) {
+        Date date = Date.from(Instant.now());
+        String data = dateFormat.format(date);
+        
+        int produtoId = buscarId(novoProduto.getNome());
+        try {
+            //abrindo a conexão
+            Statement conex = stmt;
+            //instrução sql correspondente a inserção da auditoria
+            String sql = "INSERT INTO auditoria (usuario_id, produto_id, data, quantidadeProdutoInicial, transacaoTipo, quantidadeProdutoFinal) VALUES (%d, %d, '%s', %d, '%s', %d);";
+            String sqlFormated = String.format(sql, usuarioId, produtoId, data, quantidadeInicial, tipo.getTipo(), novoProduto.getQuantidade());
             
             try {
                 //executando a instrução sql
