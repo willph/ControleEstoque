@@ -1,15 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.0
+-- version 4.6.5.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: 23-Maio-2017 às 02:54
+-- Tempo de geração: 26/05/2017 às 01:28
 -- Versão do servidor: 10.1.21-MariaDB
--- PHP Version: 5.6.30
+-- Versão do PHP: 5.6.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
-START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -19,13 +17,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `merciaria`
+-- Banco de dados: `merciaria`
 --
 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `auditoria`
+-- Estrutura para tabela `auditoria`
 --
 
 CREATE TABLE `auditoria` (
@@ -41,7 +39,7 @@ CREATE TABLE `auditoria` (
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `produto`
+-- Estrutura para tabela `produto`
 --
 
 CREATE TABLE `produto` (
@@ -55,29 +53,30 @@ CREATE TABLE `produto` (
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `usuario`
+-- Estrutura para tabela `usuario`
 --
 
 CREATE TABLE `usuario` (
   `id` int(11) NOT NULL,
   `login` text,
   `senha` text,
-  `nome` text NOT NULL
+  `nome` text NOT NULL,
+  `privilegio` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Extraindo dados da tabela `usuario`
+-- Fazendo dump de dados para tabela `usuario`
 --
 
-INSERT INTO `usuario` (`id`, `login`, `senha`, `nome`) VALUES
-(1, 'admin', '1234', '');
+INSERT INTO `usuario` (`id`, `login`, `senha`, `nome`, `privilegio`) VALUES
+(1, 'admin', '1234', '', 'administrador');
 
 --
--- Indexes for dumped tables
+-- Índices de tabelas apagadas
 --
 
 --
--- Indexes for table `auditoria`
+-- Índices de tabela `auditoria`
 --
 ALTER TABLE `auditoria`
   ADD PRIMARY KEY (`id`),
@@ -85,46 +84,45 @@ ALTER TABLE `auditoria`
   ADD KEY `produto_id` (`produto_id`);
 
 --
--- Indexes for table `produto`
+-- Índices de tabela `produto`
 --
 ALTER TABLE `produto`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `usuario`
+-- Índices de tabela `usuario`
 --
 ALTER TABLE `usuario`
   ADD PRIMARY KEY (`id`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT de tabelas apagadas
 --
 
 --
--- AUTO_INCREMENT for table `auditoria`
+-- AUTO_INCREMENT de tabela `auditoria`
 --
 ALTER TABLE `auditoria`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 --
--- AUTO_INCREMENT for table `produto`
+-- AUTO_INCREMENT de tabela `produto`
 --
 ALTER TABLE `produto`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 --
--- AUTO_INCREMENT for table `usuario`
+-- AUTO_INCREMENT de tabela `usuario`
 --
 ALTER TABLE `usuario`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
--- Constraints for dumped tables
+-- Restrições para dumps de tabelas
 --
 
 --
--- Limitadores para a tabela `auditoria`
+-- Restrições para tabelas `auditoria`
 --
 ALTER TABLE `auditoria`
   ADD CONSTRAINT `auditoria_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`id`);
-COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

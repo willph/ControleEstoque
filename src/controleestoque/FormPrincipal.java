@@ -13,13 +13,19 @@ package controleestoque;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import java.awt.print.PrinterException;
-import java.sql.SQLException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  *
@@ -27,15 +33,21 @@ import javax.swing.table.TableModel;
  */
 public class FormPrincipal extends javax.swing.JFrame {
 
-    private final Conexao con;
+    ArrayList<Produto> listaProdutos;
+    FormAlterarProduto alterarProduto;
+    FormNovoUsuario novoUsuario;
 
     /**
      * Creates new form FormPrincipal
+     *
+     * @param privilegio
      */
-    public FormPrincipal() {
-        this.con = new Conexao();
+    public FormPrincipal(String privilegio) {
+
         initComponents();
-        listar();
+        if (privilegio.equals("administrador") == false) {
+            jButtonNovoUsuario.setEnabled(false);
+        }
     }
 
     /**
@@ -54,18 +66,15 @@ public class FormPrincipal extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
         jButtonListar = new javax.swing.JButton();
         jButtonRemover = new javax.swing.JButton();
-        jButtonAtualizar = new javax.swing.JButton();
+        jButtonNovoUsuario = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jButtonTestarConexao = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jTextFieldQuantidade = new javax.swing.JTextField();
         jTextFieldDescricao = new javax.swing.JTextField();
         jLabeID = new javax.swing.JLabel();
         jTextFieldPreco = new javax.swing.JTextField();
-        jButtonLogoff = new javax.swing.JButton();
         jButtonBuscar = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1Arquivo = new javax.swing.JMenu();
         jMenuItemGerarRelatorio = new javax.swing.JMenuItem();
@@ -76,9 +85,10 @@ public class FormPrincipal extends javax.swing.JFrame {
         setLocation(new java.awt.Point(300, 50));
 
         jTextFieldID.setEnabled(false);
-        jTextFieldID.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldIDActionPerformed(evt);
+
+        jTextFieldNome.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextFieldNomeKeyReleased(evt);
             }
         });
 
@@ -116,10 +126,10 @@ public class FormPrincipal extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jTable1);
 
-        jButtonListar.setText("Listar");
+        jButtonListar.setText("Limpar");
         jButtonListar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonListarActionPerformed(evt);
+                jButtonLimparActionPerformed(evt);
             }
         });
 
@@ -130,10 +140,10 @@ public class FormPrincipal extends javax.swing.JFrame {
             }
         });
 
-        jButtonAtualizar.setText("Atualizar");
-        jButtonAtualizar.addActionListener(new java.awt.event.ActionListener() {
+        jButtonNovoUsuario.setText("Novo usuário");
+        jButtonNovoUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonAtualizarActionPerformed(evt);
+                jButtonNovoUsuarioActionPerformed(evt);
             }
         });
 
@@ -141,30 +151,27 @@ public class FormPrincipal extends javax.swing.JFrame {
 
         jLabel2.setText("Nome:");
 
-        jButtonTestarConexao.setText("Testar Conexão");
-        jButtonTestarConexao.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonTestarConexaoActionPerformed(evt);
-            }
-        });
-
         jLabel3.setText("Descrição:");
 
-        jLabel4.setText("Quantidade:");
+        jTextFieldDescricao.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextFieldDescricaoKeyReleased(evt);
+            }
+        });
 
         jLabeID.setText("ID:");
 
-        jButtonLogoff.setText("Logoff");
-        jButtonLogoff.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonLogoffActionPerformed(evt);
-            }
-        });
-
-        jButtonBuscar.setText("Buscar");
+        jButtonBuscar.setText("Consultar");
         jButtonBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonBuscarActionPerformed(evt);
+            }
+        });
+
+        jButton1.setText("Logoff");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
             }
         });
 
@@ -198,10 +205,10 @@ public class FormPrincipal extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 682, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(8, 8, 8)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
                             .addComponent(jLabel1)
                             .addComponent(jLabel2)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -209,36 +216,32 @@ public class FormPrincipal extends javax.swing.JFrame {
                                     .addComponent(jLabeID)
                                     .addGap(35, 35, 35))
                                 .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(14, 14, 14)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jTextFieldID, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextFieldQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextFieldPreco, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextFieldNome, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-                            .addComponent(jTextFieldDescricao))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jTextFieldNome)
+                            .addComponent(jTextFieldDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextFieldPreco, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButtonBuscar)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButtonCadastrar)
-                        .addGap(113, 113, 113)
-                        .addComponent(jButtonListar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 112, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButtonRemover)
-                        .addGap(91, 91, 91)
-                        .addComponent(jButtonAtualizar)))
+                        .addGap(216, 216, 216)
+                        .addComponent(jButtonListar, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButtonNovoUsuario)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(234, 234, 234)
-                .addComponent(jButtonTestarConexao)
-                .addGap(18, 18, 18)
-                .addComponent(jButtonLogoff)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(24, Short.MAX_VALUE)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabeID)
                     .addComponent(jTextFieldID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -255,77 +258,54 @@ public class FormPrincipal extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jTextFieldPreco, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(jTextFieldQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonCadastrar)
                     .addComponent(jButtonListar)
-                    .addComponent(jButtonRemover)
-                    .addComponent(jButtonAtualizar))
+                    .addComponent(jButtonRemover))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(24, 24, 24)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonTestarConexao)
-                    .addComponent(jButtonLogoff))
-                .addGap(17, 17, 17))
+                    .addComponent(jButtonNovoUsuario)
+                    .addComponent(jButton1))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextFieldIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldIDActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldIDActionPerformed
-
     private void jButtonCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCadastrarActionPerformed
-        Produto produto1 = new Produto(jTextFieldNome.getText(), Double.valueOf(jTextFieldPreco.getText()),
-                Integer.valueOf(jTextFieldQuantidade.getText()), jTextFieldDescricao.getText());
 
-        con.cadastrar(produto1);
-        listar();
+        Produto produto1 = new Produto(jTextFieldNome.getText(), Double.valueOf(jTextFieldPreco.getText()),
+                0, jTextFieldDescricao.getText());
+
+        DadosProduto dados = new DadosProduto();
+        dados.cadastrar(produto1);
+        JOptionPane.showMessageDialog(rootPane, "Produto cadastrado");
         clearFields();
     }//GEN-LAST:event_jButtonCadastrarActionPerformed
 
-    private void jButtonListarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonListarActionPerformed
-        listar();
+    private void jButtonLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLimparActionPerformed
         clearFields();
-    }//GEN-LAST:event_jButtonListarActionPerformed
+    }//GEN-LAST:event_jButtonLimparActionPerformed
 
     private void jButtonRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoverActionPerformed
-        // TODO add your handling code here:
-        
-        con.remover(Integer.parseInt(jTextFieldID.getText()));
-        listar();
-        clearFields();
+        try {
+            // TODO add your handling code here:
+            DadosProduto dados = new DadosProduto();
+            dados.remover(Integer.parseInt(jTextFieldID.getText()));
+            JOptionPane.showMessageDialog(rootPane, "Produto removido");
+            clearFields();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+        }
 
     }//GEN-LAST:event_jButtonRemoverActionPerformed
 
-    private void jButtonAtualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAtualizarActionPerformed
-        // TODO add your handling code here:
-        Produto novoProduto = new Produto(Integer.valueOf(jTextFieldID.getText()), jTextFieldNome.getText(), Double.valueOf(jTextFieldPreco.getText()),
-                Integer.valueOf(jTextFieldQuantidade.getText()), jTextFieldDescricao.getText());
-        con.atualizar(novoProduto);
-        listar();
-        clearFields();
-    }//GEN-LAST:event_jButtonAtualizarActionPerformed
-
-    private void jButtonTestarConexaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTestarConexaoActionPerformed
-        try {
-            con.conectar();
-            JOptionPane.showMessageDialog(rootPane, "Conectou");
-            con.desconectar();
-            JOptionPane.showMessageDialog(rootPane, "Desconectou");
-        } catch (ClassNotFoundException | SQLException ex) {
-            JOptionPane.showMessageDialog(rootPane, ex.getMessage());
-        }
-    }//GEN-LAST:event_jButtonTestarConexaoActionPerformed
-
     private void jMenuItemGerarRelatorioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemGerarRelatorioActionPerformed
-        con.gerarRelatorio();
+        DadosProduto dados = new DadosProduto();
+        dados.gerarRelatorio();
     }//GEN-LAST:event_jMenuItemGerarRelatorioActionPerformed
 
 
@@ -340,34 +320,69 @@ public class FormPrincipal extends javax.swing.JFrame {
         imprimir();
     }//GEN-LAST:event_jMenu2MouseClicked
 
-    private void jButtonLogoffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLogoffActionPerformed
-        // TODO add your handling code here:
-        fechar();
-        new Login().setVisible(true);
-
-    }//GEN-LAST:event_jButtonLogoffActionPerformed
-
     private void jButtonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarActionPerformed
-        jTable1.setModel(con.buscar(jTextFieldNome.getText()));
+        try {
+            DadosProduto dados = new DadosProduto();
+            this.listaProdutos = dados.listar();
+            DefaultTableModel modelo = new DefaultTableModel();
+            //atribuindo as colunas da tabela
+            modelo.setColumnIdentifiers(new String[]{"ID", "Nome", "Preço", "Quantidade", "Descrição"});
+            for (int i = 0; i < this.listaProdutos.size(); i++) {
+                Produto p = this.listaProdutos.get(i);
+                modelo.addRow(new String[]{"" + p.getId(), p.getNome(), "R$ "
+                    + p.getPreco(), "" + p.getQuantidade(), p.getDescricao()});
+            }
+            jTable1.setModel(modelo);
+            jTable1.setDefaultEditor(Object.class, null);
+            TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(jTable1.getModel());
+            jTable1.setRowSorter(sorter);
+            List<RowSorter.SortKey> sortKeys = new ArrayList<>(25);
+            sortKeys.add(new RowSorter.SortKey(4, SortOrder.ASCENDING));
+            sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
+            sorter.setSortKeys(sortKeys);
+        } catch (Exception ex) {
+            Logger.getLogger(FormPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButtonBuscarActionPerformed
+
+    private void jTextFieldNomeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldNomeKeyReleased
+        // TODO add your handling code here:
+        jTextFieldNome.setText(jTextFieldNome.getText().toUpperCase(Locale.CANADA));
+    }//GEN-LAST:event_jTextFieldNomeKeyReleased
+
+    private void jTextFieldDescricaoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldDescricaoKeyReleased
+        // TODO add your handling code here:
+        jTextFieldDescricao.setText(jTextFieldDescricao.getText().toUpperCase(Locale.CANADA));
+    }//GEN-LAST:event_jTextFieldDescricaoKeyReleased
+
+    private void jButtonNovoUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNovoUsuarioActionPerformed
+        // TODO add your handling code here:
+        if (novoUsuario == null) {
+            novoUsuario = new FormNovoUsuario(this);
+        }
+        novoUsuario.setVisible(true);
+    }//GEN-LAST:event_jButtonNovoUsuarioActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        fechar();
+        new FormLogin().setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
      */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButtonAtualizar;
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButtonBuscar;
     private javax.swing.JButton jButtonCadastrar;
     private javax.swing.JButton jButtonListar;
-    private javax.swing.JButton jButtonLogoff;
+    private javax.swing.JButton jButtonNovoUsuario;
     private javax.swing.JButton jButtonRemover;
-    private javax.swing.JButton jButtonTestarConexao;
     private javax.swing.JLabel jLabeID;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JMenu jMenu1Arquivo;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
@@ -378,19 +393,13 @@ public class FormPrincipal extends javax.swing.JFrame {
     private javax.swing.JTextField jTextFieldID;
     private javax.swing.JTextField jTextFieldNome;
     private javax.swing.JTextField jTextFieldPreco;
-    private javax.swing.JTextField jTextFieldQuantidade;
     // End of variables declaration//GEN-END:variables
 
     private void clearFields() {
         jTextFieldID.setText("");
         jTextFieldNome.setText("");
         jTextFieldPreco.setText("");
-        jTextFieldQuantidade.setText("");
         jTextFieldDescricao.setText("");
-    }
-
-    private void listar() {
-        jTable1.setModel(con.listar());
     }
 
     private void fechar() {
@@ -400,22 +409,20 @@ public class FormPrincipal extends javax.swing.JFrame {
 
     private void selectTableRow() {
         int index = jTable1.getSelectedRow();
-
         TableModel model = jTable1.getModel();
+        Produto p = this.listaProdutos.get(index);
+        if (alterarProduto == null) {
+            alterarProduto = new FormAlterarProduto(this, p);
+        }
+        alterarProduto.setVisible(true);
 
-        String id = model.getValueAt(index, 0).toString();
-        String nome = model.getValueAt(index, 1).toString();
-        String preco = model.getValueAt(index, 2).toString();
-        String quantidade = model.getValueAt(index, 3).toString();
-        String descricao = model.getValueAt(index, 4).toString();
-
-        jTextFieldID.setText(id);
-        jTextFieldNome.setText(nome);
+        /*jTextFieldID.setText(""+p.getId());
+        jTextFieldNome.setText(p.getNome());
         jTextFieldPreco.setText(preco.replace("R$ ", ""));
         jTextFieldQuantidade.setText(quantidade);
         jTextFieldDescricao.setText(descricao);
-
-        /*int column = 0;
+         */
+ /*int column = 0;
         int row = jTable1.getSelectedRow();
         String value = jTable1.getModel().getValueAt(row, column).toString();
         jTextFieldID.setText(value);*/

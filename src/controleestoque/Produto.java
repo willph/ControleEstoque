@@ -10,21 +10,25 @@ package controleestoque;
  * @author rafaeljcadena
  */
 public class Produto {
-    
+
     private int id;
     private String nome;
     private double preco;
     private int quantidade;
     private String descricao;
 
-    public Produto(String nome, double preco, int quantidade, String descricao){
+    public Produto() {
+
+    }
+
+    public Produto(String nome, double preco, int quantidade, String descricao) {
         this.nome = nome;
         this.preco = preco;
         this.quantidade = quantidade;
         this.descricao = descricao;
     }
-    
-    public Produto(int id, String nome, double preco, int quantidade, String descricao){
+
+    public Produto(int id, String nome, double preco, int quantidade, String descricao) {
         this.id = id;
         this.nome = nome;
         this.preco = preco;
@@ -36,8 +40,6 @@ public class Produto {
         return id;
     }
 
-    
-    
     public String getNome() {
         return nome;
     }
@@ -73,9 +75,5 @@ public class Produto {
     public void setId(int id) {
         this.id = id;
     }
-    
-    
-    
-    
-    
+
 }
