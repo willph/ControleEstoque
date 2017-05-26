@@ -41,7 +41,7 @@ src/.DS_Store
 
 # NetBeans specific #
 nbproject/private/
-build/
+
 nbbuild/
 dist/
 nbdist/
