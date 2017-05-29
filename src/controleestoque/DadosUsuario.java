@@ -21,12 +21,13 @@ public class DadosUsuario extends Conexao {
         Statement conex;
         try {
             conex = conexao.conectar();
-            String sql = "INSERT INTO usuario (nome, login, senha, privilegio) ";
+            String sql = "INSERT INTO usuario (login, senha, nome, privilegio) ";
             sql += "VALUES ('"
+                    + novoUsuario.getLogin() + "', '"
+                    + novoUsuario.getSenha() + "', '"
                     + novoUsuario.getNome() + "', '"
-                    + novoUsuario.getLogin() + "', "
-                    + novoUsuario.getSenha() + ", '"
                     + novoUsuario.getPrivilegio() + "' )";
+            
             conex.executeUpdate(sql);
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(DadosUsuario.class.getName()).log(Level.SEVERE, null, ex);

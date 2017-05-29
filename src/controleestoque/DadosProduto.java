@@ -116,7 +116,7 @@ public class DadosProduto extends Conexao {
         JOptionPane.showMessageDialog(null, "Relatorio gerado com sucesso!");
     }
 
-    public void cadastrar(Produto novoProduto) {
+    public void cadastrar(Produto novoProduto, FormPrincipal form) {
 
         // TODO add your handling code here:
         //abrindo a conexão
@@ -134,6 +134,7 @@ public class DadosProduto extends Conexao {
             if (stmt.executeUpdate(sql) > 0) {
                 auditConection = new UtilsDbAuditoria(stmt);
                 auditConection.cadastrarAuditoria(novoProduto, "cadastro");
+                form.atualizarLinhas();
             }
 
             //fechando a conexão com o banco de dados
@@ -219,6 +220,38 @@ public class DadosProduto extends Conexao {
         desconectar();
         return retorno;
     }
+
+    public Produto getProdutoByID(int id) {
+        int index = id;
+        Produto retorno = new Produto();
+        try {    
+            
+            //abrindo a conexão
+            Statement conex = conectar();
+            
+            String sql = "SELECT id, nome, preco, qtd, tipoProduto FROM produto WHERE id = " + index;
+            
+            ResultSet rs = conex.executeQuery(sql);
+            while (rs.next()) {
+                retorno.setId(rs.getInt("id"));
+                retorno.setNome(rs.getString("nome"));
+                retorno.setPreco(rs.getFloat("preco"));
+                retorno.setQuantidade(rs.getInt("qtd"));
+                retorno.setDescricao(rs.getString("tipoProduto"));
+            }
+            //fechando a conexão com o banco de dados
+            desconectar();
+            
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(DadosProduto.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(DadosProduto.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return retorno;
+    }
+
+    
+    
 
     /*public DefaultTableModel buscar(String nome) {
         DefaultTableModel modelo = new DefaultTableModel();

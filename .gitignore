@@ -34,6 +34,7 @@ hs_err_pid*\
 \
 \
 build/classes/controleestoque/*.class
+# build/built-jar.properties
 .directory
 .DS_Store
 src/.DS_Store

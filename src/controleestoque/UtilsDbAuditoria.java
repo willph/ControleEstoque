@@ -29,7 +29,7 @@ public class UtilsDbAuditoria {
 
     public UtilsDbAuditoria(Statement stmt) {
         this.stmt = stmt;
-        usuarioId = Login.id;
+        usuarioId = Login.getId();
     }
 
     public void cadastrarAuditoria(Produto novoProduto, String transacaoTipo) {

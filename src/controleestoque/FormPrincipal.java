@@ -24,7 +24,6 @@ import javax.swing.JTable;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 /**
@@ -45,7 +44,8 @@ public class FormPrincipal extends javax.swing.JFrame {
     public FormPrincipal(String privilegio) {
 
         initComponents();
-        if (privilegio.equals("administrador") == false) {
+        atualizarLinhas();
+        if (!Login.permitidoParaAdministrador()) {
             jButtonNovoUsuario.setEnabled(false);
         }
     }
@@ -65,7 +65,6 @@ public class FormPrincipal extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jButtonListar = new javax.swing.JButton();
-        jButtonRemover = new javax.swing.JButton();
         jButtonNovoUsuario = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -130,13 +129,6 @@ public class FormPrincipal extends javax.swing.JFrame {
         jButtonListar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonLimparActionPerformed(evt);
-            }
-        });
-
-        jButtonRemover.setText("Remover");
-        jButtonRemover.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonRemoverActionPerformed(evt);
             }
         });
 
@@ -206,36 +198,36 @@ public class FormPrincipal extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 682, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(8, 8, 8)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabeID)
-                                    .addGap(35, 35, 35))
-                                .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)))
-                        .addGap(14, 14, 14)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextFieldID, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextFieldNome)
-                            .addComponent(jTextFieldDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextFieldPreco, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButtonBuscar)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButtonCadastrar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButtonRemover)
-                        .addGap(216, 216, 216)
-                        .addComponent(jButtonListar, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jButtonNovoUsuario)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(8, 8, 8)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel2)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(jLabeID)
+                                            .addGap(35, 35, 35))
+                                        .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)))
+                                .addGap(14, 14, 14)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jTextFieldID, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jTextFieldNome)
+                                    .addComponent(jTextFieldDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jTextFieldPreco, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jButtonBuscar))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButtonCadastrar)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButtonListar, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -261,8 +253,7 @@ public class FormPrincipal extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonCadastrar)
-                    .addComponent(jButtonListar)
-                    .addComponent(jButtonRemover))
+                    .addComponent(jButtonListar))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(24, 24, 24)
@@ -281,7 +272,7 @@ public class FormPrincipal extends javax.swing.JFrame {
                 0, jTextFieldDescricao.getText());
 
         DadosProduto dados = new DadosProduto();
-        dados.cadastrar(produto1);
+        dados.cadastrar(produto1, this);
         JOptionPane.showMessageDialog(rootPane, "Produto cadastrado");
         clearFields();
     }//GEN-LAST:event_jButtonCadastrarActionPerformed
@@ -289,19 +280,6 @@ public class FormPrincipal extends javax.swing.JFrame {
     private void jButtonLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLimparActionPerformed
         clearFields();
     }//GEN-LAST:event_jButtonLimparActionPerformed
-
-    private void jButtonRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoverActionPerformed
-        try {
-            // TODO add your handling code here:
-            DadosProduto dados = new DadosProduto();
-            dados.remover(Integer.parseInt(jTextFieldID.getText()));
-            JOptionPane.showMessageDialog(rootPane, "Produto removido");
-            clearFields();
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(rootPane, ex.getMessage());
-        }
-
-    }//GEN-LAST:event_jButtonRemoverActionPerformed
 
     private void jMenuItemGerarRelatorioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemGerarRelatorioActionPerformed
         DadosProduto dados = new DadosProduto();
@@ -321,28 +299,7 @@ public class FormPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenu2MouseClicked
 
     private void jButtonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarActionPerformed
-        try {
-            DadosProduto dados = new DadosProduto();
-            this.listaProdutos = dados.listar();
-            DefaultTableModel modelo = new DefaultTableModel();
-            //atribuindo as colunas da tabela
-            modelo.setColumnIdentifiers(new String[]{"ID", "Nome", "Preço", "Quantidade", "Descrição"});
-            for (int i = 0; i < this.listaProdutos.size(); i++) {
-                Produto p = this.listaProdutos.get(i);
-                modelo.addRow(new String[]{"" + p.getId(), p.getNome(), "R$ "
-                    + p.getPreco(), "" + p.getQuantidade(), p.getDescricao()});
-            }
-            jTable1.setModel(modelo);
-            jTable1.setDefaultEditor(Object.class, null);
-            TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(jTable1.getModel());
-            jTable1.setRowSorter(sorter);
-            List<RowSorter.SortKey> sortKeys = new ArrayList<>(25);
-            sortKeys.add(new RowSorter.SortKey(4, SortOrder.ASCENDING));
-            sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
-            sorter.setSortKeys(sortKeys);
-        } catch (Exception ex) {
-            Logger.getLogger(FormPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        atualizarLinhas();
     }//GEN-LAST:event_jButtonBuscarActionPerformed
 
     private void jTextFieldNomeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldNomeKeyReleased
@@ -378,7 +335,6 @@ public class FormPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton jButtonCadastrar;
     private javax.swing.JButton jButtonListar;
     private javax.swing.JButton jButtonNovoUsuario;
-    private javax.swing.JButton jButtonRemover;
     private javax.swing.JLabel jLabeID;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -406,26 +362,63 @@ public class FormPrincipal extends javax.swing.JFrame {
         WindowEvent windowsfechar = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
         Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(windowsfechar);
     }
+    
+    public void atualizarLinhas(){
+        try {
+            DadosProduto dados = new DadosProduto();
+            this.listaProdutos = dados.listar();
+            DefaultTableModel modelo = new DefaultTableModel();
+            //atribuindo as colunas da tabela
+            modelo.setColumnIdentifiers(new String[]{"ID", "Nome", "Preço", "Quantidade", "Descrição"});
+            for (int i = 0; i < this.listaProdutos.size(); i++) {
+                Produto p = this.listaProdutos.get(i);
+                modelo.addRow(new String[]{String.valueOf(p.getId()), p.getNome(), "R$ "
+                    + String.valueOf(p.getPreco()), "" + p.getQuantidade(), p.getDescricao()});
+            }
+            jTable1.setModel(modelo);
+//            jTable1.setDefaultEditor(Object.class, null);
+            jTable1.setRowSorter(new TableRowSorter<>(modelo));
+//            TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(jTable1.getModel());
+//            jTable1.setRowSorter(sorter);
+//            List<RowSorter.SortKey> sortKeys = new ArrayList<>(25);
+//            sortKeys.add(new RowSorter.SortKey(4, SortOrder.ASCENDING));
+//            sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
+//            sorter.setSortKeys(sortKeys);
+        } catch (Exception ex) {
+            Logger.getLogger(FormPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     private void selectTableRow() {
-        int index = jTable1.getSelectedRow();
-        TableModel model = jTable1.getModel();
-        Produto p = this.listaProdutos.get(index);
+//        int index = jTable1.getSelectedRow();
+//        TableModel model = jTable1.getModel();
+        
+        int column = 0;
+        int row = jTable1.getSelectedRow();
+        row = jTable1.convertRowIndexToModel(row);
+        String value = jTable1.getModel().getValueAt(row, column).toString();
+        DadosProduto dados = new DadosProduto();
+        Produto produto = dados.getProdutoByID(Integer.valueOf(value));
         if (alterarProduto == null) {
-            alterarProduto = new FormAlterarProduto(this, p);
+            alterarProduto = new FormAlterarProduto(this, produto);
         }
+        alterarProduto.getjTextFieldID().setText(String.valueOf(produto.getId()));
+        alterarProduto.getjTextFieldNome().setText(produto.getNome());
+        alterarProduto.getjTextFieldPreco().setText(String.valueOf(produto.getPreco()));
+        alterarProduto.getjTextFieldQuantidade().setText(String.valueOf(produto.getQuantidade()));
+        alterarProduto.getjTextFieldDescricao().setText(produto.getDescricao());
         alterarProduto.setVisible(true);
 
-        /*jTextFieldID.setText(""+p.getId());
-        jTextFieldNome.setText(p.getNome());
-        jTextFieldPreco.setText(preco.replace("R$ ", ""));
-        jTextFieldQuantidade.setText(quantidade);
-        jTextFieldDescricao.setText(descricao);
-         */
- /*int column = 0;
-        int row = jTable1.getSelectedRow();
-        String value = jTable1.getModel().getValueAt(row, column).toString();
-        jTextFieldID.setText(value);*/
+//        jTextFieldID.setText(""+p.getId());
+//        jTextFieldNome.setText(p.getNome());
+//        jTextFieldPreco.setText(preco.replace("R$ ", ""));
+//        jTextFieldQuantidade.setText(quantidade);
+//        jTextFieldDescricao.setText(descricao);
+        
+//        int column = 0;
+//        int row = jTable1.getSelectedRow();
+//        String value = jTable1.getModel().getValueAt(row, column).toString();
+//        jTextFieldID.setText(value);
     }
 
     private void imprimir() {

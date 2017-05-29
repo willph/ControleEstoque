@@ -19,8 +19,8 @@ import javax.swing.JOptionPane;
  */
 public class Login extends Conexao{
     
-    static String privilegio;
-    static int id;
+    private static String privilegio;
+    private static int id;
     
     public boolean entrar(String nome, String senha) {
 
@@ -36,13 +36,37 @@ public class Login extends Conexao{
                 JOptionPane.showMessageDialog(null, "Senha incorreta.");
                 return false;
             } else {
+                Login.setPrivilegio(rs.getString("privilegio"));
                 new FormPrincipal(rs.getString("privilegio")).setVisible(true);
-                privilegio = rs.getString("privilegio");
-                id = rs.getInt("id");
+                Login.setId(rs.getInt("id"));
             }
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(FormLogin.class.getName()).log(Level.SEVERE, null, ex);
         }
          return true;
     }
+
+    public static String getPrivilegio() {
+        return privilegio;
+    }
+
+    public static void setPrivilegio(String privilegio) {
+        Login.privilegio = privilegio;
+    }
+
+    public static int getId() {
+        return id;
+    }
+
+    public static void setId(int id) {
+        Login.id = id;
+    }
+    
+    public static boolean permitidoParaAdministrador() {
+        boolean allowed = false;
+        allowed = Login.getPrivilegio().equals("administrador");
+        return allowed;
+    }
+    
+    
 }
