@@ -46,7 +46,6 @@ public class FormLogin extends javax.swing.JFrame {
         jTextFieldLogin = new javax.swing.JTextField();
         jPasswordFieldSenha = new javax.swing.JPasswordField();
         jLabelBackground = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
 
         jTextField2.setText("jTextField2");
 
@@ -89,6 +88,11 @@ public class FormLogin extends javax.swing.JFrame {
         getContentPane().add(jTextFieldLogin);
         jTextFieldLogin.setBounds(190, 90, 110, 25);
 
+        jPasswordFieldSenha.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jPasswordFieldSenhaActionPerformed(evt);
+            }
+        });
         jPasswordFieldSenha.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 enter(evt);
@@ -100,10 +104,6 @@ public class FormLogin extends javax.swing.JFrame {
         jLabelBackground.setIcon(new javax.swing.ImageIcon(getClass().getResource("/controleestoque/background/windows_7_black_login.jpg"))); // NOI18N
         getContentPane().add(jLabelBackground);
         jLabelBackground.setBounds(0, 0, 450, 250);
-
-        jTextField1.setText("jTextField1");
-        getContentPane().add(jTextField1);
-        jTextField1.setBounds(350, 50, 59, 20);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -128,6 +128,10 @@ public class FormLogin extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_enter
+
+    private void jPasswordFieldSenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordFieldSenhaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jPasswordFieldSenhaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -172,7 +176,6 @@ public class FormLogin extends javax.swing.JFrame {
     private javax.swing.JLabel jLabelLogin;
     private javax.swing.JLabel jLabelSenha;
     private javax.swing.JPasswordField jPasswordFieldSenha;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextFieldLogin;
     // End of variables declaration//GEN-END:variables

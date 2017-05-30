@@ -20,12 +20,14 @@ public class EntradaSaida extends javax.swing.JDialog {
      * Creates new form SaidaEntrada
      */
     Produto p = new Produto();
+    FormAlterarProduto alterarProduto;
 
-    public EntradaSaida(java.awt.Frame parent, boolean modal, Produto p) {
+    public EntradaSaida(javax.swing.JDialog parent, boolean modal, Produto p, FormAlterarProduto alterarProduto) {
         super(parent, modal);
         initComponents();
         this.p = p;
         this.setLocationRelativeTo(parent);
+        this.alterarProduto = alterarProduto;
     }
 
     /**
@@ -45,31 +47,38 @@ public class EntradaSaida extends javax.swing.JDialog {
         jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Entrada/Saída");
         setLocation(new java.awt.Point(0, 0));
         setResizable(false);
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Entrada", "Saída" }));
+        jComboBox1.setFocusable(false);
 
-        jLabel1.setText("Tipo de transação");
+        jLabel1.setText("Tipo de transação:");
 
-        jLabel2.setText("Quantidade");
+        jLabel2.setText("Quantidade:");
 
         jTextField1.setText("0");
+        jTextField1.setFocusCycleRoot(true);
+        jTextField1.setNextFocusableComponent(jButton1);
+        jTextField1.setSelectionStart(0);
         jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 jTextField1KeyPressed(evt);
             }
         });
 
-        jButton1.setText("Atualizar");
+        jButton1.setText("Ok");
+        jButton1.setNextFocusableComponent(jButton2);
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonAtualizarActionPerformed(evt);
+                jButtonOkActionPerformed(evt);
             }
         });
 
         jButton2.setText("Cancelar");
         jButton2.setAlignmentX(10.0F);
+        jButton2.setMaximumSize(new java.awt.Dimension(45, 23));
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonCancelarActionPerformed(evt);
@@ -85,13 +94,13 @@ public class EntradaSaida extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
                     .addComponent(jLabel2)
-                    .addComponent(jButton1))
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jTextField1))
-                    .addComponent(jButton2))
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -108,48 +117,47 @@ public class EntradaSaida extends javax.swing.JDialog {
                 .addGap(42, 42, 42)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButtonAtualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAtualizarActionPerformed
+    private void jButtonOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOkActionPerformed
         // TODO add your handling code here:
+        try{
         if (jComboBox1.getSelectedItem().toString().equals("Entrada") == true) {
-            int qtd = p.getQuantidade();
-            p.setQuantidade(Integer.parseInt(jTextField1.getText()));
-            DadosProduto dados = new DadosProduto();
-            dados.transacao(p, "entrada");
-            p.setQuantidade(qtd + Integer.parseInt(jTextField1.getText()));
-            dados.atualizar(p);
+            p.setQuantidadeOperacao(Integer.parseInt(jTextField1.getText()));
+            p.setQuantidade(p.getQuantidade() + p.getQuantidadeOperacao());
             fechar();
         } else {
             if (Integer.parseInt(jTextField1.getText()) <= p.getQuantidade()) {
-                int qtd = p.getQuantidade();
-                p.setQuantidade(Integer.parseInt(jTextField1.getText()));
-                DadosProduto dados = new DadosProduto();
-                dados.transacao(p, "saída");
-                p.setQuantidade(qtd - Integer.parseInt(jTextField1.getText()));
-                dados.atualizar(p);
+                p.setQuantidadeOperacao(Integer.parseInt(jTextField1.getText()));
+                p.setQuantidade(p.getQuantidade() - p.getQuantidadeOperacao());
                 fechar();
             } else {
                 JOptionPane.showMessageDialog(null, "A quantidade de retirada não pode ser maior que a disponível.");
             }
-    }//GEN-LAST:event_jButtonAtualizarActionPerformed
-    }
-    private void jButtonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelarActionPerformed
-        // TODO add your handling code here:
-        fechar();
-    }//GEN-LAST:event_jButtonCancelarActionPerformed
-
+        }
+        }catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(rootPane, "Erro: quantidade invalida.");
+        }
+        
+        
+    }//GEN-LAST:event_jButtonOkActionPerformed
+    
     private void jTextField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyPressed
         // TODO add your handling code here:
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             jButton1.doClick();
         }
     }//GEN-LAST:event_jTextField1KeyPressed
+
+    private void jButtonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelarActionPerformed
+        // TODO add your handling code here:
+        fechar();
+    }//GEN-LAST:event_jButtonCancelarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -164,5 +172,6 @@ public class EntradaSaida extends javax.swing.JDialog {
     private void fechar() {
         WindowEvent windowsfechar = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
         Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(windowsfechar);
+        alterarProduto.setTextField();
     }
 }

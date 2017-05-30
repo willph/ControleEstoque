@@ -79,7 +79,6 @@ public class DadosProduto extends Conexao {
 
 //alinhamento do que tem dentro da celula
             cell1.setHorizontalAlignment(Element.ALIGN_CENTER);
-
             cell2.setHorizontalAlignment(Element.ALIGN_CENTER);
 
 //finalizando as celulas nome, email na tabela
@@ -97,7 +96,6 @@ public class DadosProduto extends Conexao {
 //finalizando as celulas do while na tabela
                 table.addCell(cell3);
                 table.addCell(cell4);
-
             }
 //finalizando a tabela dentro do pdf
             document.add(table);
@@ -116,7 +114,7 @@ public class DadosProduto extends Conexao {
         JOptionPane.showMessageDialog(null, "Relatorio gerado com sucesso!");
     }
 
-    public void cadastrar(Produto novoProduto, FormPrincipal form) {
+    public void cadastrar(Produto novoProduto) {
 
         // TODO add your handling code here:
         //abrindo a conexão
@@ -134,7 +132,6 @@ public class DadosProduto extends Conexao {
             if (stmt.executeUpdate(sql) > 0) {
                 auditConection = new UtilsDbAuditoria(stmt);
                 auditConection.cadastrarAuditoria(novoProduto, "cadastro");
-                form.atualizarLinhas();
             }
 
             //fechando a conexão com o banco de dados
@@ -188,11 +185,13 @@ public class DadosProduto extends Conexao {
         Statement conex = conectar();
 
         //instrução sql correspondente a remoção do aluno
-        String sql = "delete from produto where id = "
+        String sql = "delete from auditoria where produto_id = "
                 + id;
+        String sql2 = "delete from produto where id = " + id;
 
         //executando a instrução sql
         conex.execute(sql);
+        conex.execute(sql2);
         //fechando a conexão com o banco de dados
         desconectar();
 
@@ -221,38 +220,48 @@ public class DadosProduto extends Conexao {
         return retorno;
     }
 
-    public Produto getProdutoByID(int id) {
-        int index = id;
-        Produto retorno = new Produto();
-        try {    
-            
+    public int buscarId(String nome) {
+        int produtoId = 0;
+        try {
+            // TODO add your handling code here:
+
             //abrindo a conexão
             Statement conex = conectar();
-            
-            String sql = "SELECT id, nome, preco, qtd, tipoProduto FROM produto WHERE id = " + index;
-            
+            //instrução sql correspondente a seleção do produto
+            String sql = "SELECT id FROM produto WHERE nome = '" + nome + "'";
+
+            //executando a instrução sql
             ResultSet rs = conex.executeQuery(sql);
             while (rs.next()) {
-                retorno.setId(rs.getInt("id"));
-                retorno.setNome(rs.getString("nome"));
-                retorno.setPreco(rs.getFloat("preco"));
-                retorno.setQuantidade(rs.getInt("qtd"));
-                retorno.setDescricao(rs.getString("tipoProduto"));
+                produtoId = rs.getInt("id");
             }
-            //fechando a conexão com o banco de dados
-            desconectar();
-            
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(DadosProduto.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(DadosProduto.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
         }
-        return retorno;
+        return produtoId;
     }
 
-    
-    
-
+    public ArrayList<Produto> consultar(String nome) throws Exception {
+        ArrayList<Produto> retorno = new ArrayList<>();
+        //abrindo a conexão
+        Statement conex = conectar();
+        //instrução sql correspondente a seleção dos alunos
+        String sql = "SELECT * FROM produto WHERE nome LIKE '%" + nome+"%'";
+        //executando a instrução sql
+        ResultSet rs = conex.executeQuery(sql);
+        while (rs.next()) {
+            Produto p = new Produto();
+            p.setId(rs.getInt("id"));
+            p.setNome(rs.getString("nome"));
+            p.setPreco(rs.getFloat("preco"));
+            p.setQuantidade(rs.getInt("qtd"));
+            p.setDescricao(rs.getString("tipoProduto"));
+            retorno.add(p);
+        }
+        //fechando a conexão com o banco de dados
+        desconectar();
+        return retorno;
+    }
     /*public DefaultTableModel buscar(String nome) {
         DefaultTableModel modelo = new DefaultTableModel();
         //atribuindo as colunas da tabela
@@ -278,4 +287,5 @@ public class DadosProduto extends Conexao {
         }
         return modelo;
     }*/
+
 }

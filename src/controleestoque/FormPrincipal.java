@@ -15,16 +15,15 @@ import java.awt.event.WindowEvent;
 import java.awt.print.PrinterException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import javax.swing.RowSorter;
-import javax.swing.SortOrder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+import org.omg.CORBA.Object;
 
 /**
  *
@@ -33,7 +32,7 @@ import javax.swing.table.TableRowSorter;
 public class FormPrincipal extends javax.swing.JFrame {
 
     ArrayList<Produto> listaProdutos;
-    FormAlterarProduto alterarProduto;
+    static FormAlterarProduto alterarProduto;
     FormNovoUsuario novoUsuario;
 
     /**
@@ -44,9 +43,11 @@ public class FormPrincipal extends javax.swing.JFrame {
     public FormPrincipal(String privilegio) {
 
         initComponents();
-        atualizarLinhas();
-        if (!Login.permitidoParaAdministrador()) {
+        if (privilegio.equals("administrador") == false) {
             jButtonNovoUsuario.setEnabled(false);
+            jButtonRemover.setEnabled(false);
+            atualizarLinhas();
+
         }
     }
 
@@ -65,6 +66,7 @@ public class FormPrincipal extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jButtonListar = new javax.swing.JButton();
+        jButtonRemover = new javax.swing.JButton();
         jButtonNovoUsuario = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -72,7 +74,7 @@ public class FormPrincipal extends javax.swing.JFrame {
         jTextFieldDescricao = new javax.swing.JTextField();
         jLabeID = new javax.swing.JLabel();
         jTextFieldPreco = new javax.swing.JTextField();
-        jButtonBuscar = new javax.swing.JButton();
+        jButtonConsultar = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1Arquivo = new javax.swing.JMenu();
@@ -85,9 +87,9 @@ public class FormPrincipal extends javax.swing.JFrame {
 
         jTextFieldID.setEnabled(false);
 
-        jTextFieldNome.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                jTextFieldNomeKeyReleased(evt);
+        jTextFieldNome.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTextFieldNomeFocusLost(evt);
             }
         });
 
@@ -100,14 +102,10 @@ public class FormPrincipal extends javax.swing.JFrame {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4", "Título 5"
+                "ID", "Nome", "Preço", "Quantidade", "Descrição"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -132,6 +130,13 @@ public class FormPrincipal extends javax.swing.JFrame {
             }
         });
 
+        jButtonRemover.setText("Remover");
+        jButtonRemover.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonRemoverActionPerformed(evt);
+            }
+        });
+
         jButtonNovoUsuario.setText("Novo usuário");
         jButtonNovoUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -145,18 +150,18 @@ public class FormPrincipal extends javax.swing.JFrame {
 
         jLabel3.setText("Descrição:");
 
-        jTextFieldDescricao.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                jTextFieldDescricaoKeyReleased(evt);
+        jTextFieldDescricao.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTextFieldDescricaoFocusLost(evt);
             }
         });
 
         jLabeID.setText("ID:");
 
-        jButtonBuscar.setText("Consultar");
-        jButtonBuscar.addActionListener(new java.awt.event.ActionListener() {
+        jButtonConsultar.setText("Consultar");
+        jButtonConsultar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonBuscarActionPerformed(evt);
+                jButtonConsultarActionPerformed(evt);
             }
         });
 
@@ -197,16 +202,15 @@ public class FormPrincipal extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 682, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jButtonNovoUsuario)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(8, 8, 8)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel1)
                                     .addComponent(jLabel2)
@@ -221,13 +225,14 @@ public class FormPrincipal extends javax.swing.JFrame {
                                     .addComponent(jTextFieldNome)
                                     .addComponent(jTextFieldDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jTextFieldPreco, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButtonBuscar))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButtonConsultar))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jButtonCadastrar)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButtonListar, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                                .addGap(222, 222, 222)
+                                .addComponent(jButtonRemover)))
+                        .addGap(224, 224, 224)
+                        .addComponent(jButtonListar, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -241,7 +246,7 @@ public class FormPrincipal extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2)
-                    .addComponent(jButtonBuscar))
+                    .addComponent(jButtonConsultar))
                 .addGap(6, 6, 6)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
@@ -253,7 +258,8 @@ public class FormPrincipal extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonCadastrar)
-                    .addComponent(jButtonListar))
+                    .addComponent(jButtonListar)
+                    .addComponent(jButtonRemover))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(24, 24, 24)
@@ -267,19 +273,51 @@ public class FormPrincipal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCadastrarActionPerformed
+        try {
+            if (jTextFieldNome.getText().equals("") == true || jTextFieldDescricao.getText().equals("") == true || jTextFieldPreco.getText().equals("") == true) {
+                JOptionPane.showMessageDialog(rootPane, "Nenhum campo pode ficar em branco.");
+            } else {
+                Produto produto1 = new Produto(jTextFieldNome.getText(), Float.valueOf(jTextFieldPreco.getText()),
+                        0, jTextFieldDescricao.getText());
 
-        Produto produto1 = new Produto(jTextFieldNome.getText(), Double.valueOf(jTextFieldPreco.getText()),
-                0, jTextFieldDescricao.getText());
-
-        DadosProduto dados = new DadosProduto();
-        dados.cadastrar(produto1, this);
-        JOptionPane.showMessageDialog(rootPane, "Produto cadastrado");
-        clearFields();
+                DadosProduto dados = new DadosProduto();
+                dados.cadastrar(produto1);
+                JOptionPane.showMessageDialog(rootPane, "Produto cadastrado");
+                DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+                modelo.addRow(new String[]{"" + new DadosProduto().buscarId(produto1.getNome()), produto1.getNome(),
+                    "R$ " + Float.toString(produto1.getPreco()), "" + produto1.getQuantidade(),
+                    produto1.getDescricao()});
+                clearFields();
+            }
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(rootPane, "Erro: preço inválido.");
+        }
     }//GEN-LAST:event_jButtonCadastrarActionPerformed
 
     private void jButtonLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLimparActionPerformed
         clearFields();
     }//GEN-LAST:event_jButtonLimparActionPerformed
+
+    private void jButtonRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoverActionPerformed
+        try {
+            // TODO add your handling code here:
+            if (Integer.valueOf(jTable1.getValueAt(jTable1.getSelectedRow(), 3).toString()) > 0) {
+                JOptionPane.showMessageDialog(rootPane, "Operação não permitida: a quantidade precisa estar zerada.");
+            } else {
+                DadosProduto dados = new DadosProduto();
+                dados.remover(Integer.valueOf(jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString()));
+                //JOptionPane.showMessageDialog(rootPane, "Produto removido.");
+                //DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+                //modelo.removeRow(jTable1.getSelectedRow());
+                atualizarLinhas();
+                clearFields();
+            }
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+        }
+
+    }//GEN-LAST:event_jButtonRemoverActionPerformed
 
     private void jMenuItemGerarRelatorioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemGerarRelatorioActionPerformed
         DadosProduto dados = new DadosProduto();
@@ -289,8 +327,9 @@ public class FormPrincipal extends javax.swing.JFrame {
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         // TODO add your handling code here:
-
-        selectTableRow();
+        if (evt.getClickCount() == 2) {
+            selectTableRow();
+        }
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jMenu2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu2MouseClicked
@@ -298,19 +337,10 @@ public class FormPrincipal extends javax.swing.JFrame {
         imprimir();
     }//GEN-LAST:event_jMenu2MouseClicked
 
-    private void jButtonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarActionPerformed
-        atualizarLinhas();
-    }//GEN-LAST:event_jButtonBuscarActionPerformed
+    private void jButtonConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConsultarActionPerformed
 
-    private void jTextFieldNomeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldNomeKeyReleased
-        // TODO add your handling code here:
-        jTextFieldNome.setText(jTextFieldNome.getText().toUpperCase(Locale.CANADA));
-    }//GEN-LAST:event_jTextFieldNomeKeyReleased
-
-    private void jTextFieldDescricaoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldDescricaoKeyReleased
-        // TODO add your handling code here:
-        jTextFieldDescricao.setText(jTextFieldDescricao.getText().toUpperCase(Locale.CANADA));
-    }//GEN-LAST:event_jTextFieldDescricaoKeyReleased
+       atualizarLinhas();
+    }//GEN-LAST:event_jButtonConsultarActionPerformed
 
     private void jButtonNovoUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNovoUsuarioActionPerformed
         // TODO add your handling code here:
@@ -325,16 +355,56 @@ public class FormPrincipal extends javax.swing.JFrame {
         new FormLogin().setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
+    private void jTextFieldNomeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldNomeFocusLost
+        // TODO add your handling code here:
+        jTextFieldNome.setText(jTextFieldNome.getText().toUpperCase(Locale.CANADA));
+    }//GEN-LAST:event_jTextFieldNomeFocusLost
+
+    private void jTextFieldDescricaoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldDescricaoFocusLost
+        // TODO add your handling code here:
+        jTextFieldDescricao.setText(jTextFieldDescricao.getText().toUpperCase(Locale.CANADA));
+    }//GEN-LAST:event_jTextFieldDescricaoFocusLost
+
+    public static void main(String args[]) {
+
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(FormLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(FormLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(FormLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(FormLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new FormPrincipal("administrador").setVisible(true);
+            }
+        });
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButtonBuscar;
     private javax.swing.JButton jButtonCadastrar;
+    private javax.swing.JButton jButtonConsultar;
     private javax.swing.JButton jButtonListar;
     private javax.swing.JButton jButtonNovoUsuario;
+    private javax.swing.JButton jButtonRemover;
     private javax.swing.JLabel jLabeID;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -358,67 +428,68 @@ public class FormPrincipal extends javax.swing.JFrame {
         jTextFieldDescricao.setText("");
     }
 
-    private void fechar() {
-        WindowEvent windowsfechar = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
-        Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(windowsfechar);
-    }
-    
-    public void atualizarLinhas(){
+    public void atualizarLinhas() {
+        DefaultTableModel modelo = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
         try {
             DadosProduto dados = new DadosProduto();
-            this.listaProdutos = dados.listar();
-            DefaultTableModel modelo = new DefaultTableModel();
+            this.listaProdutos = dados.consultar(jTextFieldNome.getText());
             //atribuindo as colunas da tabela
             modelo.setColumnIdentifiers(new String[]{"ID", "Nome", "Preço", "Quantidade", "Descrição"});
             for (int i = 0; i < this.listaProdutos.size(); i++) {
                 Produto p = this.listaProdutos.get(i);
-                modelo.addRow(new String[]{String.valueOf(p.getId()), p.getNome(), "R$ "
-                    + String.valueOf(p.getPreco()), "" + p.getQuantidade(), p.getDescricao()});
+                modelo.addRow(new String[]{"" + p.getId(), p.getNome(), "R$ "
+                    + p.getPreco(), "" + p.getQuantidade(), p.getDescricao()});
             }
             jTable1.setModel(modelo);
-//            jTable1.setDefaultEditor(Object.class, null);
-            jTable1.setRowSorter(new TableRowSorter<>(modelo));
-//            TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(jTable1.getModel());
-//            jTable1.setRowSorter(sorter);
-//            List<RowSorter.SortKey> sortKeys = new ArrayList<>(25);
-//            sortKeys.add(new RowSorter.SortKey(4, SortOrder.ASCENDING));
-//            sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
-//            sorter.setSortKeys(sortKeys);
+            TableRowSorter<TableModel> sorter = new TableRowSorter<>(jTable1.getModel());
+            jTable1.setRowSorter(sorter);
+            //List<RowSorter.SortKey> sortKeys = new ArrayList<>(25);
+            //sorter.setSortKeys(sortKeys);
+
         } catch (Exception ex) {
             Logger.getLogger(FormPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    private void selectTableRow() {
-//        int index = jTable1.getSelectedRow();
-//        TableModel model = jTable1.getModel();
-        
-        int column = 0;
-        int row = jTable1.getSelectedRow();
-        row = jTable1.convertRowIndexToModel(row);
-        String value = jTable1.getModel().getValueAt(row, column).toString();
-        DadosProduto dados = new DadosProduto();
-        Produto produto = dados.getProdutoByID(Integer.valueOf(value));
-        if (alterarProduto == null) {
-            alterarProduto = new FormAlterarProduto(this, produto);
-        }
-        alterarProduto.getjTextFieldID().setText(String.valueOf(produto.getId()));
-        alterarProduto.getjTextFieldNome().setText(produto.getNome());
-        alterarProduto.getjTextFieldPreco().setText(String.valueOf(produto.getPreco()));
-        alterarProduto.getjTextFieldQuantidade().setText(String.valueOf(produto.getQuantidade()));
-        alterarProduto.getjTextFieldDescricao().setText(produto.getDescricao());
-        alterarProduto.setVisible(true);
+    private void fechar() {
+        WindowEvent windowsfechar = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
+        Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(windowsfechar);
+    }
 
-//        jTextFieldID.setText(""+p.getId());
-//        jTextFieldNome.setText(p.getNome());
-//        jTextFieldPreco.setText(preco.replace("R$ ", ""));
-//        jTextFieldQuantidade.setText(quantidade);
-//        jTextFieldDescricao.setText(descricao);
-        
-//        int column = 0;
-//        int row = jTable1.getSelectedRow();
-//        String value = jTable1.getModel().getValueAt(row, column).toString();
-//        jTextFieldID.setText(value);
+    private void selectTableRow() {
+        Produto p = new Produto();
+        int row = jTable1.getSelectedRow();
+        int column = 0;
+        row = jTable1.convertRowIndexToModel(row);
+
+        p.setId(Integer.parseInt(jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString()));
+        p.setNome(jTable1.getValueAt(jTable1.getSelectedRow(), 1).toString());
+        p.setPreco(Float.valueOf(jTable1.getValueAt(jTable1.getSelectedRow(), 2).toString().substring(3)));
+        p.setQuantidade(Integer.parseInt(jTable1.getValueAt(jTable1.getSelectedRow(), 3).toString()));
+        p.setDescricao(jTable1.getValueAt(jTable1.getSelectedRow(), 4).toString());
+        if (alterarProduto == null) {
+            alterarProduto = new FormAlterarProduto(this, true, p, this);
+        }
+        alterarProduto.fechar();
+        alterarProduto = new FormAlterarProduto(this, true, p, this);
+        alterarProduto.setVisible(true);
+    }
+
+    public void setTableRow(Produto p) {
+        jTable1.setValueAt(p.getId(), jTable1.getSelectedRow(), 0);
+        jTable1.setValueAt(p.getNome(), jTable1.getSelectedRow(), 1);
+        jTable1.setValueAt("R$ " + Float.toString(p.getPreco()), jTable1.getSelectedRow(), 2);
+        jTable1.setValueAt(p.getQuantidade(), jTable1.getSelectedRow(), 3);
+        jTable1.setValueAt(p.getDescricao(), jTable1.getSelectedRow(), 4);
+    }
+
+    public static void setNull() {
+        alterarProduto = null;
     }
 
     private void imprimir() {
