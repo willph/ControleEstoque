@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: 19-Maio-2017 às 03:25
+-- Generation Time: 01-Jun-2017 às 04:58
 -- Versão do servidor: 10.1.21-MariaDB
 -- PHP Version: 5.6.30
 
@@ -61,15 +61,16 @@ CREATE TABLE `usuario` (
   `id` int(11) NOT NULL,
   `login` text,
   `senha` text,
-  `nome` text NOT NULL
+  `nome` text NOT NULL,
+  `privilegio` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Extraindo dados da tabela `usuario`
 --
 
-INSERT INTO `usuario` (`id`, `login`, `senha`, `nome`) VALUES
-(1, 'admin', '1234', '');
+INSERT INTO `usuario` (`id`, `login`, `senha`, `nome`, `privilegio`) VALUES
+(1, 'admin', '1234', 'admin', 'administrador');
 
 --
 -- Indexes for dumped tables
@@ -103,12 +104,12 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT for table `auditoria`
 --
 ALTER TABLE `auditoria`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `produto`
 --
 ALTER TABLE `produto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `usuario`
 --
