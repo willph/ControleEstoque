@@ -77,10 +77,6 @@ public class FormPrincipal extends javax.swing.JFrame {
         jTextFieldPreco = new javax.swing.JTextField();
         jButtonConsultar = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
-        jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1Arquivo = new javax.swing.JMenu();
-        jMenuItemGerarRelatorio = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Controle De Estoque - Copyright © ®");
@@ -189,29 +185,6 @@ public class FormPrincipal extends javax.swing.JFrame {
             }
         });
 
-        jMenu1Arquivo.setText("Arquivo");
-
-        jMenuItemGerarRelatorio.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItemGerarRelatorio.setText("Gerar Relatorio");
-        jMenuItemGerarRelatorio.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemGerarRelatorioActionPerformed(evt);
-            }
-        });
-        jMenu1Arquivo.add(jMenuItemGerarRelatorio);
-
-        jMenuBar1.add(jMenu1Arquivo);
-
-        jMenu2.setText("Imprimir");
-        jMenu2.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jMenu2MouseClicked(evt);
-            }
-        });
-        jMenuBar1.add(jMenu2);
-
-        setJMenuBar(jMenuBar1);
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -255,7 +228,7 @@ public class FormPrincipal extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabeID)
                     .addComponent(jTextFieldID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -272,7 +245,7 @@ public class FormPrincipal extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jTextFieldPreco, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonCadastrar)
                     .addComponent(jButtonListar)
@@ -336,11 +309,6 @@ public class FormPrincipal extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jButtonRemoverActionPerformed
 
-    private void jMenuItemGerarRelatorioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemGerarRelatorioActionPerformed
-        DadosProduto dados = new DadosProduto();
-        dados.gerarRelatorio();
-    }//GEN-LAST:event_jMenuItemGerarRelatorioActionPerformed
-
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         // TODO add your handling code here:
@@ -348,11 +316,6 @@ public class FormPrincipal extends javax.swing.JFrame {
             selectTableRow();
         }
     }//GEN-LAST:event_jTable1MouseClicked
-
-    private void jMenu2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu2MouseClicked
-
-        imprimir();
-    }//GEN-LAST:event_jMenu2MouseClicked
 
     private void jButtonConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConsultarActionPerformed
 
@@ -447,10 +410,6 @@ public class FormPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JMenu jMenu1Arquivo;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItemGerarRelatorio;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextFieldDescricao;
@@ -528,28 +487,6 @@ public class FormPrincipal extends javax.swing.JFrame {
 
     public static void setNull() {
         alterarProduto = null;
-    }
-
-    private void imprimir() {
-        MessageFormat header = new MessageFormat("Controle de Estoque");
-        MessageFormat footer = new MessageFormat("Pagina {0,number,integer}");
-
-        try {
-            // TODO add your handling code here:
-
-            jTable1.print(JTable.PrintMode.FIT_WIDTH, header, footer);
-
-            /*Boolean printdata = jTable1.print();
-            
-            if(printdata){
-                JOptionPane.showMessageDialog(null, "Impressão terminada");
-            }else{
-                JOptionPane.showMessageDialog(null, "Imprimindo...");
-            }*/
-        } catch (PrinterException ex) {
-            //System.err.format("Impressora não encontrada %s%n", ex.getMessage());
-            Logger.getLogger(FormPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
 }
