@@ -11,6 +11,7 @@
 package controleestoque;
 
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.print.PrinterException;
 import java.text.MessageFormat;
@@ -92,6 +93,11 @@ public class FormPrincipal extends javax.swing.JFrame {
                 jTextFieldNomeFocusLost(evt);
             }
         });
+        jTextFieldNome.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTextFieldNomeKeyPressed(evt);
+            }
+        });
 
         jButtonCadastrar.setText("Cadastrar");
         jButtonCadastrar.addActionListener(new java.awt.event.ActionListener() {
@@ -155,8 +161,19 @@ public class FormPrincipal extends javax.swing.JFrame {
                 jTextFieldDescricaoFocusLost(evt);
             }
         });
+        jTextFieldDescricao.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTextFieldDescricaoKeyPressed(evt);
+            }
+        });
 
         jLabeID.setText("ID:");
+
+        jTextFieldPreco.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTextFieldPrecoKeyPressed(evt);
+            }
+        });
 
         jButtonConsultar.setText("Consultar");
         jButtonConsultar.addActionListener(new java.awt.event.ActionListener() {
@@ -339,7 +356,7 @@ public class FormPrincipal extends javax.swing.JFrame {
 
     private void jButtonConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConsultarActionPerformed
 
-       atualizarLinhas();
+        atualizarLinhas();
     }//GEN-LAST:event_jButtonConsultarActionPerformed
 
     private void jButtonNovoUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNovoUsuarioActionPerformed
@@ -364,6 +381,27 @@ public class FormPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
         jTextFieldDescricao.setText(jTextFieldDescricao.getText().toUpperCase(Locale.CANADA));
     }//GEN-LAST:event_jTextFieldDescricaoFocusLost
+
+    private void jTextFieldNomeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldNomeKeyPressed
+        // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            jTextFieldDescricao.requestFocus();
+        }
+    }//GEN-LAST:event_jTextFieldNomeKeyPressed
+
+    private void jTextFieldDescricaoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldDescricaoKeyPressed
+        // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            jTextFieldPreco.requestFocus();
+        }
+    }//GEN-LAST:event_jTextFieldDescricaoKeyPressed
+
+    private void jTextFieldPrecoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldPrecoKeyPressed
+        // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            jButtonCadastrar.doClick();
+        }
+    }//GEN-LAST:event_jTextFieldPrecoKeyPressed
 
     public static void main(String args[]) {
 

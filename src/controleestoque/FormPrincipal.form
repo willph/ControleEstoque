@@ -159,6 +159,7 @@
     <Component class="javax.swing.JTextField" name="jTextFieldNome">
       <Events>
         <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jTextFieldNomeFocusLost"/>
+        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jTextFieldNomeKeyPressed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="jButtonCadastrar">
@@ -240,6 +241,7 @@
     <Component class="javax.swing.JTextField" name="jTextFieldDescricao">
       <Events>
         <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jTextFieldDescricaoFocusLost"/>
+        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jTextFieldDescricaoKeyPressed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabeID">
@@ -248,6 +250,9 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="jTextFieldPreco">
+      <Events>
+        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jTextFieldPrecoKeyPressed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="jButtonConsultar">
       <Properties>

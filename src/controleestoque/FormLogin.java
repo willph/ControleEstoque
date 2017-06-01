@@ -85,6 +85,12 @@ public class FormLogin extends javax.swing.JFrame {
         jLabelSenha.setText("Senha");
         getContentPane().add(jLabelSenha);
         jLabelSenha.setBounds(150, 135, 40, 14);
+
+        jTextFieldLogin.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTextFieldLoginKeyPressed(evt);
+            }
+        });
         getContentPane().add(jTextFieldLogin);
         jTextFieldLogin.setBounds(190, 90, 110, 25);
 
@@ -132,6 +138,13 @@ public class FormLogin extends javax.swing.JFrame {
     private void jPasswordFieldSenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordFieldSenhaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jPasswordFieldSenhaActionPerformed
+
+    private void jTextFieldLoginKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldLoginKeyPressed
+        // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            jPasswordFieldSenha.requestFocus();
+        }
+    }//GEN-LAST:event_jTextFieldLoginKeyPressed
 
     /**
      * @param args the command line arguments
