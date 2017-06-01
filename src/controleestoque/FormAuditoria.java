@@ -5,6 +5,12 @@
  */
 package controleestoque;
 
+import java.awt.print.PrinterException;
+import java.text.MessageFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JTable;
+
 /**
  *
  * @author aluno
@@ -39,6 +45,10 @@ public class FormAuditoria extends javax.swing.JDialog {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItemGerarRelatorio = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -74,6 +84,34 @@ public class FormAuditoria extends javax.swing.JDialog {
         jScrollPane1.setViewportView(jTable1);
 
         jButton1.setText("Buscar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jMenu1.setText("Arquivo");
+
+        jMenuItemGerarRelatorio.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemGerarRelatorio.setText("Gerar Relatorio");
+        jMenuItemGerarRelatorio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemGerarRelatorioActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItemGerarRelatorio);
+
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Imprimir");
+        jMenu2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu2MouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -135,6 +173,21 @@ public class FormAuditoria extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jMenuItemGerarRelatorioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemGerarRelatorioActionPerformed
+        // TODO add your handling code here:
+        DadosProduto dados = new DadosProduto();
+        dados.gerarRelatorio();
+    }//GEN-LAST:event_jMenuItemGerarRelatorioActionPerformed
+
+    private void jMenu2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu2MouseClicked
+        // TODO add your handling code here:
+        imprimir();
+    }//GEN-LAST:event_jMenu2MouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -185,9 +238,37 @@ public class FormAuditoria extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItemGerarRelatorio;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
+
+    private void imprimir() {
+         
+        MessageFormat header = new MessageFormat("Controle de Estoque");
+        MessageFormat footer = new MessageFormat("Pagina {0,number,integer}");
+
+        try {
+            // TODO add your handling code here:
+
+            jTable1.print(JTable.PrintMode.FIT_WIDTH, header, footer);
+
+            /*Boolean printdata = jTable1.print();
+            
+            if(printdata){
+                JOptionPane.showMessageDialog(null, "Impressão terminada");
+            }else{
+                JOptionPane.showMessageDialog(null, "Imprimindo...");
+            }*/
+        } catch (PrinterException ex) {
+            //System.err.format("Impressora não encontrada %s%n", ex.getMessage());
+            Logger.getLogger(FormPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    
+    }
 }
