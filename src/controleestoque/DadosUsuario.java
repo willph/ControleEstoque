@@ -33,7 +33,7 @@ public class DadosUsuario extends Conexao {
         }
     }
     
-    public int buscarId(String login) {
+    public int buscarId(String login) throws Exception {
         int usuarioId = 0;
         try {
             stmt = conectar();
@@ -47,7 +47,7 @@ public class DadosUsuario extends Conexao {
             Logger.getLogger(DadosUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (usuarioId==0 && login.equals("")==false){
-            throw new UnsupportedOperationException("Usuário inexistente.");
+            throw new Exception("Usuário inexistente.");
         }
         return usuarioId;
     }

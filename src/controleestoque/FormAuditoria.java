@@ -181,7 +181,7 @@ public class FormAuditoria extends javax.swing.JDialog {
                 }
             }
         } catch (Exception ex) {
-            Logger.getLogger(FormAuditoria.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(rootPane, ex.getMessage());
         }
     }//GEN-LAST:event_jButtonBuscarActionPerformed
 
