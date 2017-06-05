@@ -5,11 +5,14 @@
  */
 package controleestoque;
 
+import java.awt.print.PrinterException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
@@ -25,6 +28,10 @@ public class FormAuditoria extends javax.swing.JDialog {
 
     /**
      * Creates new form FormAuditoria
+     *
+     * @param parent
+     * @param modal
+     * @throws java.lang.Exception
      */
     public FormAuditoria(java.awt.Frame parent, boolean modal) throws Exception {
         super(parent, modal);
@@ -51,6 +58,10 @@ public class FormAuditoria extends javax.swing.JDialog {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jButtonBuscar = new javax.swing.JButton();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItemGerarRelatorio = new javax.swing.JMenuItem();
+        jMenuImprimir = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Auditoria");
@@ -85,7 +96,6 @@ public class FormAuditoria extends javax.swing.JDialog {
             jTable1.getColumnModel().getColumn(5).setPreferredWidth(40);
             jTable1.getColumnModel().getColumn(6).setPreferredWidth(40);
             jTable1.getColumnModel().getColumn(7).setPreferredWidth(80);
-            jTable1.getColumnModel().getColumn(7).setCellRenderer(null);
         }
 
         jButtonBuscar.setText("Buscar");
@@ -94,6 +104,29 @@ public class FormAuditoria extends javax.swing.JDialog {
                 jButtonBuscarActionPerformed(evt);
             }
         });
+
+        jMenu1.setText("Arquivo");
+
+        jMenuItemGerarRelatorio.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemGerarRelatorio.setText("Gerar Relatorio");
+        jMenuItemGerarRelatorio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemGerarRelatorioActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItemGerarRelatorio);
+
+        jMenuBar1.add(jMenu1);
+
+        jMenuImprimir.setText("Imprimir");
+        jMenuImprimir.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenuImprimirMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(jMenuImprimir);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -119,7 +152,7 @@ public class FormAuditoria extends javax.swing.JDialog {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(72, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jTextFieldProduto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -142,7 +175,7 @@ public class FormAuditoria extends javax.swing.JDialog {
                 listar(listaAuditoria);
             } else {
                 if (jTextFieldProduto.getText().equals("") == true && jTextFieldUsuario.getText().equals("") == true) {
-                    JOptionPane.showMessageDialog(null, "Preencha pelo menos um campo para buscar.");
+                    JOptionPane.showMessageDialog(null, "Preencha pelo menos um campos para buscar.");
                 } else {
                     JOptionPane.showMessageDialog(null, "A busca não retornou resultados.");
                 }
@@ -151,6 +184,17 @@ public class FormAuditoria extends javax.swing.JDialog {
             Logger.getLogger(FormAuditoria.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButtonBuscarActionPerformed
+
+    private void jMenuItemGerarRelatorioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemGerarRelatorioActionPerformed
+        // TODO add your handling code here:
+        DadosProduto dados = new DadosProduto();
+        dados.gerarRelatorio();
+    }//GEN-LAST:event_jMenuItemGerarRelatorioActionPerformed
+
+    private void jMenuImprimirMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuImprimirMouseClicked
+        // TODO add your handling code here:
+        imprimir();
+    }//GEN-LAST:event_jMenuImprimirMouseClicked
 
     /**
      * @param args the command line arguments
@@ -180,22 +224,20 @@ public class FormAuditoria extends javax.swing.JDialog {
         //</editor-fold>
 
         /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                FormAuditoria dialog;
-                try {
-                    dialog = new FormAuditoria(new javax.swing.JFrame(), true);
+        java.awt.EventQueue.invokeLater(() -> {
+            FormAuditoria dialog;
+            try {
+                dialog = new FormAuditoria(new javax.swing.JFrame(), true);
 
-                    dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                        @Override
-                        public void windowClosing(java.awt.event.WindowEvent e) {
-                            System.exit(0);
-                        }
-                    });
-                    dialog.setVisible(true);
-                } catch (Exception ex) {
-                    Logger.getLogger(FormAuditoria.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosing(java.awt.event.WindowEvent e) {
+                        System.exit(0);
+                    }
+                });
+                dialog.setVisible(true);
+            } catch (Exception ex) {
+                Logger.getLogger(FormAuditoria.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
     }
@@ -204,6 +246,10 @@ public class FormAuditoria extends javax.swing.JDialog {
     private javax.swing.JButton jButtonBuscar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenu jMenuImprimir;
+    private javax.swing.JMenuItem jMenuItemGerarRelatorio;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextFieldProduto;
@@ -229,8 +275,7 @@ public class FormAuditoria extends javax.swing.JDialog {
                 modelo.addRow(new String[]{"" + auditoria.getId(), "" + auditoria.getUsuarioId(), dadosU.buscarLogin(auditoria.getUsuarioId()), ""
                     + auditoria.getProdutoId(), dados.buscarNome(auditoria.getProdutoId()), "" + auditoria.getQuantidadeProduto(), auditoria.getTipoTransacao(), "" + auditoria.getDataOperacao()});
             }
-
-            for (int x = 0; x < 8; x++) {
+            for (int x = 0; x < 5; x++) {
                 jTable1.getColumnModel().getColumn(x).setCellRenderer(centerRenderer);
             }
             TableRowSorter<TableModel> sorter = new TableRowSorter<>(jTable1.getModel());
@@ -239,4 +284,29 @@ public class FormAuditoria extends javax.swing.JDialog {
             Logger.getLogger(FormAuditoria.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    private void imprimir() {
+
+        MessageFormat header = new MessageFormat("Controle de Estoque");
+        MessageFormat footer = new MessageFormat("Pagina {0,number,integer}");
+
+        try {
+            // TODO add your handling code here:
+
+            jTable1.print(JTable.PrintMode.FIT_WIDTH, header, footer);
+
+            /*Boolean printdata = jTable1.print();
+            
+            if(printdata){
+                JOptionPane.showMessageDialog(null, "Impressão terminada");
+            }else{
+                JOptionPane.showMessageDialog(null, "Imprimindo...");
+            }*/
+        } catch (PrinterException ex) {
+            //System.err.format("Impressora não encontrada %s%n", ex.getMessage());
+            Logger.getLogger(FormPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
 }

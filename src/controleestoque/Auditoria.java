@@ -19,6 +19,7 @@ public class Auditoria {
     private int usuarioId;
     private int produtoId;
     private int quantidadeProduto;
+
     private Timestamp dataOperacao;
     private String tipoTransacao;
 
@@ -82,5 +83,4 @@ public class Auditoria {
     public void setTipoTransacao(String tipoTransacao) {
         this.tipoTransacao = tipoTransacao;
     }
-
 }

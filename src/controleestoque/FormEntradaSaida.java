@@ -14,7 +14,7 @@ import javax.swing.JOptionPane;
  *
  * @author Eduardo
  */
-public class EntradaSaida extends javax.swing.JDialog {
+public class FormEntradaSaida extends javax.swing.JDialog {
 
     /**
      * Creates new form SaidaEntrada
@@ -22,7 +22,7 @@ public class EntradaSaida extends javax.swing.JDialog {
     Produto p = new Produto();
     FormAlterarProduto alterarProduto;
 
-    public EntradaSaida(javax.swing.JDialog parent, boolean modal, Produto p, FormAlterarProduto alterarProduto) {
+    public FormEntradaSaida(javax.swing.JDialog parent, boolean modal, Produto p, FormAlterarProduto alterarProduto) {
         super(parent, modal);
         initComponents();
         this.p = p;

@@ -10,7 +10,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -33,7 +32,7 @@ public class DadosUsuario extends Conexao {
             Logger.getLogger(DadosUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
     public int buscarId(String login) {
         int usuarioId = 0;
         try {
@@ -48,12 +47,12 @@ public class DadosUsuario extends Conexao {
             Logger.getLogger(DadosUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (usuarioId==0 && login.equals("")==false){
-            JOptionPane.showMessageDialog(null, "Usuário inexistente.");
+            throw new UnsupportedOperationException("Usuário inexistente.");
         }
         return usuarioId;
     }
     
-    public String buscarLogin(int id) {
+    public String buscarLogin(int id) throws Exception {
         String usuarioLogin = "";
         try {
             //abrindo a conexão
@@ -67,8 +66,8 @@ public class DadosUsuario extends Conexao {
                 usuarioLogin = rs.getString("login");
             }
             desconectar();
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, ex.getMessage());
+        } catch (ClassNotFoundException | SQLException ex) {
+            throw new Exception(ex.getMessage());
         }
         return usuarioLogin;
     }

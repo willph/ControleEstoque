@@ -1,4 +1,3 @@
-
 package controleestoque;
 
 import java.awt.Toolkit;
@@ -11,10 +10,12 @@ import javax.swing.JOptionPane;
  */
 public class FormNovoUsuario extends javax.swing.JFrame {
 
+    Login login = new Login();
+
     /**
      * Creates new form FormNovoUsuario
+     * @param parent
      */
-    
     public FormNovoUsuario(java.awt.Frame parent) {
         initComponents();
         this.setLocationRelativeTo(parent);
@@ -114,22 +115,29 @@ public class FormNovoUsuario extends javax.swing.JFrame {
 
     private void jButtonCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCadastrarActionPerformed
         // TODO add your handling code here:
-        if (jTextFieldNome.getText().equals("") == true || jTextFieldLogin.getText().equals("") == true || jTextFieldSenha.getText().equals("") == true) {
+        
+        if (login.validar(jTextFieldLogin.getText()) == true) {
+            if (jTextFieldNome.getText().equals("") == true || jTextFieldLogin.getText().equals("") == true || jTextFieldSenha.getText().equals("") == true) {
                 JOptionPane.showMessageDialog(rootPane, "Nenhum campo pode ficar em branco.");
             } else {
-        Usuario usuario = new Usuario();
-        usuario.setNome(jTextFieldNome.getText());
-        usuario.setLogin(jTextFieldLogin.getText());
-        usuario.setSenha(jTextFieldSenha.getText());
-        usuario.setPrivilegio(jComboBox1.getSelectedItem().toString().toLowerCase());
-        DadosUsuario dados = new DadosUsuario();
-        dados.cadastrar(usuario);
-        JOptionPane.showMessageDialog(rootPane, "Usuário cadastrado.");
-        fechar();
+                Usuario usuario = new Usuario();
+                usuario.setNome(jTextFieldNome.getText());
+                usuario.setLogin(jTextFieldLogin.getText());
+                usuario.setSenha(jTextFieldSenha.getText());
+                usuario.setPrivilegio(jComboBox1.getSelectedItem().toString().toLowerCase());
+                DadosUsuario dados = new DadosUsuario();
+                dados.cadastrar(usuario);
+                JOptionPane.showMessageDialog(rootPane, "Usuário cadastrado.");
+                clearFields();
+                fechar();
+            }
+        }else{
+            JOptionPane.showMessageDialog(null, "Login ja existe. Por favor escolha outro");
+            jTextFieldLogin.requestFocus();
         }
     }//GEN-LAST:event_jButtonCadastrarActionPerformed
 
-   
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCadastrar;
     private javax.swing.JComboBox<String> jComboBox1;
@@ -142,9 +150,17 @@ public class FormNovoUsuario extends javax.swing.JFrame {
     private javax.swing.JTextField jTextFieldSenha;
     // End of variables declaration//GEN-END:variables
 
-private void fechar() {
+    private void fechar() {
         WindowEvent windowsfechar = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
         Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(windowsfechar);
     }
-    
+
+    private void clearFields() {
+        
+        jTextFieldNome.setText("");
+        jTextFieldLogin.setText("");
+        jTextFieldSenha.setText("");
+       
+    }
+
 }

@@ -151,7 +151,7 @@ public class FormAlterarProduto extends javax.swing.JDialog {
                         .addComponent(jButton2)
                         .addGap(64, 64, 64)
                         .addComponent(jButton3)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -196,7 +196,7 @@ public class FormAlterarProduto extends javax.swing.JDialog {
 
     private void jButton1jButtonAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1jButtonAlterarActionPerformed
         //Abre o form de entrada e saída
-        new EntradaSaida(this, true, p, this).setVisible(true);
+        new FormEntradaSaida(this, true, p, this).setVisible(true);
     }//GEN-LAST:event_jButton1jButtonAlterarActionPerformed
 
     private void jTextFieldNomeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldNomeKeyReleased

@@ -13,6 +13,8 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
+import com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -21,8 +23,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -111,7 +111,7 @@ public class DadosProduto extends Conexao {
 
 //encerrando o documento pdf
         document.close();
-        JOptionPane.showMessageDialog(null, "Relatorio gerado com sucesso!");
+
     }
 
     public void cadastrar(Produto novoProduto) {
@@ -160,7 +160,7 @@ public class DadosProduto extends Conexao {
             //fechando a conexão com o banco de dados
             desconectar();
         } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(EntradaSaida.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FormEntradaSaida.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
@@ -222,24 +222,25 @@ public class DadosProduto extends Conexao {
 
     public int buscarId(String nome) {
         int produtoId = 0;
-        if (nome.equals("")==false) {
-            try {
-                // TODO add your handling code here:
+        try {
+            // TODO add your handling code here:
 
-                //abrindo a conexão
-                Statement conex = conectar();
-                //instrução sql correspondente a seleção do produto
-                String sql = "SELECT id FROM produto WHERE nome LIKE '%" + nome + "%'";
+            //abrindo a conexão
+            Statement conex = conectar();
+            //instrução sql correspondente a seleção do produto
+            String sql = "SELECT id FROM produto WHERE nome = '" + nome + "'";
 
-                //executando a instrução sql
-                ResultSet rs = conex.executeQuery(sql);
-                while (rs.next()) {
-                    produtoId = rs.getInt("id");
-                }
-                desconectar();
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, ex.getMessage());
+            //executando a instrução sql
+            ResultSet rs = conex.executeQuery(sql);
+            while (rs.next()) {
+                produtoId = rs.getInt("id");
             }
+            desconectar();
+        } catch (CommunicationsException ex) {
+            throw new UnsupportedOperationException("Servidor RGBD pode estar off-line", ex);
+
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(DadosProduto.class.getName()).log(Level.SEVERE, null, ex);
         }
         return produtoId;
     }
@@ -247,19 +248,18 @@ public class DadosProduto extends Conexao {
     public String buscarNome(int id) {
         String produtoNome = "";
         try {
-            //abrindo a conexão
             stmt = conectar();
-            //instrução sql correspondente a seleção do produto
             String sql = "SELECT nome FROM produto WHERE id = " + id;
-
-            //executando a instrução sql
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 produtoNome = rs.getString("nome");
             }
             desconectar();
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, ex.getMessage());
+        } catch (CommunicationsException ex) {
+            throw new UnsupportedOperationException("Servidor RGBD pode estar off-line", ex);
+
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(DadosProduto.class.getName()).log(Level.SEVERE, null, ex);
         }
         return produtoNome;
     }
@@ -267,23 +267,32 @@ public class DadosProduto extends Conexao {
     public ArrayList<Produto> consultar(String nome) throws Exception {
         ArrayList<Produto> retorno = new ArrayList<>();
         //abrindo a conexão
-        Statement conex = conectar();
-        //instrução sql correspondente a seleção dos alunos
-        String sql = "SELECT * FROM produto WHERE nome LIKE '%" + nome + "%'";
-        //executando a instrução sql
-        ResultSet rs = conex.executeQuery(sql);
-        while (rs.next()) {
-            Produto p = new Produto();
-            p.setId(rs.getInt("id"));
-            p.setNome(rs.getString("nome"));
-            p.setPreco(rs.getFloat("preco"));
-            p.setQuantidade(rs.getInt("qtd"));
-            p.setDescricao(rs.getString("tipoProduto"));
-            retorno.add(p);
+        try {
+            Statement conex = conectar();
+            //instrução sql correspondente a seleção dos alunos
+            String sql = "SELECT * FROM produto WHERE nome LIKE '%" + nome + "%'";
+            //executando a instrução sql
+            ResultSet rs = conex.executeQuery(sql);
+            while (rs.next()) {
+                Produto p = new Produto();
+                p.setId(rs.getInt("id"));
+                p.setNome(rs.getString("nome"));
+                p.setPreco(rs.getFloat("preco"));
+                p.setQuantidade(rs.getInt("qtd"));
+                p.setDescricao(rs.getString("tipoProduto"));
+                retorno.add(p);
+            }
+            //fechando a conexão com o banco de dados
+            desconectar();
+            return retorno;
+
+        } catch (CommunicationsException ex) {
+            throw new Exception("Servidor RGBD pode estar off-line.\nPor favor comunicar ao suporte", ex);
+
+        } catch (MySQLSyntaxErrorException ex) {
+            throw new Exception("Banco de dados\n" + ex.getMessage());
+
         }
-        //fechando a conexão com o banco de dados
-        desconectar();
-        return retorno;
     }
     /*public DefaultTableModel buscar(String nome) {
         DefaultTableModel modelo = new DefaultTableModel();
