@@ -8,16 +8,13 @@ package controleestoque;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 
 /**
  *
  * @author Will
  */
 public class FormLogin extends javax.swing.JFrame {
-
+    
     Login login = new Login();
 
     /**
@@ -88,12 +85,6 @@ public class FormLogin extends javax.swing.JFrame {
         jLabelSenha.setText("Senha");
         getContentPane().add(jLabelSenha);
         jLabelSenha.setBounds(150, 135, 40, 14);
-
-        jTextFieldLogin.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                jTextFieldLoginKeyPressed(evt);
-            }
-        });
         getContentPane().add(jTextFieldLogin);
         jTextFieldLogin.setBounds(190, 90, 110, 25);
 
@@ -117,47 +108,30 @@ public class FormLogin extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButtonEntrarActionPerformed(java.awt.event.ActionEvent evt) {
+    private void jButtonEntrarActionPerformed(java.awt.event.ActionEvent evt) {                                             
 
-        try {
-            if (login.entrar(jTextFieldLogin.getText(), new String(jPasswordFieldSenha.getPassword()))) {
-                fechar();
-            }
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, ex.getMessage());
+        if (login.entrar(jTextFieldLogin.getText(), new String(jPasswordFieldSenha.getPassword()))) {
+            fechar();
         }
     }
 
-    private void jButtonSairActionPerformed(java.awt.event.ActionEvent evt) {
+    private void jButtonSairActionPerformed(java.awt.event.ActionEvent evt) {                                            
 
         fechar();
     }
 
     private void enter(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_enter
         // TODO add your handling code here:
-        try {
-            if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-                if (login.entrar(jTextFieldLogin.getText(), new String(jPasswordFieldSenha.getPassword()))) {
-                    fechar();
-                }
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            if (login.entrar(jTextFieldLogin.getText(), new String(jPasswordFieldSenha.getPassword()))) {
+                fechar();
             }
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, ex.getMessage());
-
         }
-
     }//GEN-LAST:event_enter
 
     private void jPasswordFieldSenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordFieldSenhaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jPasswordFieldSenhaActionPerformed
-
-    private void jTextFieldLoginKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldLoginKeyPressed
-        // TODO add your handling code here:
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            jPasswordFieldSenha.requestFocus();
-        }
-    }//GEN-LAST:event_jTextFieldLoginKeyPressed
 
     /**
      * @param args the command line arguments
@@ -173,24 +147,16 @@ public class FormLogin extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
-
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FormLogin.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
+            java.util.logging.Logger.getLogger(FormLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FormLogin.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
+            java.util.logging.Logger.getLogger(FormLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FormLogin.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
+            java.util.logging.Logger.getLogger(FormLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FormLogin.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FormLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>

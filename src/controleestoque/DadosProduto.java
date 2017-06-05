@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -221,23 +222,46 @@ public class DadosProduto extends Conexao {
 
     public int buscarId(String nome) {
         int produtoId = 0;
-        try {
-            // TODO add your handling code here:
+        if (nome.equals("")==false) {
+            try {
+                // TODO add your handling code here:
 
+                //abrindo a conexão
+                Statement conex = conectar();
+                //instrução sql correspondente a seleção do produto
+                String sql = "SELECT id FROM produto WHERE nome LIKE '%" + nome + "%'";
+
+                //executando a instrução sql
+                ResultSet rs = conex.executeQuery(sql);
+                while (rs.next()) {
+                    produtoId = rs.getInt("id");
+                }
+                desconectar();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, ex.getMessage());
+            }
+        }
+        return produtoId;
+    }
+
+    public String buscarNome(int id) {
+        String produtoNome = "";
+        try {
             //abrindo a conexão
-            Statement conex = conectar();
+            stmt = conectar();
             //instrução sql correspondente a seleção do produto
-            String sql = "SELECT id FROM produto WHERE nome = '" + nome + "'";
+            String sql = "SELECT nome FROM produto WHERE id = " + id;
 
             //executando a instrução sql
-            ResultSet rs = conex.executeQuery(sql);
+            ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
-                produtoId = rs.getInt("id");
+                produtoNome = rs.getString("nome");
             }
+            desconectar();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
-        return produtoId;
+        return produtoNome;
     }
 
     public ArrayList<Produto> consultar(String nome) throws Exception {
@@ -245,7 +269,7 @@ public class DadosProduto extends Conexao {
         //abrindo a conexão
         Statement conex = conectar();
         //instrução sql correspondente a seleção dos alunos
-        String sql = "SELECT * FROM produto WHERE nome LIKE '%" + nome+"%'";
+        String sql = "SELECT * FROM produto WHERE nome LIKE '%" + nome + "%'";
         //executando a instrução sql
         ResultSet rs = conex.executeQuery(sql);
         while (rs.next()) {

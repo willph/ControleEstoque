@@ -11,13 +11,15 @@
 package controleestoque;
 
 import java.awt.Toolkit;
-import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
+import java.awt.print.PrinterException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
@@ -44,9 +46,8 @@ public class FormPrincipal extends javax.swing.JFrame {
         if (privilegio.equals("administrador") == false) {
             jButtonNovoUsuario.setEnabled(false);
             jButtonRemover.setEnabled(false);
-            atualizarLinhas();
-
         }
+        atualizarLinhas();
     }
 
     /**
@@ -74,6 +75,11 @@ public class FormPrincipal extends javax.swing.JFrame {
         jTextFieldPreco = new javax.swing.JTextField();
         jButtonConsultar = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        jButtonAuditoria = new javax.swing.JButton();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1Arquivo = new javax.swing.JMenu();
+        jMenuItemGerarRelatorio = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Controle De Estoque - Copyright © ®");
@@ -84,11 +90,6 @@ public class FormPrincipal extends javax.swing.JFrame {
         jTextFieldNome.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextFieldNomeFocusLost(evt);
-            }
-        });
-        jTextFieldNome.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                jTextFieldNomeKeyPressed(evt);
             }
         });
 
@@ -154,19 +155,8 @@ public class FormPrincipal extends javax.swing.JFrame {
                 jTextFieldDescricaoFocusLost(evt);
             }
         });
-        jTextFieldDescricao.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                jTextFieldDescricaoKeyPressed(evt);
-            }
-        });
 
         jLabeID.setText("ID:");
-
-        jTextFieldPreco.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                jTextFieldPrecoKeyPressed(evt);
-            }
-        });
 
         jButtonConsultar.setText("Consultar");
         jButtonConsultar.addActionListener(new java.awt.event.ActionListener() {
@@ -182,6 +172,36 @@ public class FormPrincipal extends javax.swing.JFrame {
             }
         });
 
+        jButtonAuditoria.setText("Auditoria");
+        jButtonAuditoria.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAuditoriaActionPerformed(evt);
+            }
+        });
+
+        jMenu1Arquivo.setText("Arquivo");
+
+        jMenuItemGerarRelatorio.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemGerarRelatorio.setText("Gerar Relatorio");
+        jMenuItemGerarRelatorio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemGerarRelatorioActionPerformed(evt);
+            }
+        });
+        jMenu1Arquivo.add(jMenuItemGerarRelatorio);
+
+        jMenuBar1.add(jMenu1Arquivo);
+
+        jMenu2.setText("Imprimir");
+        jMenu2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu2MouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -192,6 +212,8 @@ public class FormPrincipal extends javax.swing.JFrame {
                     .addComponent(jScrollPane1)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButtonAuditoria, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonNovoUsuario)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -219,13 +241,14 @@ public class FormPrincipal extends javax.swing.JFrame {
                                 .addGap(222, 222, 222)
                                 .addComponent(jButtonRemover)))
                         .addGap(224, 224, 224)
-                        .addComponent(jButtonListar, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jButtonListar, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(26, 26, 26)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabeID)
                     .addComponent(jTextFieldID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -242,7 +265,7 @@ public class FormPrincipal extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jTextFieldPreco, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonCadastrar)
                     .addComponent(jButtonListar)
@@ -252,7 +275,8 @@ public class FormPrincipal extends javax.swing.JFrame {
                 .addGap(24, 24, 24)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonNovoUsuario)
-                    .addComponent(jButton1))
+                    .addComponent(jButton1)
+                    .addComponent(jButtonAuditoria))
                 .addContainerGap())
         );
 
@@ -306,6 +330,11 @@ public class FormPrincipal extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jButtonRemoverActionPerformed
 
+    private void jMenuItemGerarRelatorioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemGerarRelatorioActionPerformed
+        DadosProduto dados = new DadosProduto();
+        dados.gerarRelatorio();
+    }//GEN-LAST:event_jMenuItemGerarRelatorioActionPerformed
+
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         // TODO add your handling code here:
@@ -314,9 +343,14 @@ public class FormPrincipal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jTable1MouseClicked
 
+    private void jMenu2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu2MouseClicked
+
+        imprimir();
+    }//GEN-LAST:event_jMenu2MouseClicked
+
     private void jButtonConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConsultarActionPerformed
 
-        atualizarLinhas();
+       atualizarLinhas();
     }//GEN-LAST:event_jButtonConsultarActionPerformed
 
     private void jButtonNovoUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNovoUsuarioActionPerformed
@@ -342,26 +376,14 @@ public class FormPrincipal extends javax.swing.JFrame {
         jTextFieldDescricao.setText(jTextFieldDescricao.getText().toUpperCase(Locale.CANADA));
     }//GEN-LAST:event_jTextFieldDescricaoFocusLost
 
-    private void jTextFieldNomeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldNomeKeyPressed
-        // TODO add your handling code here:
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            jTextFieldDescricao.requestFocus();
+    private void jButtonAuditoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAuditoriaActionPerformed
+        try {
+            // TODO add your handling code here:
+            new FormAuditoria(this, true).setVisible(true);
+        } catch (Exception ex) {
+            Logger.getLogger(FormPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_jTextFieldNomeKeyPressed
-
-    private void jTextFieldDescricaoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldDescricaoKeyPressed
-        // TODO add your handling code here:
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            jTextFieldPreco.requestFocus();
-        }
-    }//GEN-LAST:event_jTextFieldDescricaoKeyPressed
-
-    private void jTextFieldPrecoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldPrecoKeyPressed
-        // TODO add your handling code here:
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            jButtonCadastrar.doClick();
-        }
-    }//GEN-LAST:event_jTextFieldPrecoKeyPressed
+    }//GEN-LAST:event_jButtonAuditoriaActionPerformed
 
     public static void main(String args[]) {
 
@@ -398,6 +420,7 @@ public class FormPrincipal extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButtonAuditoria;
     private javax.swing.JButton jButtonCadastrar;
     private javax.swing.JButton jButtonConsultar;
     private javax.swing.JButton jButtonListar;
@@ -407,6 +430,10 @@ public class FormPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JMenu jMenu1Arquivo;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItemGerarRelatorio;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextFieldDescricao;
@@ -442,9 +469,6 @@ public class FormPrincipal extends javax.swing.JFrame {
             jTable1.setModel(modelo);
             TableRowSorter<TableModel> sorter = new TableRowSorter<>(jTable1.getModel());
             jTable1.setRowSorter(sorter);
-            //List<RowSorter.SortKey> sortKeys = new ArrayList<>(25);
-            //sorter.setSortKeys(sortKeys);
-
         } catch (Exception ex) {
             Logger.getLogger(FormPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -484,6 +508,28 @@ public class FormPrincipal extends javax.swing.JFrame {
 
     public static void setNull() {
         alterarProduto = null;
+    }
+
+    private void imprimir() {
+        MessageFormat header = new MessageFormat("Controle de Estoque");
+        MessageFormat footer = new MessageFormat("Pagina {0,number,integer}");
+
+        try {
+            // TODO add your handling code here:
+
+            jTable1.print(JTable.PrintMode.FIT_WIDTH, header, footer);
+
+            /*Boolean printdata = jTable1.print();
+            
+            if(printdata){
+                JOptionPane.showMessageDialog(null, "Impressão terminada");
+            }else{
+                JOptionPane.showMessageDialog(null, "Imprimindo...");
+            }*/
+        } catch (PrinterException ex) {
+            //System.err.format("Impressora não encontrada %s%n", ex.getMessage());
+            Logger.getLogger(FormPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }

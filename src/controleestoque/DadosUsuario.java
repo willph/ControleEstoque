@@ -5,10 +5,12 @@
  */
 package controleestoque;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -30,5 +32,44 @@ public class DadosUsuario extends Conexao {
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(DadosUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public int buscarId(String login) {
+        int usuarioId = 0;
+        try {
+            stmt = conectar();
+            String sql = "SELECT id FROM usuario WHERE login LIKE '" + login + "'";
+            //executando a instrução sql
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                usuarioId = rs.getInt("id");
+            }
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(DadosUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (usuarioId==0 && login.equals("")==false){
+            JOptionPane.showMessageDialog(null, "Usuário inexistente.");
+        }
+        return usuarioId;
+    }
+    
+    public String buscarLogin(int id) {
+        String usuarioLogin = "";
+        try {
+            //abrindo a conexão
+            stmt = conectar();
+            //instrução sql correspondente a seleção do produto
+            String sql = "SELECT login FROM usuario WHERE id = " + id;
+
+            //executando a instrução sql
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                usuarioLogin = rs.getString("login");
+            }
+            desconectar();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
+        return usuarioLogin;
     }
 }

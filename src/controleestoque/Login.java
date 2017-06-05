@@ -5,34 +5,36 @@
  */
 package controleestoque;
 
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author Eduardo
  */
-public class Login extends Conexao {
-
+public class Login extends Conexao{
+    
     static String privilegio;
     static int id = 1;
+    
+    public boolean entrar(String nome, String senha) {
 
-    public boolean entrar (String nome, String senha) {
-
-        try {
+         try {
             Statement conex = this.conectar();
             String sql = "SELECT * FROM usuario WHERE login='" + nome + "'";
             ResultSet rs = conex.executeQuery(sql);
-
+            
             if (!rs.first()) {
-                throw new UnsupportedOperationException("Usuário incorreto.");
-
+                JOptionPane.showMessageDialog(null, "Usuário incorreto.");
+                return false;
             } else if (rs.getString("senha").equals(senha) == false) {
-                throw new UnsupportedOperationException("Senha incorreta.");
-                
+                JOptionPane.showMessageDialog(null, "Senha incorreta.");
+                return false;
             } else {
                 new FormPrincipal(rs.getString("privilegio")).setVisible(true);
                 privilegio = rs.getString("privilegio");
@@ -41,26 +43,6 @@ public class Login extends Conexao {
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(FormLogin.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return true;
-    }
-
-    public boolean validar(String login) {
-        try {
-            Statement conex = this.conectar();
-            String sql = "SELECT * FROM usuario WHERE login='" + login + "'";
-            ResultSet rs = conex.executeQuery(sql);
-
-            if (!rs.first()) {
-
-            } else {
-                
-                return false;
-            }
-        } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(FormLogin.class.getName()).log(Level.SEVERE, null, ex);
-
-        }
-        return true;
-
+         return true;
     }
 }
