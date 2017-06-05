@@ -45,7 +45,6 @@ public class FormPrincipal extends javax.swing.JFrame {
         if (privilegio.equals("administrador") == false) {
             jButtonNovoUsuario.setEnabled(false);
             jButtonRemover.setEnabled(false);
-            jButtonAuditoria.setEnabled(false);
         }
             atualizarLinhas();
 
