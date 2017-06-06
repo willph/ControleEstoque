@@ -18,7 +18,10 @@ import javax.swing.JOptionPane;
  */
 public class DadosAuditoria extends Conexao {
 
+//    private Auditoria auditoria = new Auditoria();
     public ArrayList<Auditoria> consultaId(int produtoId, int usuarioId) throws Exception {
+        DadosProduto dadosProduto = new DadosProduto();
+        DadosUsuario dadosUsuario = new DadosUsuario();
         ArrayList<Auditoria> retorno = new ArrayList<>();
         if ((produtoId != 0 || usuarioId != 0)) {
             String sql = "";
@@ -40,9 +43,12 @@ public class DadosAuditoria extends Conexao {
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 Auditoria auditoria = new Auditoria();
+
                 auditoria.setId(rs.getInt("id"));
-                auditoria.setUsuarioId(rs.getInt("usuario_id"));
-                auditoria.setProdutoId(rs.getInt("produto_id"));
+//                auditoria.setUsuarioId(rs.getInt("usuario_id"));
+                auditoria.setProduto(dadosProduto.buscarProduto(rs.getInt("produto_id"), stmt));
+                auditoria.setUsuario(dadosUsuario.buscarUsuario(rs.getInt("usuario_id"), stmt));
+//                auditoria.setProdutoId(rs.getInt("produto_id"));
                 auditoria.setQuantidadeProduto(rs.getInt("quantidadeProduto"));
                 auditoria.setDataOperacao((rs.getTimestamp("data")));
                 auditoria.setTipoTransacao(rs.getString("transacaoTipo"));
@@ -52,10 +58,12 @@ public class DadosAuditoria extends Conexao {
         }
         //fechando a conexão com o banco de dados
         return retorno;
-        
+
     }
 
     public ArrayList<Auditoria> listar() throws Exception {
+        DadosProduto dadosProduto = new DadosProduto();
+        DadosUsuario dadosUsuario = new DadosUsuario();
         ArrayList<Auditoria> retorno = new ArrayList<>();
         //abrindo a conexão
         stmt = conectar();
@@ -64,14 +72,18 @@ public class DadosAuditoria extends Conexao {
         //executando a instrução sql
         ResultSet rs = stmt.executeQuery(sql);
         while (rs.next()) {
-            Auditoria a = new Auditoria();
-            a.setId(rs.getInt("id"));
-            a.setUsuarioId(rs.getInt("usuario_id"));
-            a.setProdutoId(rs.getInt("produto_id"));
-            a.setQuantidadeProduto(rs.getInt("quantidadeProduto"));
-            a.setDataOperacao(rs.getTimestamp("data"));
-            a.setTipoTransacao(rs.getString("transacaoTipo"));
-            retorno.add(a);
+            Auditoria auditoria = new Auditoria();
+
+            auditoria.setId(rs.getInt("id"));
+//                auditoria.setUsuarioId(rs.getInt("usuario_id"));
+            auditoria.setProduto(dadosProduto.buscarProduto(rs.getInt("produto_id"), stmt));
+            auditoria.setUsuario(dadosUsuario.buscarUsuario(rs.getInt("usuario_id"), stmt));
+//                auditoria.setProdutoId(rs.getInt("produto_id"));
+            auditoria.setQuantidadeProduto(rs.getInt("quantidadeProduto"));
+            auditoria.setDataOperacao((rs.getTimestamp("data")));
+            auditoria.setTipoTransacao(rs.getString("transacaoTipo"));
+            System.out.println(rs.getInt("id"));
+            retorno.add(auditoria);
 
         }
         //fechando a conexão com o banco de dados

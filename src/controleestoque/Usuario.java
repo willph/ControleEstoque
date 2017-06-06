@@ -11,11 +11,38 @@ package controleestoque;
  */
 public class Usuario {
 
+    private int id;
     private String nome;
     private String login;
     private String senha;
     private String privilegio;
 
+
+    public Usuario(){
+        
+    }
+    
+//    public Usuario(int id, String nome, String login, String senha, String privilegio){
+//        this.id = id;
+//        this.nome = nome;
+//        this.login = login;
+//        this.senha = senha;
+//        this.privilegio = privilegio;
+//    }
+    
+    
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    
+    
+    
+    
     /**
      * @return the nome
      */

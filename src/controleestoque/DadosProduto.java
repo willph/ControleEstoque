@@ -264,6 +264,32 @@ public class DadosProduto extends Conexao {
         return produtoNome;
     }
 
+        public Produto buscarProduto(int id, Statement stmt) {
+        String produtoNome = "";
+        Produto produto = new Produto();
+        try {
+//            stmt = conectar();
+            String sql = "SELECT * FROM produto WHERE id = " + id;
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+//                produtoNome = rs.getString("nome");
+                produto.setId(rs.getInt("id"));
+                produto.setNome(rs.getString("nome"));
+                produto.setPreco(rs.getFloat("preco"));
+                produto.setQuantidade(rs.getInt("qtd"));
+                produto.setDescricao(rs.getString("tipoProduto"));
+                
+            }
+//            desconectar();
+        } catch (CommunicationsException ex) {
+            throw new UnsupportedOperationException("Servidor RGBD pode estar off-line", ex);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DadosProduto.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return produto;
+    }
+
     public ArrayList<Produto> consultar(String nome) throws Exception {
         ArrayList<Produto> retorno = new ArrayList<>();
         //abrindo a conexão

@@ -31,7 +31,8 @@ public class UtilsDbAuditoria {
         Date date = Date.from(Instant.now());
         String data = dateFormat.format(date);
 
-        int produtoId = new DadosProduto().buscarId(novoProduto.getNome());
+//        int produtoId = new DadosProduto().buscarId(novoProduto.getNome());
+        int produtoId = novoProduto.getId();
         try {
             //abrindo a conexão
             Statement conex = stmt;

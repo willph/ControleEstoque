@@ -263,8 +263,8 @@ public class FormAuditoria extends javax.swing.JDialog {
     }
 
     private void listar(ArrayList<Auditoria> listaAuditoria) {
-        DadosUsuario dadosU = new DadosUsuario();
-        DadosProduto dados = new DadosProduto();
+//        DadosUsuario dadosU = new DadosUsuario();
+//        DadosProduto dados = new DadosProduto();
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         try {
@@ -272,8 +272,8 @@ public class FormAuditoria extends javax.swing.JDialog {
             modelo.setRowCount(0);
             for (int i = 0; i < listaAuditoria.size(); i++) {
                 Auditoria auditoria = listaAuditoria.get(i);
-                modelo.addRow(new String[]{"" + auditoria.getId(), "" + auditoria.getUsuarioId(), dadosU.buscarLogin(auditoria.getUsuarioId()), ""
-                    + auditoria.getProdutoId(), dados.buscarNome(auditoria.getProdutoId()), "" + auditoria.getQuantidadeProduto(), auditoria.getTipoTransacao(), "" + auditoria.getDataOperacao()});
+                modelo.addRow(new String[]{String.valueOf(auditoria.getId()), String.valueOf(auditoria.getUsuario().getId()), auditoria.getUsuario().getLogin(), ""
+                    + auditoria.getProduto().getId(), auditoria.getProduto().getNome(), String.valueOf(auditoria.getProduto().getQuantidade()), auditoria.getTipoTransacao(), String.valueOf(auditoria.getDataOperacao())});
             }
             for (int x = 0; x < 5; x++) {
                 jTable1.getColumnModel().getColumn(x).setCellRenderer(centerRenderer);

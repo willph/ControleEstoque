@@ -18,12 +18,16 @@ public class Auditoria {
     private int id;
     private int usuarioId;
     private int produtoId;
+    private Produto produto;
+    private Usuario usuario;
     private int quantidadeProduto;
 
     private Timestamp dataOperacao;
     private String tipoTransacao;
 
     public Auditoria() {
+        this.produto = new Produto();
+        this.usuario = new Usuario();
 
     }
 
@@ -35,6 +39,12 @@ public class Auditoria {
         this.dataOperacao = dataOperacao;
 //        this.tipoTransacao = tipoTransacao;
     }
+
+    public Produto getProduto() {
+        return produto;
+    }
+    
+    
 
     public int getId() {
         return id;
@@ -82,5 +92,20 @@ public class Auditoria {
 
     public void setTipoTransacao(String tipoTransacao) {
         this.tipoTransacao = tipoTransacao;
+    }
+    
+    
+    public void setProduto(Produto produto) {
+        this.produto = produto;
+    }
+
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 }

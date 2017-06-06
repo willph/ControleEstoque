@@ -71,4 +71,32 @@ public class DadosUsuario extends Conexao {
         }
         return usuarioLogin;
     }
+    
+    public Usuario buscarUsuario(int id, Statement stmt) {
+        Usuario usuario = new Usuario();
+        try {
+            
+            
+            //abrindo a conexão
+        //            stmt = conectar();
+        //instrução sql correspondente a seleção do produto
+        String sql = "SELECT * FROM usuario WHERE id = " + id;
+
+        //executando a instrução sql
+        ResultSet rs = stmt.executeQuery(sql);
+        while (rs.next()) {
+
+            usuario.setId(rs.getInt("id"));
+            usuario.setLogin(rs.getString("login"));
+            usuario.setNome(rs.getString("nome"));
+//            usuario.setLogin(rs.getString("login"));
+            usuario.setPrivilegio(rs.getString("privilegio"));
+}
+//            desconectar();
+        } catch (SQLException ex) {
+            Logger.getLogger(DadosUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return usuario;
+    }
+        
 }

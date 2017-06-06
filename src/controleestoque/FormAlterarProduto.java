@@ -20,9 +20,10 @@ public class FormAlterarProduto extends javax.swing.JDialog {
     /**
      * Creates new form NewJDialog
      */
-      Produto p;
-    int quantidadeTotalInicial;
-    FormPrincipal formPrincipal;
+    private Produto p;
+    private int quantidadeTotalInicial;
+    private FormPrincipal formPrincipal;
+    
     public FormAlterarProduto(java.awt.Frame parent, boolean modal, Produto p, FormPrincipal f) {
         super(parent, modal);
           initComponents();
