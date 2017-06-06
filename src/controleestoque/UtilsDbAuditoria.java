@@ -19,12 +19,12 @@ import java.util.Date;
 public class UtilsDbAuditoria {
 
     private final Statement stmt;
-    private final int usuarioId;
+    private final Usuario usuarioLogado;
     private final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
     public UtilsDbAuditoria(Statement stmt) {
         this.stmt = stmt;
-        usuarioId = Login.id;
+        usuarioLogado = Login.getUsuarioLogado();
     }
 
     public void cadastrarAuditoria(Produto novoProduto, String transacaoTipo) {
@@ -38,7 +38,7 @@ public class UtilsDbAuditoria {
             Statement conex = stmt;
             //instrução sql correspondente a inserção da auditoria
             String sql = "INSERT INTO auditoria (usuario_id, produto_id, data, quantidadeProduto, transacaoTipo) VALUES (%d, %d, '%s', %d, '%s');";
-            String sqlFormated = String.format(sql, usuarioId, produtoId, data, novoProduto.getQuantidadeOperacao(), transacaoTipo);
+            String sqlFormated = String.format(sql, usuarioLogado.getId(), produtoId, data, novoProduto.getQuantidadeOperacao(), transacaoTipo);
 
             try {
                 //executando a instrução sql

@@ -264,7 +264,7 @@ public class FormAlterarProduto extends javax.swing.JDialog {
 public void fechar() {
         WindowEvent windowsfechar = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
         Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(windowsfechar);
-        FormPrincipal.setNull();
+        formPrincipal.setNull();
     }
 
     public void setTextField() {

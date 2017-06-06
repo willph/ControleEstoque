@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: 01-Jun-2017 às 04:58
+-- Generation Time: 06-Jun-2017 às 20:50
 -- Versão do servidor: 10.1.21-MariaDB
 -- PHP Version: 5.6.30
 
@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `merciaria`
+-- Database: `mercearia`
 --
 
 -- --------------------------------------------------------
@@ -37,6 +37,13 @@ CREATE TABLE `auditoria` (
   `transacaoTipo` text
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Extraindo dados da tabela `auditoria`
+--
+
+INSERT INTO `auditoria` (`id`, `usuario_id`, `produto_id`, `data`, `quantidadeProduto`, `transacaoTipo`) VALUES
+(1, 1, 1, '2017-06-06', 10, 'entrada');
+
 -- --------------------------------------------------------
 
 --
@@ -48,8 +55,19 @@ CREATE TABLE `produto` (
   `nome` text,
   `preco` float DEFAULT NULL,
   `qtd` int(11) DEFAULT NULL,
-  `tipoProduto` text
+  `tipoProduto` text,
+  `apagado` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Extraindo dados da tabela `produto`
+--
+
+INSERT INTO `produto` (`id`, `nome`, `preco`, `qtd`, `tipoProduto`, `apagado`) VALUES
+(1, 'Produto 1 E', 3.5, 20, 'lalala', 0),
+(2, 'Produto 2 Edit', 3.5, 5, 'faef', 0),
+(5, 'Produt 3', 3.45, 20, 'eoign', 1),
+(6, 'Produto 4', 3.4, 20, 'efoai', 0);
 
 -- --------------------------------------------------------
 
@@ -70,7 +88,7 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`id`, `login`, `senha`, `nome`, `privilegio`) VALUES
-(1, 'admin', '1234', 'admin', 'administrador');
+(1, 'admin', '1234', '', 'administrador');
 
 --
 -- Indexes for dumped tables
@@ -104,12 +122,12 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT for table `auditoria`
 --
 ALTER TABLE `auditoria`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `produto`
 --
 ALTER TABLE `produto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `usuario`
 --

@@ -53,25 +53,25 @@ public class DadosUsuario extends Conexao {
         return usuarioId;
     }
 
-    public String buscarLogin(int id) throws Exception {
-        String usuarioLogin = "";
-        try {
-            //abrindo a conexão
-            stmt = conectar();
-            //instrução sql correspondente a seleção do produto
-            String sql = "SELECT login FROM usuario WHERE id = " + id;
-
-            //executando a instrução sql
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                usuarioLogin = rs.getString("login");
-            }
-            desconectar();
-        } catch (ClassNotFoundException | SQLException ex) {
-            throw new Exception(ex.getMessage());
-        }
-        return usuarioLogin;
-    }
+//    public String buscarLogin(int id) throws Exception {
+//        String usuarioLogin = "";
+//        try {
+//            //abrindo a conexão
+//            stmt = conectar();
+//            //instrução sql correspondente a seleção do produto
+//            String sql = "SELECT login FROM usuario WHERE id = " + id;
+//
+//            //executando a instrução sql
+//            ResultSet rs = stmt.executeQuery(sql);
+//            while (rs.next()) {
+//                usuarioLogin = rs.getString("login");
+//            }
+//            desconectar();
+//        } catch (ClassNotFoundException | SQLException ex) {
+//            throw new Exception(ex.getMessage());
+//        }
+//        return usuarioLogin;
+//    }
 
     public Usuario buscarUsuario(String login) {
         Usuario usuario = new Usuario();

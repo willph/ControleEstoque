@@ -22,13 +22,13 @@ public class Usuario {
         
     }
     
-//    public Usuario(int id, String nome, String login, String senha, String privilegio){
-//        this.id = id;
-//        this.nome = nome;
-//        this.login = login;
-//        this.senha = senha;
-//        this.privilegio = privilegio;
-//    }
+    public Usuario(int id, String nome, String login, String privilegio){
+        this.id = id;
+        this.nome = nome;
+        this.login = login;
+        this.senha = senha;
+        this.privilegio = privilegio;
+    }
     
     
     public int getId() {

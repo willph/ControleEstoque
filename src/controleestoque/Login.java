@@ -19,8 +19,7 @@ import java.util.logging.Logger;
  */
 public class Login extends Conexao {
 
-    static String privilegio;
-    static int id = 1;
+    private static Usuario usuarioLogado;
 
     public boolean entrar (String nome, String senha) {
 
@@ -37,8 +36,7 @@ public class Login extends Conexao {
                 
             } else {
                 new FormPrincipal(rs.getString("privilegio")).setVisible(true);
-                privilegio = rs.getString("privilegio");
-                id = rs.getInt("id");
+                usuarioLogado = new Usuario(rs.getInt("id"), rs.getString("nome"), rs.getString("login"), rs.getString("privilegio"));
             }
         }catch(CommunicationsException ex){
             throw new UnsupportedOperationException("Servidor RGBD pode estar off-line", ex);
@@ -71,4 +69,10 @@ public class Login extends Conexao {
         return true;
 
     }
+
+    public static Usuario getUsuarioLogado() {
+        return usuarioLogado;
+    }
+    
+    
 }

@@ -23,7 +23,7 @@ public class Conexao {
         try {
 
             String driver = "com.mysql.jdbc.Driver";
-            String dataBaseName = "merciaria";
+            String dataBaseName = "mercearia";
             String url = "jdbc:mysql://localhost:3306/";
             String usuario = "root";
             String senha = "";

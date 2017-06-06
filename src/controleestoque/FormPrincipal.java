@@ -30,9 +30,9 @@ import org.omg.CORBA.Object;
  */
 public class FormPrincipal extends javax.swing.JFrame {
 
-    ArrayList<Produto> listaProdutos;
-    static FormAlterarProduto alterarProduto;
-    FormNovoUsuario novoUsuario;
+    private ArrayList<Produto> listaProdutos;
+    private FormAlterarProduto alterarProduto;
+    private FormNovoUsuario novoUsuario;
 
     /**
      * Creates new form FormPrincipal
@@ -45,6 +45,7 @@ public class FormPrincipal extends javax.swing.JFrame {
         if (privilegio.equals("administrador") == false) {
             jButtonNovoUsuario.setEnabled(false);
             jButtonRemover.setEnabled(false);
+            jButtonAuditoria.setEnabled(false);
         }
             atualizarLinhas();
 
@@ -511,7 +512,7 @@ public class FormPrincipal extends javax.swing.JFrame {
         jTable1.setValueAt(p.getDescricao(), jTable1.getSelectedRow(), 4);
     }
 
-    public static void setNull() {
+    public void setNull() {
         alterarProduto = null;
     }
 
