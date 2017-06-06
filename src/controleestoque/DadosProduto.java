@@ -347,30 +347,4 @@ public class DadosProduto extends Conexao {
 
         }
     }
-    /*public DefaultTableModel buscar(String nome) {
-        DefaultTableModel modelo = new DefaultTableModel();
-        //atribuindo as colunas da tabela
-        modelo.setColumnIdentifiers(new String[]{"ID", "Nome", "Preço", "Quantidade", "Descrição"});
-        try {
-            // TODO add your handling code here:
-
-            //abrindo a conexão
-            Statement conex = conectar();
-            //instrução sql correspondente a seleção dos alunos
-            String sql = "SELECT id, nome, preco, qtd, tipoProduto FROM produto WHERE nome LIKE '%" + nome + "%'  ORDER by nome";
-
-            //executando a instrução sql
-            ResultSet rs = conex.executeQuery(sql);
-            while (rs.next()) {
-                modelo.addRow(new String[]{"" + rs.getInt("id"), rs.getString("nome"), "R$ "
-                    + rs.getString("preco"), rs.getString("qtd"), rs.getString("tipoProduto")});
-            }
-            //fechando a conexão com o banco de dados
-            desconectar();
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, ex.getMessage());
-        }
-        return modelo;
-    }*/
-
 }

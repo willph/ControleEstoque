@@ -24,7 +24,7 @@ import javax.swing.table.TableRowSorter;
  */
 public class FormAuditoria extends javax.swing.JDialog {
 
-    ArrayList<Auditoria> listaAuditoria;
+    private ArrayList<Auditoria> listaAuditoria;
 
     /**
      * Creates new form FormAuditoria

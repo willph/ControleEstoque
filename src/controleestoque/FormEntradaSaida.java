@@ -19,13 +19,13 @@ public class FormEntradaSaida extends javax.swing.JDialog {
     /**
      * Creates new form SaidaEntrada
      */
-    Produto p = new Produto();
-    FormAlterarProduto alterarProduto;
+    private Produto produto = new Produto();
+    private FormAlterarProduto alterarProduto;
 
-    public FormEntradaSaida(javax.swing.JDialog parent, boolean modal, Produto p, FormAlterarProduto alterarProduto) {
+    public FormEntradaSaida(javax.swing.JDialog parent, boolean modal, Produto produto, FormAlterarProduto alterarProduto) {
         super(parent, modal);
         initComponents();
-        this.p = p;
+        this.produto = produto;
         this.setLocationRelativeTo(parent);
         this.alterarProduto = alterarProduto;
     }
@@ -128,13 +128,13 @@ public class FormEntradaSaida extends javax.swing.JDialog {
         // TODO add your handling code here:
         try{
         if (jComboBox1.getSelectedItem().toString().equals("Entrada") == true) {
-            p.setQuantidadeOperacao(Integer.parseInt(jTextField1.getText()));
-            p.setQuantidade(p.getQuantidade() + p.getQuantidadeOperacao());
+            produto.setQuantidadeOperacao(Integer.parseInt(jTextField1.getText()));
+            produto.setQuantidade(produto.getQuantidade() + produto.getQuantidadeOperacao());
             fechar();
         } else {
-            if (Integer.parseInt(jTextField1.getText()) <= p.getQuantidade()) {
-                p.setQuantidadeOperacao(Integer.parseInt(jTextField1.getText()));
-                p.setQuantidade(p.getQuantidade() - p.getQuantidadeOperacao());
+            if (Integer.parseInt(jTextField1.getText()) <= produto.getQuantidade()) {
+                produto.setQuantidadeOperacao(Integer.parseInt(jTextField1.getText()));
+                produto.setQuantidade(produto.getQuantidade() - produto.getQuantidadeOperacao());
                 fechar();
             } else {
                 JOptionPane.showMessageDialog(null, "A quantidade de retirada não pode ser maior que a disponível.");

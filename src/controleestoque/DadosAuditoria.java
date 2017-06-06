@@ -17,11 +17,12 @@ import javax.swing.JOptionPane;
  * @author Eduardo
  */
 public class DadosAuditoria extends Conexao {
+    
+    private final DadosProduto dadosProduto = new DadosProduto();
+    private final DadosUsuario dadosUsuario = new DadosUsuario();
 
-//    private Auditoria auditoria = new Auditoria();
     public ArrayList<Auditoria> consultaId(Produto produto, Usuario usuario) throws Exception {
-        DadosProduto dadosProduto = new DadosProduto();
-        DadosUsuario dadosUsuario = new DadosUsuario();
+
         ArrayList<Auditoria> retorno = new ArrayList<>();
         if ((produto.getId() != 0 || usuario.getId() != 0)) {
             String sql = "";
@@ -62,8 +63,6 @@ public class DadosAuditoria extends Conexao {
     }
 
     public ArrayList<Auditoria> listar() throws Exception {
-        DadosProduto dadosProduto = new DadosProduto();
-        DadosUsuario dadosUsuario = new DadosUsuario();
         ArrayList<Auditoria> retorno = new ArrayList<>();
         //abrindo a conexão
         stmt = conectar();

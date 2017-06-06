@@ -10,7 +10,7 @@ import javax.swing.JOptionPane;
  */
 public class FormNovoUsuario extends javax.swing.JFrame {
 
-    Login login = new Login();
+    private Login login = new Login();
 
     /**
      * Creates new form FormNovoUsuario

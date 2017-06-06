@@ -20,14 +20,14 @@ public class FormAlterarProduto extends javax.swing.JDialog {
     /**
      * Creates new form NewJDialog
      */
-    private Produto p;
+    private Produto produto;
     private int quantidadeTotalInicial;
     private FormPrincipal formPrincipal;
     
     public FormAlterarProduto(java.awt.Frame parent, boolean modal, Produto p, FormPrincipal f) {
         super(parent, modal);
           initComponents();
-        this.p = new Produto(p);
+        this.produto = new Produto(p);
         this.formPrincipal = f;
         jTextFieldQuantidade.setEnabled(false);
         jTextFieldID.setText("" + p.getId());
@@ -197,7 +197,7 @@ public class FormAlterarProduto extends javax.swing.JDialog {
 
     private void jButton1jButtonAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1jButtonAlterarActionPerformed
         //Abre o form de entrada e saída
-        new FormEntradaSaida(this, true, p, this).setVisible(true);
+        new FormEntradaSaida(this, true, produto, this).setVisible(true);
     }//GEN-LAST:event_jButton1jButtonAlterarActionPerformed
 
     private void jTextFieldNomeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldNomeKeyReleased
@@ -211,20 +211,20 @@ public class FormAlterarProduto extends javax.swing.JDialog {
     private void jButton2jButtonAtualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2jButtonAtualizarActionPerformed
         //Atualiza as informações no BD
         try{
-        p.setId(Integer.valueOf(jTextFieldID.getText()));
-        p.setNome(jTextFieldNome.getText());
-        p.setDescricao(jTextFieldDescricao.getText());
-        p.setPreco(Float.valueOf(jTextFieldPreco.getText()));
+        produto.setId(Integer.valueOf(jTextFieldID.getText()));
+        produto.setNome(jTextFieldNome.getText());
+        produto.setDescricao(jTextFieldDescricao.getText());
+        produto.setPreco(Float.valueOf(jTextFieldPreco.getText()));
         DadosProduto dados = new DadosProduto();
-        if (quantidadeTotalInicial >= p.getQuantidade() && (quantidadeTotalInicial - p.getQuantidade()) != 0) {
-            p.setQuantidadeOperacao(quantidadeTotalInicial - p.getQuantidade());
-            dados.transacao(p, "saída");
-        } else if (quantidadeTotalInicial <= p.getQuantidade() && (p.getQuantidade() - quantidadeTotalInicial) != 0) {
-            p.setQuantidadeOperacao(p.getQuantidade() - quantidadeTotalInicial);
-            dados.transacao(p, "entrada");
+        if (quantidadeTotalInicial >= produto.getQuantidade() && (quantidadeTotalInicial - produto.getQuantidade()) != 0) {
+            produto.setQuantidadeOperacao(quantidadeTotalInicial - produto.getQuantidade());
+            dados.transacao(produto, "saída");
+        } else if (quantidadeTotalInicial <= produto.getQuantidade() && (produto.getQuantidade() - quantidadeTotalInicial) != 0) {
+            produto.setQuantidadeOperacao(produto.getQuantidade() - quantidadeTotalInicial);
+            dados.transacao(produto, "entrada");
         }
-        dados.atualizar(p);
-        formPrincipal.setTableRow(p);
+        dados.atualizar(produto);
+        formPrincipal.setTableRow(produto);
         fechar();
         }catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(rootPane, "Erro: preço inválido.");
@@ -268,6 +268,6 @@ public void fechar() {
     }
 
     public void setTextField() {
-        jTextFieldQuantidade.setText("" + p.getQuantidade());
+        jTextFieldQuantidade.setText("" + produto.getQuantidade());
     }
 }

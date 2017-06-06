@@ -18,9 +18,9 @@ import java.util.Date;
  */
 public class UtilsDbAuditoria {
 
-    private final Statement stmt;
-    private final Usuario usuarioLogado;
-    private final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+    private Statement stmt;
+    private Usuario usuarioLogado;
+    private DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
     public UtilsDbAuditoria(Statement stmt) {
         this.stmt = stmt;
