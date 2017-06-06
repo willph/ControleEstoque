@@ -21,14 +21,14 @@ public class Produto {
     public Produto() {
 
     }
-    public Produto(Produto copia){
-        descricao = copia.descricao;
-        id = copia.id;
-        nome = copia.nome;
-        preco = copia.preco;
-        quantidade = copia.quantidade;
-        quantidadeOperacao = copia.quantidadeOperacao;
-    }
+//    public Produto(Produto produto){
+//        descricao = produto.descricao;
+//        id = produto.id;
+//        nome = produto.nome;
+//        preco = produto.preco;
+//        quantidade = produto.quantidade;
+//        quantidadeOperacao = produto.quantidadeOperacao;
+//    }
 
     public Produto(String nome, float preco, int quantidade, String descricao) {
         this.nome = nome;

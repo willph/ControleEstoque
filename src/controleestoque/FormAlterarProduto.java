@@ -24,18 +24,18 @@ public class FormAlterarProduto extends javax.swing.JDialog {
     private int quantidadeTotalInicial;
     private FormPrincipal formPrincipal;
     
-    public FormAlterarProduto(java.awt.Frame parent, boolean modal, Produto p, FormPrincipal f) {
+    public FormAlterarProduto(java.awt.Frame parent, boolean modal, Produto produto, FormPrincipal form) {
         super(parent, modal);
           initComponents();
-        this.produto = new Produto(p);
-        this.formPrincipal = f;
+        this.produto = produto;
+        this.formPrincipal = form;
         jTextFieldQuantidade.setEnabled(false);
-        jTextFieldID.setText("" + p.getId());
-        jTextFieldNome.setText(p.getNome());
-        jTextFieldPreco.setText("" + p.getPreco());
-        jTextFieldQuantidade.setText("" + p.getQuantidade());
-        jTextFieldDescricao.setText(p.getDescricao());
-        quantidadeTotalInicial = p.getQuantidade();
+        jTextFieldID.setText("" + produto.getId());
+        jTextFieldNome.setText(produto.getNome());
+        jTextFieldPreco.setText("" + produto.getPreco());
+        jTextFieldQuantidade.setText("" + produto.getQuantidade());
+        jTextFieldDescricao.setText(produto.getDescricao());
+        quantidadeTotalInicial = produto.getQuantidade();
         //Abre o form no centro do form que o chamou
         this.setLocationRelativeTo(parent);
     }
