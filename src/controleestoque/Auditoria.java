@@ -6,7 +6,6 @@
 package controleestoque;
 
 import java.sql.Timestamp;
-import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -16,12 +15,9 @@ import java.util.Date;
 public class Auditoria {
 
     private int id;
-    private int usuarioId;
-    private int produtoId;
     private Produto produto;
     private Usuario usuario;
     private int quantidadeProduto;
-
     private Timestamp dataOperacao;
     private String tipoTransacao;
 
@@ -30,44 +26,17 @@ public class Auditoria {
         this.usuario = new Usuario();
 
     }
-
-    public Auditoria(int id, int usuarioId, int produtoId, int quantidadeProduto, Timestamp dataOperacao) {
-        this.id = id;
-        this.usuarioId = usuarioId;
-        this.produtoId = produtoId;
-        this.quantidadeProduto = quantidadeProduto;
-        this.dataOperacao = dataOperacao;
-//        this.tipoTransacao = tipoTransacao;
-    }
-
+    
     public Produto getProduto() {
         return produto;
     }
     
-    
-
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getUsuarioId() {
-        return usuarioId;
-    }
-
-    public void setUsuarioId(int usuarioId) {
-        this.usuarioId = usuarioId;
-    }
-
-    public int getProdutoId() {
-        return produtoId;
-    }
-
-    public void setProdutoId(int produtoId) {
-        this.produtoId = produtoId;
     }
 
     public int getQuantidadeProduto() {

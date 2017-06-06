@@ -19,24 +19,24 @@ import javax.swing.JOptionPane;
 public class DadosAuditoria extends Conexao {
 
 //    private Auditoria auditoria = new Auditoria();
-    public ArrayList<Auditoria> consultaId(int produtoId, int usuarioId) throws Exception {
+    public ArrayList<Auditoria> consultaId(Produto produto, Usuario usuario) throws Exception {
         DadosProduto dadosProduto = new DadosProduto();
         DadosUsuario dadosUsuario = new DadosUsuario();
         ArrayList<Auditoria> retorno = new ArrayList<>();
-        if ((produtoId != 0 || usuarioId != 0)) {
+        if ((produto.getId() != 0 || usuario.getId() != 0)) {
             String sql = "";
             //abrindo a conexão
             stmt = conectar();
             //instrução sql correspondente a seleção dos alunos
-            if (usuarioId == 0) {
-                if (produtoId != 0) {
-                    sql = "SELECT * FROM auditoria WHERE produto_id = " + produtoId;
+            if (usuario.getId() == 0) {
+                if (produto.getId() != 0) {
+                    sql = "SELECT * FROM auditoria WHERE produto_id = " + produto.getId();
                 }
             } else {
-                if (produtoId != 0) {
-                    sql = "SELECT * FROM auditoria WHERE produto_id = " + produtoId + " and usuario_id = " + usuarioId;
+                if (produto.getId() != 0) {
+                    sql = "SELECT * FROM auditoria WHERE produto_id = " + produto.getId() + " and usuario_id = " + usuario.getId();
                 } else {
-                    sql = "SELECT * FROM auditoria WHERE usuario_id = " + usuarioId;
+                    sql = "SELECT * FROM auditoria WHERE usuario_id = " + usuario.getId();
                 }
             }
             //executando a instrução sql
@@ -46,8 +46,8 @@ public class DadosAuditoria extends Conexao {
 
                 auditoria.setId(rs.getInt("id"));
 //                auditoria.setUsuarioId(rs.getInt("usuario_id"));
-                auditoria.setProduto(dadosProduto.buscarProduto(rs.getInt("produto_id"), stmt));
-                auditoria.setUsuario(dadosUsuario.buscarUsuario(rs.getInt("usuario_id"), stmt));
+                auditoria.setProduto(dadosProduto.buscarProdutoPorId(rs.getInt("produto_id")));
+                auditoria.setUsuario(dadosUsuario.buscarUsuarioPorId(rs.getInt("usuario_id")));
 //                auditoria.setProdutoId(rs.getInt("produto_id"));
                 auditoria.setQuantidadeProduto(rs.getInt("quantidadeProduto"));
                 auditoria.setDataOperacao((rs.getTimestamp("data")));
@@ -76,13 +76,12 @@ public class DadosAuditoria extends Conexao {
 
             auditoria.setId(rs.getInt("id"));
 //                auditoria.setUsuarioId(rs.getInt("usuario_id"));
-            auditoria.setProduto(dadosProduto.buscarProduto(rs.getInt("produto_id"), stmt));
-            auditoria.setUsuario(dadosUsuario.buscarUsuario(rs.getInt("usuario_id"), stmt));
+            auditoria.setProduto(dadosProduto.buscarProdutoPorId(rs.getInt("produto_id")));
+            auditoria.setUsuario(dadosUsuario.buscarUsuarioPorId(rs.getInt("usuario_id")));
 //                auditoria.setProdutoId(rs.getInt("produto_id"));
             auditoria.setQuantidadeProduto(rs.getInt("quantidadeProduto"));
             auditoria.setDataOperacao((rs.getTimestamp("data")));
             auditoria.setTipoTransacao(rs.getString("transacaoTipo"));
-            System.out.println(rs.getInt("id"));
             retorno.add(auditoria);
 
         }

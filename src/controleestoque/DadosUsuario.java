@@ -5,6 +5,7 @@
  */
 package controleestoque;
 
+import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -32,7 +33,7 @@ public class DadosUsuario extends Conexao {
             Logger.getLogger(DadosUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public int buscarId(String login) throws Exception {
         int usuarioId = 0;
         try {
@@ -46,12 +47,12 @@ public class DadosUsuario extends Conexao {
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(DadosUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
-        if (usuarioId==0 && login.equals("")==false){
+        if (usuarioId == 0 && login.equals("") == false) {
             throw new Exception("Usuário inexistente.");
         }
         return usuarioId;
     }
-    
+
     public String buscarLogin(int id) throws Exception {
         String usuarioLogin = "";
         try {
@@ -71,32 +72,63 @@ public class DadosUsuario extends Conexao {
         }
         return usuarioLogin;
     }
-    
-    public Usuario buscarUsuario(int id, Statement stmt) {
+
+    public Usuario buscarUsuario(String login) {
         Usuario usuario = new Usuario();
-        try {
-            
-            
-            //abrindo a conexão
-        //            stmt = conectar();
-        //instrução sql correspondente a seleção do produto
-        String sql = "SELECT * FROM usuario WHERE id = " + id;
+        if (login.equals("") == false) {
+            try {
 
-        //executando a instrução sql
-        ResultSet rs = stmt.executeQuery(sql);
-        while (rs.next()) {
+                //abrindo a conexão
+                stmt = conectar();
+                //instrução sql correspondente a seleção do produto
+                String sql = "SELECT * FROM usuario WHERE login = '" + login + "'";
 
-            usuario.setId(rs.getInt("id"));
-            usuario.setLogin(rs.getString("login"));
-            usuario.setNome(rs.getString("nome"));
+                //executando a instrução sql
+                ResultSet rs = stmt.executeQuery(sql);
+                while (rs.next()) {
+
+                    usuario.setId(rs.getInt("id"));
+                    usuario.setLogin(rs.getString("login"));
+                    usuario.setNome(rs.getString("nome"));
 //            usuario.setLogin(rs.getString("login"));
-            usuario.setPrivilegio(rs.getString("privilegio"));
-}
-//            desconectar();
-        } catch (SQLException ex) {
-            Logger.getLogger(DadosUsuario.class.getName()).log(Level.SEVERE, null, ex);
+                    usuario.setPrivilegio(rs.getString("privilegio"));
+                }
+                desconectar();
+            } catch (SQLException | ClassNotFoundException ex) {
+                Logger.getLogger(DadosUsuario.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return usuario;
+        }else{
+            usuario.setId(0);
+            return usuario;
         }
+        
+    }
+    
+    public Usuario buscarUsuarioPorId(int id) {
+        Usuario usuario = new Usuario();
+            try {
+                stmt = conectar();
+                String sql = "SELECT * FROM usuario WHERE id = " + id;
+                ResultSet rs = stmt.executeQuery(sql);
+                while (rs.next()) {
+//                produtoNome = rs.getString("nome");
+                    usuario.setId(rs.getInt("id"));
+                    usuario.setNome(rs.getString("nome"));
+                    usuario.setLogin(rs.getString("login"));
+                    usuario.setSenha(rs.getString("senha"));
+                    usuario.setPrivilegio(rs.getString("privilegio"));
+                }
+                desconectar();
+
+            } catch (CommunicationsException ex) {
+                throw new UnsupportedOperationException("Servidor RGBD pode estar off-line", ex);
+
+            } catch (SQLException | ClassNotFoundException ex) {
+                Logger.getLogger(DadosProduto.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        
         return usuario;
     }
-        
+
 }

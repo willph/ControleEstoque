@@ -152,7 +152,7 @@ public class FormAuditoria extends javax.swing.JDialog {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(72, Short.MAX_VALUE)
+                .addContainerGap(20, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jTextFieldProduto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -170,7 +170,8 @@ public class FormAuditoria extends javax.swing.JDialog {
     private void jButtonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarActionPerformed
         try {
             // TODO add your handling code here:
-            listaAuditoria = new DadosAuditoria().consultaId(new DadosProduto().buscarId(jTextFieldProduto.getText()), new DadosUsuario().buscarId(jTextFieldUsuario.getText()));
+            listaAuditoria = new DadosAuditoria().consultaId(new DadosProduto().buscarProduto(jTextFieldProduto.getText()),
+                    new DadosUsuario().buscarUsuario(jTextFieldUsuario.getText()));
             if (listaAuditoria.size() > 0) {
                 listar(listaAuditoria);
             } else {
@@ -275,7 +276,7 @@ public class FormAuditoria extends javax.swing.JDialog {
                 modelo.addRow(new String[]{String.valueOf(auditoria.getId()), String.valueOf(auditoria.getUsuario().getId()), auditoria.getUsuario().getLogin(), ""
                     + auditoria.getProduto().getId(), auditoria.getProduto().getNome(), String.valueOf(auditoria.getProduto().getQuantidade()), auditoria.getTipoTransacao(), String.valueOf(auditoria.getDataOperacao())});
             }
-            for (int x = 0; x < 5; x++) {
+            for (int x = 0; x < 8; x++) {
                 jTable1.getColumnModel().getColumn(x).setCellRenderer(centerRenderer);
             }
             TableRowSorter<TableModel> sorter = new TableRowSorter<>(jTable1.getModel());
