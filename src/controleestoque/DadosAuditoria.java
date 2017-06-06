@@ -21,10 +21,10 @@ public class DadosAuditoria extends Conexao {
     private final DadosProduto dadosProduto = new DadosProduto();
     private final DadosUsuario dadosUsuario = new DadosUsuario();
 
-    public ArrayList<Auditoria> consultaId(Produto produto, Usuario usuario) throws Exception {
+    public ArrayList<Auditoria> consultaId(String produtoNome, String usuarioLogin) throws Exception {
 
         ArrayList<Auditoria> retorno = new ArrayList<>();
-        if ((produto.getId() != 0 || usuario.getId() != 0)) {
+        if (!produtoNome.equals("") || !usuarioLogin.equals("")) {
             String sql = "";
             //abrindo a conexão
             stmt = conectar();
@@ -41,27 +41,27 @@ public class DadosAuditoria extends Conexao {
 //                }
 //            }
             
-            if (usuario.getId() == 0) {
-                if (produto.getId() != 0) {
+            if (usuarioLogin.equals("")) {
+                if (!produtoNome.equals("")) {
                     sql = "select a.id as auditoria_id, a.quantidadeProduto as auditoria_quantidadeProduto, a.data as auditoria_data, a.transacaoTipo as auditoria_transacaoTipo, "
                             + "p.id as produto_id, p.nome as produto_nome, p.preco as produto_preco, p.qtd as produto_quantidade, p.tipoProduto as produto_descricao, "
                             + "u.id as usuario_id, u.nome as usuario_nome, u.login as usuario_login, u.senha as usuario_senha, u.privilegio as usuario_privilegio "
                             + "from auditoria as a inner join produto as p on p.id = a.produto_id inner join usuario as u on u.id = a.usuario_id "
-                            + "where p.id = " + produto.getId() + " ;";
+                            + "where p.nome = '" + produtoNome + "' ;";
                 }
             } else {
-                if (produto.getId() != 0) {
+                if (!produtoNome.equals("")) {
                     sql = "select a.id as auditoria_id, a.quantidadeProduto as auditoria_quantidadeProduto, a.data as auditoria_data, a.transacaoTipo as auditoria_transacaoTipo, "
                             + "p.id as produto_id, p.nome as produto_nome, p.preco as produto_preco, p.qtd as produto_quantidade, p.tipoProduto as produto_descricao, "
                             + "u.id as usuario_id, u.nome as usuario_nome, u.login as usuario_login, u.senha as usuario_senha, u.privilegio as usuario_privilegio "
                             + "from auditoria as a inner join produto as p on p.id = a.produto_id inner join usuario as u on u.id = a.usuario_id "
-                            + "where p.id = " + produto.getId() + " and u.id = " + usuario.getId() + " ;";
+                            + "where p.nome = '" + produtoNome + "' and u.login = '" + usuarioLogin + "' ;";
                 } else {
                     sql = "select a.id as auditoria_id, a.quantidadeProduto as auditoria_quantidadeProduto, a.data as auditoria_data, a.transacaoTipo as auditoria_transacaoTipo, "
                             + "p.id as produto_id, p.nome as produto_nome, p.preco as produto_preco, p.qtd as produto_quantidade, p.tipoProduto as produto_descricao, "
                             + "u.id as usuario_id, u.nome as usuario_nome, u.login as usuario_login, u.senha as usuario_senha, u.privilegio as usuario_privilegio "
                             + "from auditoria as a inner join produto as p on p.id = a.produto_id inner join usuario as u on u.id = a.usuario_id "
-                            + "where u.id = " + usuario.getId() + " ;";
+                            + "where u.login = '" + usuarioLogin + "';";
                 }
             }
             
@@ -71,10 +71,8 @@ public class DadosAuditoria extends Conexao {
                 Auditoria auditoria = new Auditoria();
 
                 auditoria.setId(rs.getInt("auditoria_id"));
-        //                auditoria.setUsuarioId(rs.getInt("usuario_id"));
                 auditoria.setProduto(new Produto(rs.getInt("produto_id"), rs.getString("produto_nome"), rs.getFloat("produto_preco"), rs.getInt("produto_quantidade"), rs.getString("produto_descricao")));
                 auditoria.setUsuario(new Usuario(rs.getInt("usuario_id"), rs.getString("usuario_nome"), rs.getString("usuario_login"), rs.getString("usuario_privilegio")));
-        //                auditoria.setProdutoId(rs.getInt("produto_id"));
                 auditoria.setQuantidadeProduto(rs.getInt("auditoria_quantidadeProduto"));
                 auditoria.setDataOperacao((rs.getTimestamp("auditoria_data")));
                 auditoria.setTipoTransacao(rs.getString("auditoria_transacaoTipo"));

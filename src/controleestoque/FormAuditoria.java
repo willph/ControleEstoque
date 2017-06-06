@@ -170,8 +170,7 @@ public class FormAuditoria extends javax.swing.JDialog {
     private void jButtonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarActionPerformed
         try {
             // TODO add your handling code here:
-            listaAuditoria = new DadosAuditoria().consultaId(new DadosProduto().buscarProduto(jTextFieldProduto.getText()),
-                    new DadosUsuario().buscarUsuario(jTextFieldUsuario.getText()));
+            listaAuditoria = new DadosAuditoria().consultaId(jTextFieldProduto.getText(), jTextFieldUsuario.getText());
             if (listaAuditoria.size() > 0) {
                 listar(listaAuditoria);
             } else {
