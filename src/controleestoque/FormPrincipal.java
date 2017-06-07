@@ -33,6 +33,7 @@ public class FormPrincipal extends javax.swing.JFrame {
     private ArrayList<Produto> listaProdutos;
     private FormAlterarProduto alterarProduto;
     private FormNovoUsuario novoUsuario;
+    private final DadosProduto dadosproduto = new DadosProduto();
 
     /**
      * Creates new form FormPrincipal
@@ -45,11 +46,10 @@ public class FormPrincipal extends javax.swing.JFrame {
         if (privilegio.equals("administrador") == false) {
             jButtonNovoUsuario.setEnabled(false);
             jButtonRemover.setEnabled(false);
-            jButtonAuditoria.setEnabled(false);
+            
         }
-            atualizarLinhas();
+        atualizarLinhas();
 
-        
     }
 
     /**
@@ -276,20 +276,26 @@ public class FormPrincipal extends javax.swing.JFrame {
 
     private void jButtonCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCadastrarActionPerformed
         try {
-            if (jTextFieldNome.getText().equals("") == true || jTextFieldDescricao.getText().equals("") == true || jTextFieldPreco.getText().equals("") == true) {
-                JOptionPane.showMessageDialog(rootPane, "Nenhum campo pode ficar em branco.");
-            } else {
-                Produto produto1 = new Produto(jTextFieldNome.getText(), Float.valueOf(jTextFieldPreco.getText()),
-                        0, jTextFieldDescricao.getText());
+            if (dadosproduto.validarProduto(jTextFieldNome.getText()) == true) {
+                if (jTextFieldNome.getText().equals("") == true || jTextFieldDescricao.getText().equals("") == true || jTextFieldPreco.getText().equals("") == true) {
+                    JOptionPane.showMessageDialog(rootPane, "Nenhum campo pode ficar em branco.");
+                } else {
+                    Produto produto1 = new Produto(jTextFieldNome.getText(), Float.valueOf(jTextFieldPreco.getText()),
+                            0, jTextFieldDescricao.getText());
 
-                DadosProduto dados = new DadosProduto();
-                dados.cadastrar(produto1);
-                JOptionPane.showMessageDialog(rootPane, "Produto cadastrado");
-                DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
-                modelo.addRow(new String[]{"" + new DadosProduto().buscarId(produto1.getNome()), produto1.getNome(),
-                    "R$ " + Float.toString(produto1.getPreco()), "" + produto1.getQuantidade(),
-                    produto1.getDescricao()});
-                clearFields();
+                    DadosProduto dados = new DadosProduto();
+                    dados.cadastrar(produto1);
+                    JOptionPane.showMessageDialog(rootPane, "Produto cadastrado");
+                    DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+                    modelo.addRow(new String[]{"" + new DadosProduto().buscarId(produto1.getNome()), produto1.getNome(),
+                        "R$ " + Float.toString(produto1.getPreco()), "" + produto1.getQuantidade(),
+                        produto1.getDescricao()});
+                    clearFields();
+                }
+            } else {
+
+                JOptionPane.showMessageDialog(null, "Produto já existe. Por favor escolha outro nome");
+                jTextFieldNome.requestFocus();
             }
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(rootPane, "Erro: preço inválido.");
@@ -385,7 +391,7 @@ public class FormPrincipal extends javax.swing.JFrame {
             new FormAuditoria(this, true).setVisible(true);
         } catch (Exception ex) {
             Logger.getLogger(FormPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-         }
+        }
     }//GEN-LAST:event_jButtonAuditoriaActionPerformed
 
     public static void main(String args[]) {
@@ -402,21 +408,15 @@ public class FormPrincipal extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FormLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FormLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FormLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(FormLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        
+        //</editor-fold>
 
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new FormPrincipal("administrador").setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new FormPrincipal("administrador").setVisible(true);
         });
     }
 
@@ -449,7 +449,7 @@ public class FormPrincipal extends javax.swing.JFrame {
     }
 
     public final void atualizarLinhas() {
-        
+
         DefaultTableModel modelo = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column) {

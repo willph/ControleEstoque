@@ -53,7 +53,7 @@ public class FormNovoUsuario extends javax.swing.JFrame {
 
         jLabel4.setText("Tipo de usuário:");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Comum", "Administrador" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Estoquista", "Administrador" }));
 
         jButtonCadastrar.setText("Cadastrar");
         jButtonCadastrar.addActionListener(new java.awt.event.ActionListener() {

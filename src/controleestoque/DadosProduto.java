@@ -32,7 +32,7 @@ public class DadosProduto extends Conexao {
 
     private UtilsDbAuditoria auditConection;
 
-    public void gerarRelatorio() {
+    public void gerarRelatorio() throws Exception {
 
         // TODO add your handling code here:
         Document document = new Document();
@@ -42,7 +42,10 @@ public class DadosProduto extends Conexao {
 
         try {
             Statement conex = this.conectar();
-            String sql = "SELECT * FROM produto ORDER BY qtd";
+            String sql = sql = "select a.id as auditoria_id, a.quantidadeProduto as auditoria_quantidadeProduto, a.data as auditoria_data, a.transacaoTipo as auditoria_transacaoTipo, "
+                    + "p.id as produto_id, p.nome as produto_nome, p.preco as produto_preco, p.qtd as produto_quantidade, p.tipoProduto as produto_descricao, "
+                    + "u.id as usuario_id, u.nome as usuario_nome, u.login as usuario_login, u.senha as usuario_senha, u.privilegio as usuario_privilegio "
+                    + "from auditoria as a inner join produto as p on p.id = a.produto_id inner join usuario as u on u.id = a.usuario_id";
             //ResultSet rs = stmt.executeQuery(sql);
             ResultSet rs = conex.executeQuery(sql);
 
@@ -50,7 +53,7 @@ public class DadosProduto extends Conexao {
             document.open();
 
 // adicionando um Titulo no documento
-            Paragraph title = new Paragraph("Produtos Cadastrados", font1);
+            Paragraph title = new Paragraph("Relatorio de Produtos", font1);
 
 //alinhado o titulo na forma centralizada
             title.setAlignment(Element.ALIGN_CENTER);
@@ -72,30 +75,48 @@ public class DadosProduto extends Conexao {
             }*/
 
 //criando uma tabela
-            PdfPTable table = new PdfPTable(2); // 2 colunas.
+            PdfPTable table = new PdfPTable(5); // 2 colunas.
 //adicionando as celulas
-            PdfPCell cell1 = new PdfPCell(new Paragraph("Produto", font2));
-            PdfPCell cell2 = new PdfPCell(new Paragraph("Quantidade", font2));
+            PdfPCell cellProduto = new PdfPCell(new Paragraph("Produto", font2));
+            PdfPCell cellQuantidade = new PdfPCell(new Paragraph("Em Estoque", font2));
+            PdfPCell cellEntrada = new PdfPCell(new Paragraph("Entrada/Saida", font2));
+            PdfPCell cellData = new PdfPCell(new Paragraph("Data", font2));
+            PdfPCell cellEstoquista = new PdfPCell(new Paragraph("Estoquista", font2));
 
 //alinhamento do que tem dentro da celula
-            cell1.setHorizontalAlignment(Element.ALIGN_CENTER);
-            cell2.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cellProduto.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cellQuantidade.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cellEntrada.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cellData.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cellEstoquista.setHorizontalAlignment(Element.ALIGN_CENTER);
 
 //finalizando as celulas nome, email na tabela
-            table.addCell(cell1);
-            table.addCell(cell2);
+            table.addCell(cellProduto);
+            table.addCell(cellQuantidade);
+            table.addCell(cellEntrada);
+            table.addCell(cellData);
+            table.addCell(cellEstoquista);
 
             while (rs.next()) {
 //criando varias celulas dentro do while
-                PdfPCell cell3 = new PdfPCell(new Paragraph(rs.getString(2)));
-                PdfPCell cell4 = new PdfPCell(new Paragraph(rs.getString(4)));
+                PdfPCell cellProduto1 = new PdfPCell(new Paragraph(rs.getString(6)));
+                PdfPCell cellQuantidade1 = new PdfPCell(new Paragraph(rs.getString(8)));
+                PdfPCell cellEntrada1 = new PdfPCell(new Paragraph(rs.getString(2) + " - " + rs.getString(4)));
+                PdfPCell cellData1 = new PdfPCell(new Paragraph(rs.getString(3)));
+                PdfPCell cell1Estoquista1 = new PdfPCell(new Paragraph(rs.getString(11)));
 
-                cell3.setHorizontalAlignment(Element.ALIGN_CENTER);
-                cell4.setHorizontalAlignment(Element.ALIGN_CENTER);
+                cellProduto1.setHorizontalAlignment(Element.ALIGN_CENTER);
+                cellQuantidade1.setHorizontalAlignment(Element.ALIGN_CENTER);
+                cellEntrada1.setHorizontalAlignment(Element.ALIGN_CENTER);
+                cellData1.setHorizontalAlignment(Element.ALIGN_CENTER);
+                cell1Estoquista1.setHorizontalAlignment(Element.ALIGN_CENTER);
 
 //finalizando as celulas do while na tabela
-                table.addCell(cell3);
-                table.addCell(cell4);
+                table.addCell(cellProduto1);
+                table.addCell(cellQuantidade1);
+                table.addCell(cellEntrada1);
+                table.addCell(cellData1);
+                table.addCell(cell1Estoquista1);
             }
 //finalizando a tabela dentro do pdf
             document.add(table);
@@ -111,6 +132,7 @@ public class DadosProduto extends Conexao {
 
 //encerrando o documento pdf
         document.close();
+        throw new Exception("Relatorio gerado com sucesso!");
 
     }
 
@@ -290,30 +312,30 @@ public class DadosProduto extends Conexao {
         }
         return produto;
     }
-    
+
     public Produto buscarProdutoPorId(int id) {
         Produto produto = new Produto();
-            try {
-                stmt = conectar();
-                String sql = "SELECT * FROM produto WHERE id = " + id;
-                ResultSet rs = stmt.executeQuery(sql);
-                while (rs.next()) {
+        try {
+            stmt = conectar();
+            String sql = "SELECT * FROM produto WHERE id = " + id;
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
 //                produtoNome = rs.getString("nome");
-                    produto.setId(rs.getInt("id"));
-                    produto.setNome(rs.getString("nome"));
-                    produto.setPreco(rs.getFloat("preco"));
-                    produto.setQuantidade(rs.getInt("qtd"));
-                    produto.setDescricao(rs.getString("tipoProduto"));
-                }
-                desconectar();
-
-            } catch (CommunicationsException ex) {
-                throw new UnsupportedOperationException("Servidor RGBD pode estar off-line", ex);
-
-            } catch (SQLException | ClassNotFoundException ex) {
-                Logger.getLogger(DadosProduto.class.getName()).log(Level.SEVERE, null, ex);
+                produto.setId(rs.getInt("id"));
+                produto.setNome(rs.getString("nome"));
+                produto.setPreco(rs.getFloat("preco"));
+                produto.setQuantidade(rs.getInt("qtd"));
+                produto.setDescricao(rs.getString("tipoProduto"));
             }
-        
+            desconectar();
+
+        } catch (CommunicationsException ex) {
+            throw new UnsupportedOperationException("Servidor RGBD pode estar off-line", ex);
+
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(DadosProduto.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         return produto;
     }
 
@@ -346,5 +368,25 @@ public class DadosProduto extends Conexao {
             throw new Exception("Banco de dados\n" + ex.getMessage());
 
         }
+    }
+
+    public boolean validarProduto(String nome) {
+        try {
+            Statement conex = this.conectar();
+            String sql = "SELECT * FROM produto WHERE nome='" + nome + "'";
+            ResultSet rs = conex.executeQuery(sql);
+
+            if (!rs.first()) {
+
+            } else {
+
+                return false;
+            }
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(FormLogin.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+        return true;
+
     }
 }
