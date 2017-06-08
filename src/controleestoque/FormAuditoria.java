@@ -321,8 +321,9 @@ public class FormAuditoria extends javax.swing.JDialog {
             modelo.setRowCount(0);
             for (int i = 0; i < listaAuditoria.size(); i++) {
                 Auditoria auditoria = listaAuditoria.get(i);
-                modelo.addRow(new String[]{String.valueOf(auditoria.getId()), String.valueOf(auditoria.getUsuario().getId()), auditoria.getUsuario().getLogin(), ""
-                    + auditoria.getProduto().getId(), auditoria.getProduto().getNome(), String.valueOf(auditoria.getProduto().getQuantidade()), auditoria.getTipoTransacao(), String.valueOf(auditoria.getDataOperacao())});
+                modelo.addRow(new String[]{String.valueOf(auditoria.getId()), String.valueOf(auditoria.getUsuario().getId()), auditoria.getUsuario().getLogin(), 
+                    String.valueOf(auditoria.getProduto().getId()), auditoria.getProduto().getNome(), String.valueOf(auditoria.getQuantidadeProduto()), 
+                    auditoria.getTipoTransacao(), String.valueOf(auditoria.getDataOperacao())});
             }
             for (int x = 0; x < 8; x++) {
                 jTable1.getColumnModel().getColumn(x).setCellRenderer(centerRenderer);

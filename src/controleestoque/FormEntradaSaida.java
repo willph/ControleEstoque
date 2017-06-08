@@ -21,7 +21,8 @@ public class FormEntradaSaida extends javax.swing.JDialog {
      */
     private Produto produto = new Produto();
     private FormAlterarProduto alterarProduto;
-
+    private int quantidadeTransacao;
+    
     public FormEntradaSaida(javax.swing.JDialog parent, boolean modal, Produto produto, FormAlterarProduto alterarProduto) {
         super(parent, modal);
         initComponents();
@@ -128,13 +129,13 @@ public class FormEntradaSaida extends javax.swing.JDialog {
         // TODO add your handling code here:
         try{
         if (jComboBox1.getSelectedItem().toString().equals("Entrada") == true) {
-            produto.setQuantidadeOperacao(Integer.parseInt(jTextField1.getText()));
-            produto.setQuantidade(produto.getQuantidade() + produto.getQuantidadeOperacao());
+            quantidadeTransacao = Integer.parseInt(jTextField1.getText());
+            produto.setQuantidade(produto.getQuantidade() + quantidadeTransacao);
             fechar();
         } else {
             if (Integer.parseInt(jTextField1.getText()) <= produto.getQuantidade()) {
-                produto.setQuantidadeOperacao(Integer.parseInt(jTextField1.getText()));
-                produto.setQuantidade(produto.getQuantidade() - produto.getQuantidadeOperacao());
+                quantidadeTransacao = Integer.parseInt(jTextField1.getText());
+                produto.setQuantidade(produto.getQuantidade() - quantidadeTransacao);
                 fechar();
             } else {
                 JOptionPane.showMessageDialog(null, "A quantidade de retirada não pode ser maior que a disponível.");

@@ -153,7 +153,7 @@ public class DadosProduto extends Conexao {
 //                conex.execute(sql);
             if (stmt.executeUpdate(sql) > 0) {
                 auditConection = new UtilsDbAuditoria(stmt);
-                auditConection.cadastrarAuditoria(novoProduto, "cadastro");
+                auditConection.cadastrarAuditoria(novoProduto, "cadastro", 0);
             }
 
             //fechando a conexão com o banco de dados
@@ -187,12 +187,12 @@ public class DadosProduto extends Conexao {
 
     }
 
-    public void transacao(Produto p, String tipo) {
+    public void transacao(Produto p, String tipo, int quantidadeTransacao) {
         try {
             //abrindo a conexão
             stmt = conectar();
             auditConection = new UtilsDbAuditoria(stmt);
-            auditConection.cadastrarAuditoria(p, tipo);
+            auditConection.cadastrarAuditoria(p, tipo, quantidadeTransacao);
             //fechando a conexão com o banco de dados
             desconectar();
         } catch (ClassNotFoundException | SQLException ex) {

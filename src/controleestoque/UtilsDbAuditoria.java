@@ -27,19 +27,17 @@ public class UtilsDbAuditoria {
         usuarioLogado = Login.getUsuarioLogado();
     }
 
-    public void cadastrarAuditoria(Produto novoProduto, String transacaoTipo) {
+    public void cadastrarAuditoria(Produto novoProduto, String transacaoTipo, int quantidadeTransacao) {
         Date date = Date.from(Instant.now());
         String data = dateFormat.format(date);
 
-//        int produtoId = new DadosProduto().buscarId(novoProduto.getNome());
         int produtoId = novoProduto.getId();
         try {
             //abrindo a conexão
             Statement conex = stmt;
             //instrução sql correspondente a inserção da auditoria
             String sql = "INSERT INTO auditoria (usuario_id, produto_id, data, quantidadeProduto, transacaoTipo) VALUES (%d, %d, '%s', %d, '%s');";
-            String sqlFormated = String.format(sql, usuarioLogado.getId(), produtoId, data, novoProduto.getQuantidadeOperacao(), transacaoTipo);
-
+            String sqlFormated = String.format(sql, usuarioLogado.getId(), produtoId, data, quantidadeTransacao, transacaoTipo);
             try {
                 //executando a instrução sql
                 conex.executeUpdate(sqlFormated);

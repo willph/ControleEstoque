@@ -23,6 +23,8 @@ public class FormAlterarProduto extends javax.swing.JDialog {
     private Produto produto;
     private int quantidadeTotalInicial;
     private FormPrincipal formPrincipal;
+    private int quantidadeTransacao;
+    
     
     public FormAlterarProduto(java.awt.Frame parent, boolean modal, Produto produto, FormPrincipal form) {
         super(parent, modal);
@@ -217,11 +219,13 @@ public class FormAlterarProduto extends javax.swing.JDialog {
         produto.setPreco(Float.valueOf(jTextFieldPreco.getText()));
         DadosProduto dados = new DadosProduto();
         if (quantidadeTotalInicial >= produto.getQuantidade() && (quantidadeTotalInicial - produto.getQuantidade()) != 0) {
-            produto.setQuantidadeOperacao(quantidadeTotalInicial - produto.getQuantidade());
-            dados.transacao(produto, "saída");
+//            produto.setQuantidadeOperacao(quantidadeTotalInicial - produto.getQuantidade());
+            quantidadeTransacao = quantidadeTotalInicial - produto.getQuantidade();
+            dados.transacao(produto, "saída", quantidadeTransacao);
         } else if (quantidadeTotalInicial <= produto.getQuantidade() && (produto.getQuantidade() - quantidadeTotalInicial) != 0) {
-            produto.setQuantidadeOperacao(produto.getQuantidade() - quantidadeTotalInicial);
-            dados.transacao(produto, "entrada");
+//            produto.setQuantidadeOperacao(produto.getQuantidade() - quantidadeTotalInicial);
+            quantidadeTransacao = produto.getQuantidade() - quantidadeTotalInicial;
+            dados.transacao(produto, "entrada", quantidadeTransacao);
         }
         dados.atualizar(produto);
         formPrincipal.setTableRow(produto);
