@@ -127,22 +127,33 @@ public class FormEntradaSaida extends javax.swing.JDialog {
 
     private void jButtonOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOkActionPerformed
         // TODO add your handling code here:
+
+        NegocioProduto negocioProduto = new NegocioProduto();
+        
+        
         try{
-        if (jComboBox1.getSelectedItem().toString().equals("Entrada") == true) {
+            String comboBoxSelected = jComboBox1.getSelectedItem().toString();
             quantidadeTransacao = Integer.parseInt(jTextField1.getText());
-            produto.setQuantidade(produto.getQuantidade() + quantidadeTransacao);
+
+            negocioProduto.validaEntradaSaida(produto, comboBoxSelected, quantidadeTransacao);
             fechar();
-        } else {
-            if (Integer.parseInt(jTextField1.getText()) <= produto.getQuantidade()) {
-                quantidadeTransacao = Integer.parseInt(jTextField1.getText());
-                produto.setQuantidade(produto.getQuantidade() - quantidadeTransacao);
-                fechar();
-            } else {
-                JOptionPane.showMessageDialog(null, "A quantidade de retirada não pode ser maior que a disponível.");
-            }
-        }
+//        if (jComboBox1.getSelectedItem().toString().equals("Entrada") == true) {
+//            quantidadeTransacao = Integer.parseInt(jTextField1.getText());
+//            produto.setQuantidade(produto.getQuantidade() + quantidadeTransacao);
+//            fechar();
+//        } else {
+//            if (Integer.parseInt(jTextField1.getText()) <= produto.getQuantidade()) {
+//                quantidadeTransacao = Integer.parseInt(jTextField1.getText());
+//                produto.setQuantidade(produto.getQuantidade() - quantidadeTransacao);
+//                fechar();
+//            } else {
+//                JOptionPane.showMessageDialog(null, "A quantidade de retirada não pode ser maior que a disponível.");
+//            }
+//        }
         }catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(rootPane, "Erro: quantidade invalida.");
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(rootPane, ex.getMessage());
         }
         
         

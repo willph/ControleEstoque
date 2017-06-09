@@ -14,6 +14,7 @@ public class FormNovoUsuario extends javax.swing.JFrame {
 
     /**
      * Creates new form FormNovoUsuario
+     *
      * @param parent
      */
     public FormNovoUsuario(java.awt.Frame parent) {
@@ -115,26 +116,41 @@ public class FormNovoUsuario extends javax.swing.JFrame {
 
     private void jButtonCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCadastrarActionPerformed
         // TODO add your handling code here:
-        
-        if (login.validar(jTextFieldLogin.getText()) == true) {
-            if (jTextFieldNome.getText().equals("") == true || jTextFieldLogin.getText().equals("") == true || jTextFieldSenha.getText().equals("") == true) {
-                JOptionPane.showMessageDialog(rootPane, "Nenhum campo pode ficar em branco.");
-            } else {
-                Usuario usuario = new Usuario();
-                usuario.setNome(jTextFieldNome.getText());
-                usuario.setLogin(jTextFieldLogin.getText());
-                usuario.setSenha(jTextFieldSenha.getText());
-                usuario.setPrivilegio(jComboBox1.getSelectedItem().toString().toLowerCase());
-                DadosUsuario dados = new DadosUsuario();
-                dados.cadastrar(usuario);
-                JOptionPane.showMessageDialog(rootPane, "Usuário cadastrado.");
-                clearFields();
-                fechar();
-            }
-        }else{
-            JOptionPane.showMessageDialog(null, "Login ja existe. Por favor escolha outro");
-            jTextFieldLogin.requestFocus();
+        try {
+            NegocioUsuario negocioUsuario = new NegocioUsuario();
+            Usuario usuario = new Usuario();
+            usuario.setNome(getjTextFieldNome().getText());
+            usuario.setLogin(getjTextFieldLogin().getText());
+            usuario.setSenha(getjTextFieldSenha().getText());
+            usuario.setPrivilegio(jComboBox1.getSelectedItem().toString().toLowerCase());
+            negocioUsuario.cadastra(usuario, this);
+            JOptionPane.showMessageDialog(rootPane, "Usuário cadastrado.");
+            fechar();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(rootPane, e.getMessage());
+//            getjTextFieldLogin().requestFocus();
         }
+
+//        if (login.validar(jTextFieldLogin.getText()) == true) {
+//            if (jTextFieldNome.getText().equals("") == true || jTextFieldLogin.getText().equals("") == true || jTextFieldSenha.getText().equals("") == true) {
+//                JOptionPane.showMessageDialog(rootPane, "Nenhum campo pode ficar em branco.");
+//            } else {
+//                Usuario usuario = new Usuario();
+//                usuario.setNome(jTextFieldNome.getText());
+//                usuario.setLogin(jTextFieldLogin.getText());
+//                usuario.setSenha(jTextFieldSenha.getText());
+//                usuario.setPrivilegio(jComboBox1.getSelectedItem().toString().toLowerCase());
+//                DadosUsuario dados = new DadosUsuario();
+//                dados.cadastrar(usuario);
+//                JOptionPane.showMessageDialog(rootPane, "Usuário cadastrado.");
+//                clearFields();
+//                fechar();
+//            }
+//        } else {
+//            JOptionPane.showMessageDialog(null, "Login ja existe. Por favor escolha outro");
+//            jTextFieldLogin.requestFocus();
+//        }
     }//GEN-LAST:event_jButtonCadastrarActionPerformed
 
 
@@ -156,11 +172,32 @@ public class FormNovoUsuario extends javax.swing.JFrame {
     }
 
     private void clearFields() {
-        
-        jTextFieldNome.setText("");
-        jTextFieldLogin.setText("");
-        jTextFieldSenha.setText("");
-       
+
+        getjTextFieldNome().setText("");
+        getjTextFieldLogin().setText("");
+        getjTextFieldSenha().setText("");
+
+    }
+
+    /**
+     * @return the jTextFieldLogin
+     */
+    public javax.swing.JTextField getjTextFieldLogin() {
+        return jTextFieldLogin;
+    }
+
+    /**
+     * @return the jTextFieldNome
+     */
+    public javax.swing.JTextField getjTextFieldNome() {
+        return jTextFieldNome;
+    }
+
+    /**
+     * @return the jTextFieldSenha
+     */
+    public javax.swing.JTextField getjTextFieldSenha() {
+        return jTextFieldSenha;
     }
 
 }

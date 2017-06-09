@@ -74,9 +74,6 @@ public class FormAuditoria extends javax.swing.JDialog {
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItemGerarRelatorio = new javax.swing.JMenuItem();
-        jMenuImprimir = new javax.swing.JMenu();
-        jMenuItemPreVizualizar = new javax.swing.JMenuItem();
-        jMenuItemImprimir = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Auditoria");
@@ -132,28 +129,6 @@ public class FormAuditoria extends javax.swing.JDialog {
         jMenu1.add(jMenuItemGerarRelatorio);
 
         jMenuBar1.add(jMenu1);
-
-        jMenuImprimir.setText("Imprimir");
-
-        jMenuItemPreVizualizar.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.ALT_MASK | java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItemPreVizualizar.setText("Pré-visualização");
-        jMenuItemPreVizualizar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemPreVizualizarActionPerformed(evt);
-            }
-        });
-        jMenuImprimir.add(jMenuItemPreVizualizar);
-
-        jMenuItemImprimir.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItemImprimir.setText("Imprimir");
-        jMenuItemImprimir.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemImprimirActionPerformed(evt);
-            }
-        });
-        jMenuImprimir.add(jMenuItemImprimir);
-
-        jMenuBar1.add(jMenuImprimir);
 
         setJMenuBar(jMenuBar1);
 
@@ -233,16 +208,6 @@ public class FormAuditoria extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_jMenuItemGerarRelatorioActionPerformed
 
-    private void jMenuItemPreVizualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemPreVizualizarActionPerformed
-        // TODO add your handling code here:
-        preVizualizar();
-    }//GEN-LAST:event_jMenuItemPreVizualizarActionPerformed
-
-    private void jMenuItemImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemImprimirActionPerformed
-        // TODO add your handling code here:
-        imprimir();
-    }//GEN-LAST:event_jMenuItemImprimirActionPerformed
-
     /**
      * @param args the command line arguments
      */
@@ -295,10 +260,7 @@ public class FormAuditoria extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenu jMenuImprimir;
     private javax.swing.JMenuItem jMenuItemGerarRelatorio;
-    private javax.swing.JMenuItem jMenuItemImprimir;
-    private javax.swing.JMenuItem jMenuItemPreVizualizar;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextFieldProduto;

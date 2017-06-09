@@ -30,7 +30,7 @@ import java.util.logging.Logger;
  */
 public class DadosProduto extends Conexao {
 
-    private UtilsDbAuditoria auditConection;
+    private DadosAuditoria auditConection;
 
     public void gerarRelatorio() throws Exception {
 
@@ -152,7 +152,7 @@ public class DadosProduto extends Conexao {
             //executando a instrução sql
 //                conex.execute(sql);
             if (stmt.executeUpdate(sql) > 0) {
-                auditConection = new UtilsDbAuditoria(stmt);
+                auditConection = new DadosAuditoria(stmt);
                 auditConection.cadastrarAuditoria(novoProduto, "cadastro", 0);
             }
 
@@ -179,6 +179,7 @@ public class DadosProduto extends Conexao {
 
             //executando a instrução sql
             stmt.execute(sql);
+            
             //fechando a conexão com o banco de dados
             desconectar();
         } catch (ClassNotFoundException | SQLException ex) {
@@ -187,19 +188,19 @@ public class DadosProduto extends Conexao {
 
     }
 
-    public void transacao(Produto p, String tipo, int quantidadeTransacao) {
-        try {
-            //abrindo a conexão
-            stmt = conectar();
-            auditConection = new UtilsDbAuditoria(stmt);
-            auditConection.cadastrarAuditoria(p, tipo, quantidadeTransacao);
-            //fechando a conexão com o banco de dados
-            desconectar();
-        } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(DadosProduto.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }
+//    public void transacao(Produto p, String tipo, int quantidadeTransacao) {
+//        try {
+//            //abrindo a conexão
+//            stmt = conectar();
+//            auditConection = new UtilsDbAuditoria(stmt);
+//            auditConection.cadastrarAuditoria(p, tipo, quantidadeTransacao);
+//            //fechando a conexão com o banco de dados
+//            desconectar();
+//        } catch (ClassNotFoundException | SQLException ex) {
+//            Logger.getLogger(DadosProduto.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//
+//    }
 
     public void remover(int id) throws Exception {
 

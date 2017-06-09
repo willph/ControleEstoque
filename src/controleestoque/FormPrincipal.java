@@ -43,6 +43,8 @@ public class FormPrincipal extends javax.swing.JFrame {
     public FormPrincipal(String privilegio) {
 
         initComponents();
+//        jTextFieldPreco.setText("0.0");
+//        System.out.println(Float.valueOf(""));
         if (privilegio.equals("administrador") == false) {
             jButtonNovoUsuario.setEnabled(false);
             jButtonRemover.setEnabled(false);
@@ -166,6 +168,11 @@ public class FormPrincipal extends javax.swing.JFrame {
 
         jLabeID.setText("ID:");
 
+        jTextFieldPreco.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldPrecoActionPerformed(evt);
+            }
+        });
         jTextFieldPreco.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 jTextFieldPrecoKeyPressed(evt);
@@ -275,30 +282,29 @@ public class FormPrincipal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCadastrarActionPerformed
+        
         try {
-            if (dadosproduto.validarProduto(jTextFieldNome.getText()) == true) {
-                if (jTextFieldNome.getText().equals("") == true || jTextFieldDescricao.getText().equals("") == true || jTextFieldPreco.getText().equals("") == true) {
-                    JOptionPane.showMessageDialog(rootPane, "Nenhum campo pode ficar em branco.");
-                } else {
+//            if (dadosproduto.validarProduto(jTextFieldNome.getText()) == true) {
+//                if (jTextFieldNome.getText().equals("") == true || jTextFieldDescricao.getText().equals("") == true || jTextFieldPreco.getText().equals("") == true) {
+//                    JOptionPane.showMessageDialog(rootPane, "Nenhum campo pode ficar em branco.");
+//                } else {
                     Produto produto1 = new Produto(jTextFieldNome.getText(), Float.valueOf(jTextFieldPreco.getText()),
                             0, jTextFieldDescricao.getText());
 
-                    DadosProduto dados = new DadosProduto();
-                    dados.cadastrar(produto1);
+                    NegocioProduto negocioDados = new NegocioProduto();
+                    negocioDados.cadastrar(produto1);
                     JOptionPane.showMessageDialog(rootPane, "Produto cadastrado");
                     DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
                     modelo.addRow(new String[]{"" + new DadosProduto().buscarId(produto1.getNome()), produto1.getNome(),
                         "R$ " + Float.toString(produto1.getPreco()), "" + produto1.getQuantidade(),
                         produto1.getDescricao()});
                     clearFields();
-                }
-            } else {
-
-                JOptionPane.showMessageDialog(null, "Produto já existe. Por favor escolha outro nome");
-                jTextFieldNome.requestFocus();
-            }
+//                }
+            
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(rootPane, "Erro: preço inválido.");
+            JOptionPane.showMessageDialog(rootPane, "Erro: preço inválido");
+        } catch(Exception ex){
+            JOptionPane.showMessageDialog(rootPane, ex.getMessage());
         }
     }//GEN-LAST:event_jButtonCadastrarActionPerformed
 
@@ -308,18 +314,13 @@ public class FormPrincipal extends javax.swing.JFrame {
 
     private void jButtonRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoverActionPerformed
         try {
-            // TODO add your handling code here:
-            if (Integer.valueOf(jTable1.getValueAt(jTable1.getSelectedRow(), 3).toString()) > 0) {
-                JOptionPane.showMessageDialog(rootPane, "Operação não permitida: a quantidade precisa estar zerada.");
-            } else {
-                DadosProduto dados = new DadosProduto();
-                dados.remover(Integer.valueOf(jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString()));
-                //JOptionPane.showMessageDialog(rootPane, "Produto removido.");
-                //DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
-                //modelo.removeRow(jTable1.getSelectedRow());
-                atualizarLinhas();
-                clearFields();
-            }
+            int id = Integer.valueOf(jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString());
+            int quantidadeProduto = Integer.valueOf(jTable1.getValueAt(jTable1.getSelectedRow(), 3).toString());
+            NegocioProduto negocioProduto = new NegocioProduto();
+            negocioProduto.remover(id, quantidadeProduto);
+
+            atualizarLinhas();
+            clearFields();
 
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(rootPane, ex.getMessage());
@@ -393,6 +394,10 @@ public class FormPrincipal extends javax.swing.JFrame {
             Logger.getLogger(FormPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButtonAuditoriaActionPerformed
+
+    private void jTextFieldPrecoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldPrecoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldPrecoActionPerformed
 
     public static void main(String args[]) {
 

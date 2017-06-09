@@ -217,17 +217,9 @@ public class FormAlterarProduto extends javax.swing.JDialog {
         produto.setNome(jTextFieldNome.getText());
         produto.setDescricao(jTextFieldDescricao.getText());
         produto.setPreco(Float.valueOf(jTextFieldPreco.getText()));
-        DadosProduto dados = new DadosProduto();
-        if (quantidadeTotalInicial >= produto.getQuantidade() && (quantidadeTotalInicial - produto.getQuantidade()) != 0) {
-//            produto.setQuantidadeOperacao(quantidadeTotalInicial - produto.getQuantidade());
-            quantidadeTransacao = quantidadeTotalInicial - produto.getQuantidade();
-            dados.transacao(produto, "saída", quantidadeTransacao);
-        } else if (quantidadeTotalInicial <= produto.getQuantidade() && (produto.getQuantidade() - quantidadeTotalInicial) != 0) {
-//            produto.setQuantidadeOperacao(produto.getQuantidade() - quantidadeTotalInicial);
-            quantidadeTransacao = produto.getQuantidade() - quantidadeTotalInicial;
-            dados.transacao(produto, "entrada", quantidadeTransacao);
-        }
-        dados.atualizar(produto);
+        NegocioProduto negocioProduto = new NegocioProduto();
+        negocioProduto.atualizar(produto, quantidadeTotalInicial);
+
         formPrincipal.setTableRow(produto);
         fechar();
         }catch (NumberFormatException ex) {

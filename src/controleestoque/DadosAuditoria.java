@@ -6,7 +6,11 @@
 package controleestoque;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -20,6 +24,18 @@ public class DadosAuditoria extends Conexao {
     
     private final DadosProduto dadosProduto = new DadosProduto();
     private final DadosUsuario dadosUsuario = new DadosUsuario();
+    private Usuario usuarioLogado;
+    private DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+//    private Statement stmt;
+    
+    
+    public DadosAuditoria(Statement stmt){
+        this.stmt = stmt;
+    }
+    
+    public DadosAuditoria() {
+        usuarioLogado = Login.getUsuarioLogado();
+    }
 
     public ArrayList<Auditoria> consultaId(String produtoNome, String usuarioLogin) throws Exception {
 
@@ -78,18 +94,7 @@ public class DadosAuditoria extends Conexao {
                 auditoria.setTipoTransacao(rs.getString("auditoria_transacaoTipo"));
                 retorno.add(auditoria);
                 
-                
-//                Auditoria auditoria = new Auditoria();
-//
-//                auditoria.setId(rs.getInt("id"));
-////                auditoria.setUsuarioId(rs.getInt("usuario_id"));
-//                auditoria.setProduto(dadosProduto.buscarProdutoPorId(rs.getInt("produto_id")));
-//                auditoria.setUsuario(dadosUsuario.buscarUsuarioPorId(rs.getInt("usuario_id")));
-////                auditoria.setProdutoId(rs.getInt("produto_id"));
-//                auditoria.setQuantidadeProduto(rs.getInt("quantidadeProduto"));
-//                auditoria.setDataOperacao((rs.getTimestamp("data")));
-//                auditoria.setTipoTransacao(rs.getString("transacaoTipo"));
-//                retorno.add(auditoria);                
+            
             }
             desconectar();
         }
@@ -115,31 +120,41 @@ public class DadosAuditoria extends Conexao {
             Auditoria auditoria = new Auditoria();
 
             auditoria.setId(rs.getInt("auditoria_id"));
-//                auditoria.setUsuarioId(rs.getInt("usuario_id"));
             auditoria.setProduto(new Produto(rs.getInt("produto_id"), rs.getString("produto_nome"), rs.getFloat("produto_preco"), rs.getInt("produto_quantidade"), rs.getString("produto_descricao")));
             auditoria.setUsuario(new Usuario(rs.getInt("usuario_id"), rs.getString("usuario_nome"), rs.getString("usuario_login"), rs.getString("usuario_privilegio")));
-//                auditoria.setProdutoId(rs.getInt("produto_id"));
             auditoria.setQuantidadeProduto(rs.getInt("auditoria_quantidadeProduto"));
             auditoria.setDataOperacao((rs.getTimestamp("auditoria_data")));
             auditoria.setTipoTransacao(rs.getString("auditoria_transacaoTipo"));
             retorno.add(auditoria);
 
-            
-//            Auditoria auditoria = new Auditoria();
-//
-//            auditoria.setId(rs.getInt("id"));
-////                auditoria.setUsuarioId(rs.getInt("usuario_id"));
-//            auditoria.setProduto(dadosProduto.buscarProdutoPorId(rs.getInt("produto_id")));
-//            auditoria.setUsuario(dadosUsuario.buscarUsuarioPorId(rs.getInt("usuario_id")));
-////                auditoria.setProdutoId(rs.getInt("produto_id"));
-//            auditoria.setQuantidadeProduto(rs.getInt("quantidadeProduto"));
-//            auditoria.setDataOperacao((rs.getTimestamp("data")));
-//            auditoria.setTipoTransacao(rs.getString("transacaoTipo"));
-//            retorno.add(auditoria);
+
             
         }
         //fechando a conexão com o banco de dados
         desconectar();
         return retorno;
+    }
+    
+    public void cadastrarAuditoria(Produto novoProduto, String transacaoTipo, int quantidadeTransacao) {
+        Date date = Date.from(Instant.now());
+        String data = dateFormat.format(date);
+
+        int produtoId = novoProduto.getId();
+        try {
+            //abrindo a conexão
+            Statement conex = stmt;
+            //instrução sql correspondente a inserção da auditoria
+            String sql = "INSERT INTO auditoria (usuario_id, produto_id, data, quantidadeProduto, transacaoTipo) VALUES (%d, %d, '%s', %d, '%s');";
+            String sqlFormated = String.format(sql, usuarioLogado.getId(), produtoId, data, quantidadeTransacao, transacaoTipo);
+            try {
+                //executando a instrução sql
+                conex.executeUpdate(sqlFormated);
+            } catch (SQLException e) {
+                //caso haja algum erro neste método será levantada esta execeção
+                throw new Exception("Erro ao executar inserção: " + e.getMessage());
+            }
+        } catch (Exception ex) {
+//            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
     }
 }
