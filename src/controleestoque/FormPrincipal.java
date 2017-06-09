@@ -48,7 +48,7 @@ public class FormPrincipal extends javax.swing.JFrame {
         if (privilegio.equals("administrador") == false) {
             jButtonNovoUsuario.setEnabled(false);
             jButtonRemover.setEnabled(false);
-            
+
         }
         atualizarLinhas();
 
@@ -282,28 +282,28 @@ public class FormPrincipal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCadastrarActionPerformed
-        
+
         try {
 //            if (dadosproduto.validarProduto(jTextFieldNome.getText()) == true) {
 //                if (jTextFieldNome.getText().equals("") == true || jTextFieldDescricao.getText().equals("") == true || jTextFieldPreco.getText().equals("") == true) {
 //                    JOptionPane.showMessageDialog(rootPane, "Nenhum campo pode ficar em branco.");
 //                } else {
-                    Produto produto1 = new Produto(jTextFieldNome.getText(), Float.valueOf(jTextFieldPreco.getText()),
-                            0, jTextFieldDescricao.getText());
+            Produto produto1 = new Produto(jTextFieldNome.getText(), Float.valueOf(jTextFieldPreco.getText()),
+                    0, jTextFieldDescricao.getText());
 
-                    NegocioProduto negocioDados = new NegocioProduto();
-                    negocioDados.cadastrar(produto1);
-                    JOptionPane.showMessageDialog(rootPane, "Produto cadastrado");
-                    DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
-                    modelo.addRow(new String[]{"" + new DadosProduto().buscarId(produto1.getNome()), produto1.getNome(),
-                        "R$ " + Float.toString(produto1.getPreco()), "" + produto1.getQuantidade(),
-                        produto1.getDescricao()});
-                    clearFields();
+            NegocioProduto negocioDados = new NegocioProduto();
+            negocioDados.cadastrar(produto1);
+            JOptionPane.showMessageDialog(rootPane, "Produto cadastrado");
+            DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+            modelo.addRow(new String[]{"" + new DadosProduto().buscarId(produto1.getNome()), produto1.getNome(),
+                "R$ " + Float.toString(produto1.getPreco()), "" + produto1.getQuantidade(),
+                produto1.getDescricao()});
+            clearFields();
 //                }
-            
+
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(rootPane, "Erro: preço inválido");
-        } catch(Exception ex){
+        } catch (Exception ex) {
             JOptionPane.showMessageDialog(rootPane, ex.getMessage());
         }
     }//GEN-LAST:event_jButtonCadastrarActionPerformed
@@ -417,9 +417,8 @@ public class FormPrincipal extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(FormLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        
-        //</editor-fold>
 
+        //</editor-fold>
         java.awt.EventQueue.invokeLater(() -> {
             new FormPrincipal("administrador").setVisible(true);
         });

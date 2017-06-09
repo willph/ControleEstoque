@@ -45,7 +45,7 @@ public class NegocioProduto extends Conexao {
         int quantidadeTransacao = 0;
         DadosProduto dados = new DadosProduto();
         String tipoTransacao = "";
-        DadosAuditoria dadosAuditoria = new DadosAuditoria(stmt);
+        DadosAuditoria dadosAuditoria = new DadosAuditoria();
 //        UtilsDbAuditoria dadosAuditoria = new UtilsDbAuditoria(stmt)
         
         if (quantidadeTotalInicial >= produto.getQuantidade() && (quantidadeTotalInicial - produto.getQuantidade()) != 0) {

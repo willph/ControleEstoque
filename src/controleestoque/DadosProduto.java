@@ -43,7 +43,7 @@ public class DadosProduto extends Conexao {
         try {
             Statement conex = this.conectar();
             String sql = sql = "select a.id as auditoria_id, a.quantidadeProduto as auditoria_quantidadeProduto, a.data as auditoria_data, a.transacaoTipo as auditoria_transacaoTipo, "
-                    + "p.id as produto_id, p.nome as produto_nome, p.preco as produto_preco, p.qtd as produto_quantidade, p.tipoProduto as produto_descricao, "
+                    + "p.id as produto_id, p.nome as produto_nome, p.preco as produto_preco, p.quantidade as produto_quantidade, p.descricao as produto_descricao, "
                     + "u.id as usuario_id, u.nome as usuario_nome, u.login as usuario_login, u.senha as usuario_senha, u.privilegio as usuario_privilegio "
                     + "from auditoria as a inner join produto as p on p.id = a.produto_id inner join usuario as u on u.id = a.usuario_id";
             //ResultSet rs = stmt.executeQuery(sql);
@@ -143,7 +143,7 @@ public class DadosProduto extends Conexao {
         try {
             stmt = conectar();
             //instrução sql correspondente a inserção do produto
-            String sql = "INSERT INTO produto (nome, preco, tipoProduto) ";
+            String sql = "INSERT INTO produto (nome, preco, descricao) ";
             sql += "VALUES ('"
                     + novoProduto.getNome() + "', "
                     + novoProduto.getPreco() + ", '"
@@ -173,8 +173,8 @@ public class DadosProduto extends Conexao {
             //instrução sql correspondente a atualização do aluno
             String sql = "update produto set " + " nome = '" + novoProduto.getNome()
                     + "', preco = " + novoProduto.getPreco()
-                    + ", qtd = " + novoProduto.getQuantidade()
-                    + ", tipoProduto = '" + novoProduto.getDescricao()
+                    + ", quantidade = " + novoProduto.getQuantidade()
+                    + ", descricao = '" + novoProduto.getDescricao()
                     + "' where id = " + id;
 
             //executando a instrução sql
@@ -225,7 +225,7 @@ public class DadosProduto extends Conexao {
         //abrindo a conexão
         Statement conex = conectar();
         //instrução sql correspondente a seleção dos alunos
-        String sql = "SELECT id, nome, preco, qtd, tipoProduto FROM produto order by nome";
+        String sql = "SELECT id, nome, preco, quantidade, descricao FROM produto order by nome";
         //executando a instrução sql
         ResultSet rs = conex.executeQuery(sql);
         while (rs.next()) {
@@ -233,8 +233,8 @@ public class DadosProduto extends Conexao {
             p.setId(rs.getInt("id"));
             p.setNome(rs.getString("nome"));
             p.setPreco(rs.getFloat("preco"));
-            p.setQuantidade(rs.getInt("qtd"));
-            p.setDescricao(rs.getString("tipoProduto"));
+            p.setQuantidade(rs.getInt("quantidade"));
+            p.setDescricao(rs.getString("descricao"));
             retorno.add(p);
 
         }
@@ -299,8 +299,8 @@ public class DadosProduto extends Conexao {
                     produto.setId(rs.getInt("id"));
                     produto.setNome(rs.getString("nome"));
                     produto.setPreco(rs.getFloat("preco"));
-                    produto.setQuantidade(rs.getInt("qtd"));
-                    produto.setDescricao(rs.getString("tipoProduto"));
+                    produto.setQuantidade(rs.getInt("quantidade"));
+                    produto.setDescricao(rs.getString("descricao"));
                 }
                 desconectar();
 
@@ -325,8 +325,8 @@ public class DadosProduto extends Conexao {
                 produto.setId(rs.getInt("id"));
                 produto.setNome(rs.getString("nome"));
                 produto.setPreco(rs.getFloat("preco"));
-                produto.setQuantidade(rs.getInt("qtd"));
-                produto.setDescricao(rs.getString("tipoProduto"));
+                produto.setQuantidade(rs.getInt("quantidade"));
+                produto.setDescricao(rs.getString("descricao"));
             }
             desconectar();
 
@@ -354,8 +354,8 @@ public class DadosProduto extends Conexao {
                 p.setId(rs.getInt("id"));
                 p.setNome(rs.getString("nome"));
                 p.setPreco(rs.getFloat("preco"));
-                p.setQuantidade(rs.getInt("qtd"));
-                p.setDescricao(rs.getString("tipoProduto"));
+                p.setQuantidade(rs.getInt("quantidade"));
+                p.setDescricao(rs.getString("descricao"));
                 retorno.add(p);
             }
             //fechando a conexão com o banco de dados

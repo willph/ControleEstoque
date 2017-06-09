@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: 06-Jun-2017 às 20:50
+-- Generation Time: 09-Jun-2017 às 04:34
 -- Versão do servidor: 10.1.21-MariaDB
 -- PHP Version: 5.6.30
 
@@ -32,7 +32,7 @@ CREATE TABLE `auditoria` (
   `id` int(11) NOT NULL,
   `usuario_id` int(11) NOT NULL,
   `produto_id` int(11) NOT NULL,
-  `data` date DEFAULT NULL,
+  `data` datetime DEFAULT NULL,
   `quantidadeProduto` int(11) DEFAULT NULL,
   `transacaoTipo` text
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -42,7 +42,14 @@ CREATE TABLE `auditoria` (
 --
 
 INSERT INTO `auditoria` (`id`, `usuario_id`, `produto_id`, `data`, `quantidadeProduto`, `transacaoTipo`) VALUES
-(1, 1, 1, '2017-06-06', 10, 'entrada');
+(1, 1, 1, '2017-06-06 00:00:00', 10, 'entrada'),
+(10, 1, 7, '2017-06-08 00:00:00', 15, 'entrada'),
+(11, 1, 7, '2017-06-08 00:00:00', 5, 'entrada'),
+(12, 1, 7, '2017-06-08 00:00:00', 3, 'saida'),
+(13, 2, 1, '2017-06-08 00:00:00', 60, 'entrada'),
+(14, 1, 6, '2017-06-08 22:57:20', 8, 'entrada'),
+(15, 1, 5, '2017-06-08 22:58:10', 900, 'entrada'),
+(16, 1, 7, '2017-06-08 23:22:33', 3, 'entrada');
 
 -- --------------------------------------------------------
 
@@ -54,20 +61,20 @@ CREATE TABLE `produto` (
   `id` int(11) NOT NULL,
   `nome` text,
   `preco` float DEFAULT NULL,
-  `qtd` int(11) DEFAULT NULL,
-  `tipoProduto` text,
-  `apagado` tinyint(1) NOT NULL DEFAULT '0'
+  `quantidade` int(11) DEFAULT NULL,
+  `descricao` text
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Extraindo dados da tabela `produto`
 --
 
-INSERT INTO `produto` (`id`, `nome`, `preco`, `qtd`, `tipoProduto`, `apagado`) VALUES
-(1, 'Produto 1 E', 3.5, 20, 'lalala', 0),
-(2, 'Produto 2 Edit', 3.5, 5, 'faef', 0),
-(5, 'Produt 3', 3.45, 20, 'eoign', 1),
-(6, 'Produto 4', 3.4, 20, 'efoai', 0);
+INSERT INTO `produto` (`id`, `nome`, `preco`, `quantidade`, `descricao`) VALUES
+(1, 'Produto 1 E', 3.5, 80, 'lalala'),
+(5, 'Produt 3', 3.45, 920, 'eoign'),
+(6, 'Produto 4', 3.4, 28, 'efoai'),
+(7, 'NOVO PRODUTO', 3.4, 20, 'DESC'),
+(8, 'PRODUTO 5', 4.65, NULL, 'DESC ALALALALALALLA');
 
 -- --------------------------------------------------------
 
@@ -88,7 +95,8 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`id`, `login`, `senha`, `nome`, `privilegio`) VALUES
-(1, 'admin', '1234', '', 'administrador');
+(1, 'admin', '1234', '', 'administrador'),
+(2, 'admin3', '1234', 'admin3', 'administrador');
 
 --
 -- Indexes for dumped tables
@@ -122,17 +130,17 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT for table `auditoria`
 --
 ALTER TABLE `auditoria`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 --
 -- AUTO_INCREMENT for table `produto`
 --
 ALTER TABLE `produto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT for table `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- Constraints for dumped tables
 --

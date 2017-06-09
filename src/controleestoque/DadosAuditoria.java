@@ -31,6 +31,7 @@ public class DadosAuditoria extends Conexao {
     
     public DadosAuditoria(Statement stmt){
         this.stmt = stmt;
+        this.usuarioLogado = Login.getUsuarioLogado();
     }
     
     public DadosAuditoria() {
@@ -60,7 +61,7 @@ public class DadosAuditoria extends Conexao {
             if (usuarioLogin.equals("")) {
                 if (!produtoNome.equals("")) {
                     sql = "select a.id as auditoria_id, a.quantidadeProduto as auditoria_quantidadeProduto, a.data as auditoria_data, a.transacaoTipo as auditoria_transacaoTipo, "
-                            + "p.id as produto_id, p.nome as produto_nome, p.preco as produto_preco, p.qtd as produto_quantidade, p.tipoProduto as produto_descricao, "
+                            + "p.id as produto_id, p.nome as produto_nome, p.preco as produto_preco, p.quantidade as produto_quantidade, p.descricao as produto_descricao, "
                             + "u.id as usuario_id, u.nome as usuario_nome, u.login as usuario_login, u.senha as usuario_senha, u.privilegio as usuario_privilegio "
                             + "from auditoria as a inner join produto as p on p.id = a.produto_id inner join usuario as u on u.id = a.usuario_id "
                             + "where p.nome = '" + produtoNome + "' ;";
@@ -68,13 +69,13 @@ public class DadosAuditoria extends Conexao {
             } else {
                 if (!produtoNome.equals("")) {
                     sql = "select a.id as auditoria_id, a.quantidadeProduto as auditoria_quantidadeProduto, a.data as auditoria_data, a.transacaoTipo as auditoria_transacaoTipo, "
-                            + "p.id as produto_id, p.nome as produto_nome, p.preco as produto_preco, p.qtd as produto_quantidade, p.tipoProduto as produto_descricao, "
+                            + "p.id as produto_id, p.nome as produto_nome, p.preco as produto_preco, p.quantidade as produto_quantidade, p.descricao as produto_descricao, "
                             + "u.id as usuario_id, u.nome as usuario_nome, u.login as usuario_login, u.senha as usuario_senha, u.privilegio as usuario_privilegio "
                             + "from auditoria as a inner join produto as p on p.id = a.produto_id inner join usuario as u on u.id = a.usuario_id "
                             + "where p.nome = '" + produtoNome + "' and u.login = '" + usuarioLogin + "' ;";
                 } else {
                     sql = "select a.id as auditoria_id, a.quantidadeProduto as auditoria_quantidadeProduto, a.data as auditoria_data, a.transacaoTipo as auditoria_transacaoTipo, "
-                            + "p.id as produto_id, p.nome as produto_nome, p.preco as produto_preco, p.qtd as produto_quantidade, p.tipoProduto as produto_descricao, "
+                            + "p.id as produto_id, p.nome as produto_nome, p.preco as produto_preco, p.quantidade as produto_quantidade, p.descricao as produto_descricao, "
                             + "u.id as usuario_id, u.nome as usuario_nome, u.login as usuario_login, u.senha as usuario_senha, u.privilegio as usuario_privilegio "
                             + "from auditoria as a inner join produto as p on p.id = a.produto_id inner join usuario as u on u.id = a.usuario_id "
                             + "where u.login = '" + usuarioLogin + "';";
@@ -111,7 +112,7 @@ public class DadosAuditoria extends Conexao {
 //        String sql = "SELECT * FROM auditoria";
         String sql;
         sql = "select a.id as auditoria_id, a.quantidadeProduto as auditoria_quantidadeProduto, a.data as auditoria_data, a.transacaoTipo as auditoria_transacaoTipo, "
-        + "p.id as produto_id, p.nome as produto_nome, p.preco as produto_preco, p.qtd as produto_quantidade, p.tipoProduto as produto_descricao, "
+        + "p.id as produto_id, p.nome as produto_nome, p.preco as produto_preco, p.quantidade as produto_quantidade, p.descricao as produto_descricao, "
         + "u.id as usuario_id, u.nome as usuario_nome, u.login as usuario_login, u.senha as usuario_senha, u.privilegio as usuario_privilegio "
         + "from auditoria as a inner join produto as p on p.id = a.produto_id inner join usuario as u on u.id = a.usuario_id;";
         //executando a instrução sql
@@ -142,7 +143,7 @@ public class DadosAuditoria extends Conexao {
         int produtoId = novoProduto.getId();
         try {
             //abrindo a conexão
-            Statement conex = stmt;
+            Statement conex = conectar();
             //instrução sql correspondente a inserção da auditoria
             String sql = "INSERT INTO auditoria (usuario_id, produto_id, data, quantidadeProduto, transacaoTipo) VALUES (%d, %d, '%s', %d, '%s');";
             String sqlFormated = String.format(sql, usuarioLogado.getId(), produtoId, data, quantidadeTransacao, transacaoTipo);
